@@ -11,6 +11,7 @@ import {
 import * as taskRepository from "../db/repositories/taskRepository";
 import * as plantRepository from "../db/repositories/plantRepository";
 import * as journalRepository from "../db/repositories/journalRepository";
+import * as seedRepository from "../db/repositories/seedRepository";
 import { PRIORITY_VARIANT, PRIORITY_LABELS } from "../constants/taskLabels";
 import { ACTIVITY_LABELS } from "../constants/plantLabels";
 import Card from "../components/ui/Card";
@@ -23,6 +24,7 @@ import {
   CheckIcon,
   ChevronRightIcon,
   ClipboardCheckIcon,
+  SeedIcon,
 } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
@@ -37,6 +39,9 @@ export default function DashboardPage() {
   const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
   const allPlants = useLiveQuery(() => plantRepository.getAll());
   const recentEntries = useLiveQuery(() => journalRepository.getRecent(5));
+  const expiringSoonSeeds = useLiveQuery(() =>
+    seedRepository.getExpiringSoon(30),
+  );
 
   const plantNames = useMemo(() => {
     const map = new Map<string, string>();
@@ -73,7 +78,8 @@ export default function DashboardPage() {
     upcomingTasks === undefined ||
     overdueTasks === undefined ||
     allPlants === undefined ||
-    recentEntries === undefined
+    recentEntries === undefined ||
+    expiringSoonSeeds === undefined
   ) {
     return (
       <div className="mx-auto max-w-2xl space-y-4 p-4" role="status" aria-label="Loading dashboard">
@@ -154,6 +160,32 @@ export default function DashboardPage() {
           </div>
         </Card>
       </Link>
+
+      {/* Seeds Expiring Soon */}
+      {expiringSoonSeeds && expiringSoonSeeds.length > 0 && (
+        <section className="mt-6">
+          <Link to="/seeds" className="block">
+            <Card className="border-brown-200 bg-brown-50/30 transition-shadow hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brown-100">
+                  <SeedIcon className="h-5 w-5 text-brown-700" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-soil-900">
+                    {expiringSoonSeeds.length}{" "}
+                    {expiringSoonSeeds.length === 1 ? "seed" : "seeds"} expiring
+                    soon
+                  </p>
+                  <p className="mt-0.5 text-xs text-soil-500">
+                    Check your seed bank before they expire
+                  </p>
+                </div>
+                <ChevronRightIcon className="h-5 w-5 shrink-0 text-brown-400" />
+              </div>
+            </Card>
+          </Link>
+        </section>
+      )}
 
       {/* This Week's Tasks */}
       <section className="mt-6">

@@ -6,3 +6,4 @@ export * as gardenBedRepository from "./gardenBedRepository.ts";
 export * as settingsRepository from "./settingsRepository.ts";
 export * as seasonRepository from "./seasonRepository.ts";
 export * as plantingRepository from "./plantingRepository.ts";
+export * as seedRepository from "./seedRepository.ts";

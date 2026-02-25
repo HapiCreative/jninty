@@ -26,6 +26,7 @@ export type {
   PlantingOutcome,
   Planting,
 } from "../validation/planting.schema.ts";
+export type { QuantityUnit, Seed } from "../validation/seed.schema.ts";
 
 // SunExposure is not yet used by any Phase 1 entity schema,
 // but exported for Phase 2 readiness.

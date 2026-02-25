@@ -154,6 +154,41 @@ export function ChevronRightIcon({ className }: IconProps) {
   );
 }
 
+export function SeedIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 22c-4-2-8-7-8-12C4 5.5 7.6 2 12 2s8 3.5 8 8c0 5-4 10-8 12z" />
+      <path d="M12 2v10" />
+      <path d="M12 12c-2-2-4-4-4-6" />
+      <path d="M12 12c2-2 4-4 4-6" />
+    </svg>
+  );
+}
+
+export function MinusIcon({ className }: IconProps) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
 export function ClipboardCheckIcon({ className }: IconProps) {
   return (
     <svg

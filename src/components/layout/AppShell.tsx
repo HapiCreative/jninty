@@ -131,6 +131,25 @@ function TaskIcon({ className }: { className?: string }) {
   );
 }
 
+function SeedNavIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 22c-4-2-8-7-8-12C4 5.5 7.6 2 12 2s8 3.5 8 8c0 5-4 10-8 12z" />
+      <path d="M12 2v10" />
+      <path d="M12 12c-2-2-4-4-4-6" />
+      <path d="M12 12c2-2 4-4 4-6" />
+    </svg>
+  );
+}
+
 function SettingsIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -167,6 +186,7 @@ const primaryNav: NavItem[] = [
 function getSecondaryNav(overdueCount: number): NavItem[] {
   return [
     { to: "/journal", label: "Journal", icon: JournalIcon },
+    { to: "/seeds", label: "Seed Bank", icon: SeedNavIcon },
     { to: "/tasks", label: "Tasks", icon: TaskIcon, badge: overdueCount },
     { to: "/settings", label: "Settings", icon: SettingsIcon },
   ];
@@ -319,6 +339,15 @@ export default function AppShell() {
               }
             >
               <JournalIcon className="h-5 w-5" />
+            </NavLink>
+            <NavLink
+              to="/seeds"
+              aria-label="Seed Bank"
+              className={({ isActive }) =>
+                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+              }
+            >
+              <SeedNavIcon className="h-5 w-5" />
             </NavLink>
             <NavLink
               to="/tasks"

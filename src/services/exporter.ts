@@ -8,12 +8,13 @@ import { gardenBedSchema } from "../validation/gardenBed.schema.ts";
 import { settingsSchema } from "../validation/settings.schema.ts";
 import { seasonSchema } from "../validation/season.schema.ts";
 import { plantingSchema } from "../validation/planting.schema.ts";
+import { seedSchema } from "../validation/seed.schema.ts";
 import { z } from "zod";
 
 // ─── Constants ───
 
 const EXPORT_VERSION = 1;
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 // ─── Manifest schema ───
 
@@ -42,6 +43,7 @@ export type ImportResult = {
     photos: number;
     seasons: number;
     plantings: number;
+    seeds: number;
   };
 };
 
@@ -105,6 +107,7 @@ export async function exportAll(): Promise<Blob> {
     photos,
     seasons,
     plantings,
+    seeds,
   ] = await Promise.all([
     db.plantInstances
       .toArray()
@@ -127,6 +130,9 @@ export async function exportAll(): Promise<Blob> {
     db.plantings
       .toArray()
       .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.seeds
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
   ]);
 
   // Settings (single record, id = "singleton") — strip Dexie wrapper `id`
@@ -146,6 +152,7 @@ export async function exportAll(): Promise<Blob> {
   dataFolder.file("gardenBeds.json", JSON.stringify(gardenBeds));
   dataFolder.file("seasons.json", JSON.stringify(seasons));
   dataFolder.file("plantings.json", JSON.stringify(plantings));
+  dataFolder.file("seeds.json", JSON.stringify(seeds));
   dataFolder.file("settings.json", JSON.stringify(settingsArray));
 
   // Photos: store metadata JSON + blob files
@@ -191,6 +198,7 @@ export async function importFromZip(file: File): Promise<ImportResult> {
     photos: 0,
     seasons: 0,
     plantings: 0,
+    seeds: 0,
   };
 
   let zip: JSZip;
@@ -273,6 +281,11 @@ export async function importFromZip(file: File): Promise<ImportResult> {
       filename: "data/plantings.json",
       schema: plantingSchema,
       countKey: "plantings",
+    },
+    {
+      filename: "data/seeds.json",
+      schema: seedSchema,
+      countKey: "seeds",
     },
   ];
 

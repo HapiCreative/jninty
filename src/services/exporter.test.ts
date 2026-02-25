@@ -103,7 +103,7 @@ function makeManifest(
 ): ExportManifest {
   return {
     exportVersion: 1,
-    schemaVersion: 2,
+    schemaVersion: 3,
     exportedAt: timestamp,
     appVersion: "0.1.0",
     ...overrides,
@@ -187,7 +187,7 @@ describe("exportAll", () => {
     const manifest: unknown = JSON.parse(manifestRaw);
     expect(manifest).toMatchObject({
       exportVersion: 1,
-      schemaVersion: 2,
+      schemaVersion: 3,
       appVersion: "0.0.0-test",
     });
     expect(
@@ -203,6 +203,7 @@ describe("exportAll", () => {
     expect(zip.file("data/photos.json")).not.toBeNull();
     expect(zip.file("data/seasons.json")).not.toBeNull();
     expect(zip.file("data/plantings.json")).not.toBeNull();
+    expect(zip.file("data/seeds.json")).not.toBeNull();
 
     // Verify data content
     const plants: unknown = JSON.parse(
@@ -324,6 +325,7 @@ describe("importFromZip", () => {
       photos: 1,
       seasons: 0,
       plantings: 0,
+      seeds: 0,
     });
   });
 
@@ -417,6 +419,7 @@ describe("importFromZip", () => {
       photos: 0,
       seasons: 0,
       plantings: 0,
+      seeds: 0,
     });
   });
 

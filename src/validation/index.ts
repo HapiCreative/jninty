@@ -44,6 +44,8 @@ export {
   plantingOutcomeSchema,
 } from "./planting.schema.ts";
 export type { PlantingOutcome, Planting } from "./planting.schema.ts";
+export { seedSchema, quantityUnitSchema } from "./seed.schema.ts";
+export type { QuantityUnit, Seed } from "./seed.schema.ts";
 export { validateEntity } from "./helpers.ts";
 export type {
   ValidationResult,

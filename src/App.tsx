@@ -10,6 +10,9 @@ import JournalPage from "./pages/JournalPage";
 import JournalEntryFormPage from "./pages/JournalEntryFormPage";
 import TasksPage from "./pages/TasksPage";
 import SettingsPage from "./pages/SettingsPage";
+import SeedBankPage from "./pages/SeedBankPage";
+import SeedDetailPage from "./pages/SeedDetailPage";
+import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -27,6 +30,10 @@ export default function App() {
               <Route path="plants/:id/edit" element={<PlantFormPage />} />
               <Route path="journal" element={<JournalPage />} />
               <Route path="journal/new" element={<JournalEntryFormPage />} />
+              <Route path="seeds" element={<SeedBankPage />} />
+              <Route path="seeds/new" element={<SeedFormPage />} />
+              <Route path="seeds/:id" element={<SeedDetailPage />} />
+              <Route path="seeds/:id/edit" element={<SeedFormPage />} />
               <Route path="tasks" element={<TasksPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="quick-log" element={<QuickLogPage />} />

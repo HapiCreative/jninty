@@ -7,6 +7,7 @@ import type { GardenBed } from "../validation/gardenBed.schema.ts";
 import type { Settings } from "../validation/settings.schema.ts";
 import type { Season } from "../validation/season.schema.ts";
 import type { Planting } from "../validation/planting.schema.ts";
+import type { Seed } from "../validation/seed.schema.ts";
 
 // Settings doesn't extend BaseEntity — wrap it with an id for Dexie.
 export type SettingsRecord = { id: string } & Settings;
@@ -24,6 +25,7 @@ export class JnintyDB extends Dexie {
   searchIndex!: Table<SearchIndexRecord, string>;
   seasons!: Table<Season, string>;
   plantings!: Table<Planting, string>;
+  seeds!: Table<Seed, string>;
 
   constructor(name = "jninty") {
     super(name);
@@ -103,6 +105,12 @@ export class JnintyDB extends Dexie {
             }
           });
       });
+
+    // ─── Version 3: Phase 2 — Seed Bank ───
+    // Adds seeds store for seed inventory tracking.
+    this.version(3).stores({
+      seeds: "id, species, expiryDate",
+    });
   }
 }
 
