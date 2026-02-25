@@ -13,6 +13,8 @@ describe("App", () => {
   it("renders the app shell with navigation", () => {
     render(<App />);
     expect(screen.getAllByText("Jninty").length).toBeGreaterThan(0);
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(
+      screen.getByText("What's happening in your garden today?"),
+    ).toBeInTheDocument();
   });
 });

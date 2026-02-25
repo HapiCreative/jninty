@@ -1,11 +1,14 @@
 import "fake-indexeddb/auto";
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { formatISO, addDays, subDays } from "date-fns";
 import { db } from "../db/schema.ts";
 import * as taskRepository from "../db/repositories/taskRepository.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
+import * as journalRepository from "../db/repositories/journalRepository.ts";
+import { SettingsProvider } from "../hooks/useSettings.tsx";
 import DashboardPage from "./DashboardPage.tsx";
 
 beforeEach(async () => {
@@ -24,18 +27,105 @@ function pastDate(days: number): string {
 
 function renderPage() {
   return render(
-    <MemoryRouter initialEntries={["/"]}>
-      <DashboardPage />
-    </MemoryRouter>,
+    <SettingsProvider>
+      <MemoryRouter initialEntries={["/"]}>
+        <DashboardPage />
+      </MemoryRouter>
+    </SettingsProvider>,
   );
 }
 
 describe("DashboardPage", () => {
+  // ── First-time experience ──
+
+  it("shows welcome card when there are no plants", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Welcome to Jninty!")).toBeInTheDocument();
+    });
+    expect(
+      screen.getByText("Start by adding your first plant."),
+    ).toBeInTheDocument();
+    // Welcome card + quick action both link to /plants/new
+    const addPlantLinks = screen.getAllByRole("link", { name: /Add Plant/ });
+    expect(addPlantLinks.length).toBeGreaterThanOrEqual(1);
+    expect(addPlantLinks[0]).toHaveAttribute("href", "/plants/new");
+  });
+
+  it("shows growing zone nudge when there are no plants", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Set your growing zone/),
+      ).toBeInTheDocument();
+    });
+    expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute(
+      "href",
+      "/settings",
+    );
+  });
+
+  it("hides welcome card and zone nudge when plants exist", async () => {
+    await plantRepository.create({
+      species: "Tomato",
+      type: "vegetable",
+      isPerennial: false,
+      source: "seed",
+      status: "active",
+      tags: [],
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("What's happening in your garden today?"),
+      ).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Welcome to Jninty!")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Set your growing zone/),
+    ).not.toBeInTheDocument();
+  });
+
+  // ── "Today in your garden" prompt card ──
+
+  it("shows the prompt card linking to quick-log", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("What's happening in your garden today?"),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("shows 'Last logged' time when journal entries exist", async () => {
+    await journalRepository.create({
+      activityType: "watering",
+      body: "Watered the roses",
+      photoIds: [],
+      isMilestone: false,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Last logged:/)).toBeInTheDocument();
+    });
+  });
+
+  // ── This Week's Tasks ──
+
   it("shows 'No tasks this week' when there are no tasks", async () => {
     renderPage();
 
     await waitFor(() => {
-      expect(screen.getByText("No tasks this week.")).toBeInTheDocument();
+      expect(
+        screen.getByText(/No tasks this week/),
+      ).toBeInTheDocument();
     });
   });
 
@@ -58,11 +148,10 @@ describe("DashboardPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Water garden")).toBeInTheDocument();
     });
-    // Task 14 days away should NOT appear
     expect(screen.queryByText("Far future task")).not.toBeInTheDocument();
   });
 
-  it("shows overdue tasks with red highlight", async () => {
+  it("shows overdue tasks with overdue label", async () => {
     await taskRepository.create({
       title: "Overdue watering",
       dueDate: pastDate(2),
@@ -95,7 +184,7 @@ describe("DashboardPage", () => {
       ).toBeInTheDocument();
     });
     expect(screen.queryByText("Done task")).not.toBeInTheDocument();
-    expect(screen.getByText("No tasks this week.")).toBeInTheDocument();
+    expect(screen.getByText(/No tasks this week/)).toBeInTheDocument();
   });
 
   it("shows linked plant name on dashboard tasks", async () => {
@@ -126,7 +215,7 @@ describe("DashboardPage", () => {
     });
   });
 
-  it("has a 'View all' link to /tasks", async () => {
+  it("has a 'See all tasks' link to /tasks", async () => {
     renderPage();
 
     await waitFor(() => {
@@ -135,7 +224,112 @@ describe("DashboardPage", () => {
       ).toBeInTheDocument();
     });
 
-    const link = screen.getByRole("link", { name: "View all" });
+    const link = screen.getByRole("link", { name: /See all tasks/ });
     expect(link).toHaveAttribute("href", "/tasks");
+  });
+
+  it("completes a task when checkbox is clicked", async () => {
+    await taskRepository.create({
+      title: "Water the tomatoes",
+      dueDate: futureDate(1),
+      priority: "normal",
+      isCompleted: false,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Water the tomatoes")).toBeInTheDocument();
+    });
+
+    const checkbox = screen.getByRole("button", {
+      name: /Complete task: Water the tomatoes/,
+    });
+    await userEvent.click(checkbox);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Water the tomatoes"),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Recent Journal ──
+
+  it("shows empty state when no journal entries exist", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Start logging your garden journey/),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("shows recent journal entries", async () => {
+    await journalRepository.create({
+      activityType: "watering",
+      body: "Watered the basil this morning",
+      photoIds: [],
+      isMilestone: false,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText("Watered the basil this morning"),
+      ).toBeInTheDocument();
+    });
+    expect(screen.getByText("Watering")).toBeInTheDocument();
+  });
+
+  it("shows plant name on journal entries", async () => {
+    const plant = await plantRepository.create({
+      species: "Rosemary",
+      type: "herb",
+      isPerennial: true,
+      source: "nursery",
+      status: "active",
+      tags: [],
+    });
+
+    await journalRepository.create({
+      activityType: "pruning",
+      body: "Trimmed back the rosemary",
+      plantInstanceId: plant.id,
+      photoIds: [],
+      isMilestone: false,
+    });
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Rosemary")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Pruning")).toBeInTheDocument();
+  });
+
+  it("has a 'See all entries' link to /journal", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Recent Journal")).toBeInTheDocument();
+    });
+
+    const link = screen.getByRole("link", { name: /See all entries/ });
+    expect(link).toHaveAttribute("href", "/journal");
+  });
+
+  // ── Quick Actions ──
+
+  it("shows quick action buttons", async () => {
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText("Log Entry")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Add Plant")).toBeInTheDocument();
+    expect(screen.getByText("Add Task")).toBeInTheDocument();
   });
 });
