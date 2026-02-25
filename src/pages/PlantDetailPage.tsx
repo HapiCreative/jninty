@@ -1,87 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
+import { format, parseISO } from "date-fns";
 import * as plantRepository from "../db/repositories/plantRepository";
 import * as journalRepository from "../db/repositories/journalRepository";
 import * as taskRepository from "../db/repositories/taskRepository";
 import * as photoRepository from "../db/repositories/photoRepository";
 import { removeFromIndex, serializeIndex } from "../db/search";
-import type { PlantType, PlantSource, PlantStatus } from "../types";
+import {
+  TYPE_LABELS,
+  STATUS_LABELS,
+  STATUS_VARIANT,
+  SOURCE_LABELS,
+  ACTIVITY_LABELS,
+} from "../constants/plantLabels";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
-
-// ─── Label maps ───
-
-const TYPE_LABELS: Record<PlantType, string> = {
-  vegetable: "Vegetable",
-  herb: "Herb",
-  flower: "Flower",
-  ornamental: "Ornamental",
-  fruit_tree: "Fruit Tree",
-  berry: "Berry",
-  other: "Other",
-};
-
-const SOURCE_LABELS: Record<PlantSource, string> = {
-  seed: "Seed",
-  nursery: "Nursery",
-  cutting: "Cutting",
-  gift: "Gift",
-  unknown: "Unknown",
-};
-
-const STATUS_LABELS: Record<PlantStatus, string> = {
-  active: "Active",
-  dormant: "Dormant",
-  harvested: "Harvested",
-  removed: "Removed",
-  dead: "Dead",
-};
-
-const STATUS_VARIANT: Record<
-  PlantStatus,
-  "default" | "success" | "warning" | "danger"
-> = {
-  active: "success",
-  dormant: "warning",
-  harvested: "default",
-  removed: "danger",
-  dead: "danger",
-};
-
-const ACTIVITY_LABELS: Record<string, string> = {
-  watering: "Watering",
-  fertilizing: "Fertilizing",
-  pruning: "Pruning",
-  pest: "Pest",
-  disease: "Disease",
-  harvest: "Harvest",
-  transplant: "Transplant",
-  milestone: "Milestone",
-  general: "General",
-};
-
-// ─── Icons ───
-
-function PlantPlaceholderIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M7 20h10" />
-      <path d="M10 20c5.5-2.5.8-6.4 3-10" />
-      <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
-      <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z" />
-    </svg>
-  );
-}
+import {
+  PlantPlaceholderIcon,
+  ChevronLeftIcon,
+  PlusIcon,
+} from "../components/icons";
 
 // ─── Component ───
 
@@ -114,6 +54,8 @@ export default function PlantDetailPage() {
   const [heroUrl, setHeroUrl] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // Load hero photo
   useEffect(() => {
@@ -147,19 +89,55 @@ export default function PlantDetailPage() {
     };
   }, [plant?.photoIds]);
 
+  // ─── Dialog keyboard handling ───
+
+  const handleDialogKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape" && showDeleteConfirm) {
+        setShowDeleteConfirm(false);
+      }
+    },
+    [showDeleteConfirm],
+  );
+
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      document.addEventListener("keydown", handleDialogKeyDown);
+      // Prevent background scroll
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.removeEventListener("keydown", handleDialogKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [showDeleteConfirm, handleDialogKeyDown]);
+
+  // Auto-focus dialog when opened
+  useEffect(() => {
+    if (showDeleteConfirm && dialogRef.current) {
+      const cancelBtn = dialogRef.current.querySelector<HTMLButtonElement>(
+        "[data-cancel]",
+      );
+      cancelBtn?.focus();
+    }
+  }, [showDeleteConfirm]);
+
   // ─── Delete handler ───
 
   const handleDelete = async () => {
     if (!id) return;
     setDeleting(true);
+    setDeleteError(null);
     try {
       await plantRepository.softDelete(id);
       removeFromIndex(id);
       void serializeIndex();
       void navigate("/plants", { replace: true });
-    } catch {
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to delete plant.";
+      setDeleteError(message);
       setDeleting(false);
-      setShowDeleteConfirm(false);
     }
   };
 
@@ -213,17 +191,7 @@ export default function PlantDetailPage() {
           className="absolute top-3 left-3 rounded-full bg-soil-900/40 p-2 text-white transition-colors hover:bg-soil-900/60"
           aria-label="Back to plants"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <ChevronLeftIcon className="h-5 w-5" />
         </button>
       </div>
 
@@ -254,18 +222,7 @@ export default function PlantDetailPage() {
           to={`/quick-log?plantId=${plant.id}`}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-terracotta-500 px-4 py-3 font-semibold text-white transition-colors hover:bg-terracotta-600"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
+          <PlusIcon className="h-5 w-5" />
           Quick Log
         </Link>
 
@@ -299,7 +256,7 @@ export default function PlantDetailPage() {
               <div className="flex justify-between">
                 <dt className="text-sm text-soil-600">Date Acquired</dt>
                 <dd className="text-sm font-medium text-soil-900">
-                  {plant.dateAcquired}
+                  {format(parseISO(plant.dateAcquired), "MMM d, yyyy")}
                 </dd>
               </div>
             )}
@@ -331,14 +288,14 @@ export default function PlantDetailPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="text-sm font-medium text-soil-900">
-                        {entry.title ?? ACTIVITY_LABELS[entry.activityType] ?? entry.activityType}
+                        {entry.title ?? ACTIVITY_LABELS[entry.activityType]}
                       </p>
                       <p className="mt-0.5 text-sm text-soil-600 line-clamp-2">
                         {entry.body}
                       </p>
                     </div>
                     <Badge>
-                      {ACTIVITY_LABELS[entry.activityType] ?? entry.activityType}
+                      {ACTIVITY_LABELS[entry.activityType]}
                     </Badge>
                   </div>
                   <p className="mt-1 text-xs text-soil-400">
@@ -374,7 +331,7 @@ export default function PlantDetailPage() {
                     </p>
                     {task.dueDate && (
                       <p className="text-xs text-soil-500">
-                        Due: {task.dueDate}
+                        Due: {format(parseISO(task.dueDate), "MMM d, yyyy")}
                       </p>
                     )}
                   </div>
@@ -415,18 +372,35 @@ export default function PlantDetailPage() {
 
         {/* Delete confirmation dialog */}
         {showDeleteConfirm && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-soil-900/50 p-4">
-            <Card className="w-full max-w-sm">
-              <h3 className="font-display text-lg font-semibold text-soil-900">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-soil-900/50 p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-dialog-title"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowDeleteConfirm(false);
+            }}
+          >
+            <Card className="w-full max-w-sm" ref={dialogRef}>
+              <h3
+                id="delete-dialog-title"
+                className="font-display text-lg font-semibold text-soil-900"
+              >
                 Delete {displayName}?
               </h3>
               <p className="mt-2 text-sm text-soil-600">
                 This plant will be removed from your inventory. This action
                 cannot be undone.
               </p>
+              {deleteError && (
+                <p className="mt-2 text-sm text-terracotta-600">
+                  {deleteError}
+                </p>
+              )}
               <div className="mt-4 flex justify-end gap-2">
                 <Button
                   variant="ghost"
+                  data-cancel
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={deleting}
                 >

@@ -1,47 +1,42 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ZodError } from "zod";
 import * as plantRepository from "../db/repositories/plantRepository";
 import * as photoRepository from "../db/repositories/photoRepository";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import type { ProcessedPhoto } from "../services/photoProcessor";
 import type { PlantType, PlantSource, PlantStatus } from "../types";
+import {
+  TYPE_OPTIONS,
+  SOURCE_OPTIONS,
+  STATUS_OPTIONS,
+} from "../constants/plantLabels";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-
-// ─── Label maps ───
-
-const TYPE_OPTIONS: { value: PlantType; label: string }[] = [
-  { value: "vegetable", label: "Vegetable" },
-  { value: "herb", label: "Herb" },
-  { value: "flower", label: "Flower" },
-  { value: "ornamental", label: "Ornamental" },
-  { value: "fruit_tree", label: "Fruit Tree" },
-  { value: "berry", label: "Berry" },
-  { value: "other", label: "Other" },
-];
-
-const SOURCE_OPTIONS: { value: PlantSource; label: string }[] = [
-  { value: "seed", label: "Seed" },
-  { value: "nursery", label: "Nursery" },
-  { value: "cutting", label: "Cutting" },
-  { value: "gift", label: "Gift" },
-  { value: "unknown", label: "Unknown" },
-];
-
-const STATUS_OPTIONS: { value: PlantStatus; label: string }[] = [
-  { value: "active", label: "Active" },
-  { value: "dormant", label: "Dormant" },
-  { value: "harvested", label: "Harvested" },
-  { value: "removed", label: "Removed" },
-  { value: "dead", label: "Dead" },
-];
+import { ChevronLeftIcon, CloseIcon } from "../components/icons";
 
 // ─── Select style ───
 
 const selectClass =
   "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+
+// ─── Field label map for user-friendly Zod error messages ───
+
+const FIELD_LABELS: Record<string, string> = {
+  species: "Species",
+  nickname: "Nickname",
+  variety: "Variety",
+  type: "Type",
+  isPerennial: "Perennial",
+  source: "Source",
+  status: "Status",
+  dateAcquired: "Date Acquired",
+  careNotes: "Care Notes",
+  tags: "Tags",
+  photoIds: "Photos",
+};
 
 // ─── Component ───
 
@@ -173,12 +168,8 @@ export default function PlantFormPage() {
     setErrors([]);
 
     // Basic validation
-    const validationErrors: string[] = [];
     if (!species.trim()) {
-      validationErrors.push("Species is required.");
-    }
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
+      setErrors(["Species is required."]);
       return;
     }
 
@@ -243,9 +234,22 @@ export default function PlantFormPage() {
 
       void navigate(`/plants/${plant.id}`, { replace: true });
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to save plant.";
-      setErrors([message]);
+      if (err instanceof ZodError) {
+        setErrors(
+          err.issues.map((issue) => {
+            const field = issue.path[0];
+            const label =
+              typeof field === "string"
+                ? (FIELD_LABELS[field] ?? field)
+                : "Field";
+            return `${label}: ${issue.message}`;
+          }),
+        );
+      } else {
+        const message =
+          err instanceof Error ? err.message : "Failed to save plant.";
+        setErrors([message]);
+      }
     } finally {
       setSaving(false);
     }
@@ -260,6 +264,7 @@ export default function PlantFormPage() {
   }
 
   const currentPhotoPreview = newPhotoPreview ?? existingPhotoUrl;
+  const backPath = isEditing && id ? `/plants/${id}` : "/plants";
 
   return (
     <div className="mx-auto max-w-2xl p-4">
@@ -267,21 +272,11 @@ export default function PlantFormPage() {
       <div className="flex items-center gap-3">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => void navigate(backPath)}
           className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
           aria-label="Go back"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <ChevronLeftIcon className="h-5 w-5" />
         </button>
         <h1 className="font-display text-2xl font-bold text-green-800">
           {isEditing ? "Edit Plant" : "Add Plant"}
@@ -308,16 +303,7 @@ export default function PlantFormPage() {
                   className="absolute top-2 right-2 rounded-full bg-soil-900/60 p-1.5 text-white transition-colors hover:bg-soil-900/80"
                   aria-label="Remove photo"
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    className="h-4 w-4"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+                  <CloseIcon className="h-4 w-4" />
                 </button>
               </div>
             ) : (
@@ -373,7 +359,6 @@ export default function PlantFormPage() {
                 placeholder="e.g. Solanum lycopersicum"
                 value={species}
                 onChange={(e) => setSpecies(e.target.value)}
-                required
               />
             </div>
 
@@ -559,8 +544,8 @@ export default function PlantFormPage() {
         {/* Error display */}
         {errors.length > 0 && (
           <div className="rounded-lg bg-terracotta-400/10 p-3">
-            {errors.map((err) => (
-              <p key={err} className="text-sm text-terracotta-600">
+            {errors.map((err, i) => (
+              <p key={i} className="text-sm text-terracotta-600">
                 {err}
               </p>
             ))}
@@ -579,7 +564,7 @@ export default function PlantFormPage() {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => navigate(-1)}
+            onClick={() => void navigate(backPath)}
           >
             Cancel
           </Button>
