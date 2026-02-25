@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseEntitySchema, isoTimestamp } from "./base.schema.ts";
+import { baseEntitySchema, isoDate } from "./base.schema.ts";
 
 export const plantTypeSchema = z.enum([
   "vegetable",
@@ -27,16 +27,23 @@ export const plantStatusSchema = z.enum([
   "dead",
 ]);
 
-export const plantInstanceSchema = baseEntitySchema.extend({
-  nickname: z.string().min(1).optional(),
-  species: z.string().min(1),
-  variety: z.string().min(1).optional(),
-  type: plantTypeSchema,
-  isPerennial: z.boolean(),
-  dateAcquired: isoTimestamp.optional(),
-  source: plantSourceSchema,
-  seedId: z.string().uuid().optional(),
-  status: plantStatusSchema,
-  tags: z.array(z.string().min(1)),
-  careNotes: z.string().min(1).optional(),
-});
+export const plantInstanceSchema = baseEntitySchema
+  .extend({
+    nickname: z.string().min(1).optional(),
+    species: z.string().min(1),
+    variety: z.string().min(1).optional(),
+    type: plantTypeSchema,
+    isPerennial: z.boolean(),
+    dateAcquired: isoDate.optional(),
+    source: plantSourceSchema,
+    seedId: z.string().uuid().optional(),
+    status: plantStatusSchema,
+    tags: z.array(z.string().min(1)),
+    careNotes: z.string().min(1).optional(),
+  })
+  .strict();
+
+export type PlantType = z.infer<typeof plantTypeSchema>;
+export type PlantSource = z.infer<typeof plantSourceSchema>;
+export type PlantStatus = z.infer<typeof plantStatusSchema>;
+export type PlantInstance = z.infer<typeof plantInstanceSchema>;

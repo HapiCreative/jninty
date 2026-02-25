@@ -8,7 +8,7 @@ const validTask = {
   createdAt: "2026-03-15T14:30:00Z",
   updatedAt: "2026-03-15T14:30:00Z",
   title: "Water the tomatoes",
-  dueDate: "2026-03-20T00:00:00Z",
+  dueDate: "2026-03-20",
   priority: "normal" as const,
   isCompleted: false,
 };
@@ -122,6 +122,30 @@ describe("taskSchema", () => {
     const result = validateEntity(taskSchema, {
       ...validTask,
       isCompleted: 0,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects unknown properties (strict mode)", () => {
+    const result = validateEntity(taskSchema, {
+      ...validTask,
+      ruleId: "some-rule",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects datetime for dueDate (expects date only)", () => {
+    const result = validateEntity(taskSchema, {
+      ...validTask,
+      dueDate: "2026-03-20T00:00:00Z",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects unknown properties in recurrence (strict mode)", () => {
+    const result = validateEntity(taskSchema, {
+      ...validTask,
+      recurrence: { type: "daily", interval: 1, extra: true },
     });
     expect(result.success).toBe(false);
   });

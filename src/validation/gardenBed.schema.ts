@@ -10,7 +10,12 @@ export const bedTypeSchema = z.enum([
   "other",
 ]);
 
-export const gardenBedSchema = baseEntitySchema.extend({
-  name: z.string().min(1),
-  type: bedTypeSchema,
-});
+export const gardenBedSchema = baseEntitySchema
+  .extend({
+    name: z.string().min(1),
+    type: bedTypeSchema,
+  })
+  .strict();
+
+export type BedType = z.infer<typeof bedTypeSchema>;
+export type GardenBed = z.infer<typeof gardenBedSchema>;

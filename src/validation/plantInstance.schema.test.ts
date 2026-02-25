@@ -26,7 +26,7 @@ describe("plantInstanceSchema", () => {
     const full = {
       ...validPlant,
       nickname: "Big Red",
-      dateAcquired: "2026-02-15T00:00:00Z",
+      dateAcquired: "2026-02-15",
       seedId: "660e8400-e29b-41d4-a716-446655440001",
       careNotes: "Needs extra calcium",
       deletedAt: "2026-12-01T00:00:00Z",
@@ -150,5 +150,21 @@ describe("plantInstanceSchema", () => {
     if (!result.success) {
       expect(result.error.issues.length).toBeGreaterThan(0);
     }
+  });
+
+  it("rejects unknown properties (strict mode)", () => {
+    const result = validateEntity(plantInstanceSchema, {
+      ...validPlant,
+      favoriteColor: "blue",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects datetime for dateAcquired (expects date only)", () => {
+    const result = validateEntity(plantInstanceSchema, {
+      ...validPlant,
+      dateAcquired: "2026-02-15T00:00:00Z",
+    });
+    expect(result.success).toBe(false);
   });
 });

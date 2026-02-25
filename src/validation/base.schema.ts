@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const isoTimestamp = z.string().datetime();
+export const isoDate = z.string().date();
 
 export const baseEntitySchema = z.object({
   id: z.string().uuid(),
@@ -9,3 +10,5 @@ export const baseEntitySchema = z.object({
   updatedAt: isoTimestamp,
   deletedAt: isoTimestamp.optional(),
 });
+
+export type BaseEntity = z.infer<typeof baseEntitySchema>;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { baseEntitySchema, isoTimestamp } from "./base.schema.ts";
+import { baseEntitySchema, isoDate, isoTimestamp } from "./base.schema.ts";
 
 export const taskPrioritySchema = z.enum(["urgent", "normal", "low"]);
 
@@ -10,19 +10,27 @@ export const recurrenceTypeSchema = z.enum([
   "custom",
 ]);
 
-export const recurrenceSchema = z.object({
-  type: recurrenceTypeSchema,
-  interval: z.number().int().positive(),
-});
+export const recurrenceSchema = z
+  .object({
+    type: recurrenceTypeSchema,
+    interval: z.number().int().positive(),
+  })
+  .strict();
 
-export const taskSchema = baseEntitySchema.extend({
-  title: z.string().min(1),
-  description: z.string().min(1).optional(),
-  plantInstanceId: z.string().uuid().optional(),
-  bedId: z.string().uuid().optional(),
-  dueDate: isoTimestamp,
-  priority: taskPrioritySchema,
-  isCompleted: z.boolean(),
-  completedAt: isoTimestamp.optional(),
-  recurrence: recurrenceSchema.optional(),
-});
+export const taskSchema = baseEntitySchema
+  .extend({
+    title: z.string().min(1),
+    description: z.string().min(1).optional(),
+    plantInstanceId: z.string().uuid().optional(),
+    bedId: z.string().uuid().optional(),
+    dueDate: isoDate,
+    priority: taskPrioritySchema,
+    isCompleted: z.boolean(),
+    completedAt: isoTimestamp.optional(),
+    recurrence: recurrenceSchema.optional(),
+  })
+  .strict();
+
+export type TaskPriority = z.infer<typeof taskPrioritySchema>;
+export type RecurrenceType = z.infer<typeof recurrenceTypeSchema>;
+export type Task = z.infer<typeof taskSchema>;

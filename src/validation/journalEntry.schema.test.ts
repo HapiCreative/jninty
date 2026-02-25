@@ -82,7 +82,7 @@ describe("journalEntrySchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects harvestWeight of zero (nonnegative allows it)", () => {
+  it("accepts zero harvestWeight", () => {
     const result = validateEntity(journalEntrySchema, {
       ...validEntry,
       harvestWeight: 0,
@@ -149,5 +149,21 @@ describe("journalEntrySchema", () => {
       });
       expect(result.success).toBe(true);
     }
+  });
+
+  it("rejects unknown properties (strict mode)", () => {
+    const result = validateEntity(journalEntrySchema, {
+      ...validEntry,
+      mood: "happy",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects unknown properties in weatherSnapshot (strict mode)", () => {
+    const result = validateEntity(journalEntrySchema, {
+      ...validEntry,
+      weatherSnapshot: { tempC: 22, windSpeed: 10 },
+    });
+    expect(result.success).toBe(false);
   });
 });
