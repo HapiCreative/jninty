@@ -393,20 +393,38 @@ export default function SeedFormPage() {
               >
                 Germination Rate (%)
               </label>
-              <div className="flex items-center gap-3">
-                <input
+              {germinationRate ? (
+                <div className="flex items-center gap-3">
+                  <input
+                    id="seed-germination"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={germinationRate}
+                    onChange={(e) => setGerminationRate(e.target.value)}
+                    className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-cream-200 accent-green-600"
+                  />
+                  <span className="w-12 text-right text-sm font-medium text-soil-700">
+                    {germinationRate}%
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setGerminationRate("")}
+                    className="text-xs text-soil-500 hover:text-soil-700"
+                  >
+                    Clear
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
                   id="seed-germination"
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={germinationRate || "0"}
-                  onChange={(e) => setGerminationRate(e.target.value)}
-                  className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-cream-200 accent-green-600"
-                />
-                <span className="w-12 text-right text-sm font-medium text-soil-700">
-                  {germinationRate || "0"}%
-                </span>
-              </div>
+                  onClick={() => setGerminationRate("50")}
+                  className="text-sm text-green-700 hover:underline"
+                >
+                  Set germination rate
+                </button>
+              )}
             </div>
 
             {/* Cost */}

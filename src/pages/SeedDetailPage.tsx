@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { format, parseISO, differenceInDays } from "date-fns";
+import { db } from "../db/schema";
 import * as seedRepository from "../db/repositories/seedRepository";
 import * as plantRepository from "../db/repositories/plantRepository";
 import * as plantingRepository from "../db/repositories/plantingRepository";
@@ -21,7 +22,7 @@ export default function SeedDetailPage() {
   const { toast } = useToast();
 
   const seed = useLiveQuery(
-    () => (id ? seedRepository.getById(id) : undefined),
+    () => (id ? seedRepository.getById(id).then((s) => s ?? null) : null),
     [id],
   );
 
@@ -84,36 +85,46 @@ export default function SeedDetailPage() {
 
     setPlanting(true);
     try {
-      // Deduct quantity
-      await seedRepository.deductQuantity(id, amount);
+      // Run in a transaction so deduction + plant creation are atomic
+      await db.transaction(
+        "rw",
+        [db.seeds, db.plantInstances, db.plantings, db.seasons],
+        async () => {
+          // Deduct quantity
+          await seedRepository.deductQuantity(id, amount);
 
-      // Optionally create PlantInstance + Planting
-      if (createPlant) {
-        const activeSeason = await seasonRepository.getActive();
-        const plant = await plantRepository.create({
-          species: seed.species,
-          type: "vegetable",
-          isPerennial: false,
-          source: "seed",
-          seedId: id,
-          status: "active",
-          tags: [],
-          ...(seed.variety != null ? { variety: seed.variety } : {}),
-        });
+          // Optionally create PlantInstance + Planting
+          if (createPlant) {
+            const activeSeason = await seasonRepository.getActive();
+            const plant = await plantRepository.create({
+              species: seed.species,
+              type: "vegetable",
+              isPerennial: false,
+              source: "seed",
+              seedId: id,
+              status: "active",
+              tags: [],
+              ...(seed.variety != null ? { variety: seed.variety } : {}),
+            });
 
-        if (activeSeason) {
-          const todayISO = new Date().toISOString().split("T")[0]!;
-          await plantingRepository.create({
-            plantInstanceId: plant.id,
-            seasonId: activeSeason.id,
-            datePlanted: todayISO,
-          });
-        }
+            if (activeSeason) {
+              const todayISO = new Date().toISOString().split("T")[0]!;
+              await plantingRepository.create({
+                plantInstanceId: plant.id,
+                seasonId: activeSeason.id,
+                datePlanted: todayISO,
+              });
+            }
+          }
+        },
+      );
 
-        toast("Seeds deducted and plant created", "success");
-      } else {
-        toast("Seeds deducted", "success");
-      }
+      toast(
+        createPlant
+          ? "Seeds deducted and plant created"
+          : "Seeds deducted",
+        "success",
+      );
 
       setShowPlantModal(false);
       setPlantAmount("");

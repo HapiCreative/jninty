@@ -86,52 +86,55 @@ export async function getBySpecies(species: string): Promise<Seed[]> {
 }
 
 export async function getExpiringSoon(days: number): Promise<Seed[]> {
-  const records = await db.seeds.toArray();
-  const now = new Date();
-  const cutoff = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+  const today = new Date();
+  const cutoff = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
   const cutoffDate = cutoff.toISOString().split("T")[0]!;
-  const todayDate = now.toISOString().split("T")[0]!;
+  const todayDate = today.toISOString().split("T")[0]!;
 
-  return records.filter(
-    (r) =>
-      r.deletedAt == null &&
-      r.expiryDate != null &&
-      r.expiryDate >= todayDate &&
-      r.expiryDate <= cutoffDate,
-  );
+  // Use the expiryDate index for an efficient range query.
+  // Seeds without expiryDate are excluded since they're not in the index.
+  const records = await db.seeds
+    .where("expiryDate")
+    .between(todayDate, cutoffDate, true, true)
+    .toArray();
+
+  return records.filter((r) => r.deletedAt == null);
 }
 
 /**
  * Deducts a quantity from a seed's remaining stock.
+ * Runs in a transaction to prevent race conditions.
  * Throws if amount would make quantity negative.
  */
 export async function deductQuantity(
   id: string,
   amount: number,
 ): Promise<Seed> {
-  const existing = await db.seeds.get(id);
-  if (!existing || existing.deletedAt != null) {
-    throw new Error(`Seed not found: ${id}`);
-  }
-
   if (amount <= 0) {
     throw new Error("Deduction amount must be positive");
   }
 
-  if (existing.quantityRemaining < amount) {
-    throw new Error(
-      `Insufficient quantity: ${String(existing.quantityRemaining)} remaining, tried to deduct ${String(amount)}`,
-    );
-  }
+  return await db.transaction("rw", db.seeds, async () => {
+    const existing = await db.seeds.get(id);
+    if (!existing || existing.deletedAt != null) {
+      throw new Error(`Seed not found: ${id}`);
+    }
 
-  const updated: Seed = {
-    ...existing,
-    quantityRemaining: existing.quantityRemaining - amount,
-    version: existing.version + 1,
-    updatedAt: now(),
-  };
+    if (existing.quantityRemaining < amount) {
+      throw new Error(
+        `Insufficient quantity: ${String(existing.quantityRemaining)} remaining, tried to deduct ${String(amount)}`,
+      );
+    }
 
-  const parsed = seedSchema.parse(updated);
-  await db.seeds.put(parsed);
-  return parsed;
+    const updated: Seed = {
+      ...existing,
+      quantityRemaining: existing.quantityRemaining - amount,
+      version: existing.version + 1,
+      updatedAt: now(),
+    };
+
+    const parsed = seedSchema.parse(updated);
+    await db.seeds.put(parsed);
+    return parsed;
+  });
 }
