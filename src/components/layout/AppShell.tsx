@@ -1,4 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
+import * as taskRepository from "../../db/repositories/taskRepository";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 
 // SVG icon components — inline to avoid extra dependencies
@@ -151,6 +153,7 @@ interface NavItem {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   disabled?: boolean;
+  badge?: number;
 }
 
 const primaryNav: NavItem[] = [
@@ -161,11 +164,13 @@ const primaryNav: NavItem[] = [
   { to: "/map", label: "Map", icon: MapIcon, disabled: true },
 ];
 
-const secondaryNav: NavItem[] = [
-  { to: "/journal", label: "Journal", icon: JournalIcon },
-  { to: "/tasks", label: "Tasks", icon: TaskIcon },
-  { to: "/settings", label: "Settings", icon: SettingsIcon },
-];
+function getSecondaryNav(overdueCount: number): NavItem[] {
+  return [
+    { to: "/journal", label: "Journal", icon: JournalIcon },
+    { to: "/tasks", label: "Tasks", icon: TaskIcon, badge: overdueCount },
+    { to: "/settings", label: "Settings", icon: SettingsIcon },
+  ];
+}
 
 function OfflineBanner() {
   return (
@@ -230,6 +235,11 @@ function SidebarLink({ item }: { item: NavItem }) {
     >
       <item.icon className="h-5 w-5" />
       <span>{item.label}</span>
+      {item.badge != null && item.badge > 0 && (
+        <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-terracotta-500 px-1.5 text-[10px] font-bold text-white">
+          {item.badge}
+        </span>
+      )}
     </NavLink>
   );
 }
@@ -237,6 +247,8 @@ function SidebarLink({ item }: { item: NavItem }) {
 export default function AppShell() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
+  const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
+  const overdueCount = overdueTasks?.length ?? 0;
 
   return (
     <div className="flex min-h-svh flex-col md:flex-row">
@@ -268,7 +280,7 @@ export default function AppShell() {
           <div className="my-3 border-t border-green-700" />
 
           {/* Secondary nav */}
-          {secondaryNav.map((item) => (
+          {getSecondaryNav(overdueCount).map((item) => (
             <SidebarLink key={item.to} item={item} />
           ))}
         </nav>
@@ -302,10 +314,15 @@ export default function AppShell() {
             <NavLink
               to="/tasks"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `relative p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
               }
             >
               <TaskIcon className="h-5 w-5" />
+              {overdueCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-terracotta-500 px-1 text-[10px] font-bold text-white">
+                  {overdueCount}
+                </span>
+              )}
             </NavLink>
             <NavLink
               to="/settings"
