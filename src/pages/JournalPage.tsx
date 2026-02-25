@@ -1,14 +1,545 @@
-import Card from "../components/ui/Card";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
+import { FixedSizeList, type ListChildComponentProps } from "react-window";
+import { formatDistanceToNow, startOfWeek, startOfMonth } from "date-fns";
+import * as journalRepository from "../db/repositories/journalRepository";
+import * as plantRepository from "../db/repositories/plantRepository";
+import * as photoRepository from "../db/repositories/photoRepository";
+import {
+  search as searchIndex,
+  loadIndex,
+  rebuildIndex,
+} from "../db/search";
+import type { ActivityType, JournalEntry } from "../types";
+import {
+  ACTIVITY_LABELS,
+  ALL_ACTIVITY_TYPES,
+} from "../constants/plantLabels";
+import { useDebounce } from "../hooks/useDebounce";
+import Badge from "../components/ui/Badge";
+import Input from "../components/ui/Input";
+import PhotoThumbnail from "../components/PhotoThumbnail";
+import { PlusIcon, CloseIcon } from "../components/icons";
+
+// ─── Constants ───
+
+const ITEM_HEIGHT = 100;
+
+type DateRange = "all" | "week" | "month";
+
+const selectClass =
+  "rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+
+// ─── Entry row component (defined outside for react-window perf) ───
+
+type RowData = {
+  entries: JournalEntry[];
+  plantNames: Map<string, string>;
+  onSelect: (entry: JournalEntry) => void;
+};
+
+function EntryRow({ index, style, data }: ListChildComponentProps<RowData>) {
+  const entry = data.entries[index];
+  if (!entry) return null;
+
+  const plantName = entry.plantInstanceId
+    ? data.plantNames.get(entry.plantInstanceId)
+    : undefined;
+  const firstPhotoId = entry.photoIds[0];
+  const timeAgo = formatDistanceToNow(new Date(entry.createdAt), {
+    addSuffix: true,
+  });
+
+  return (
+    <div style={style} className="px-4 py-1">
+      <button
+        type="button"
+        onClick={() => data.onSelect(entry)}
+        className="flex w-full gap-3 rounded-xl border border-cream-200 bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md"
+        aria-label={`Journal entry: ${entry.body.slice(0, 50)}`}
+      >
+        {/* Photo or activity placeholder */}
+        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-cream-200">
+          {firstPhotoId ? (
+            <PhotoThumbnail
+              photoId={firstPhotoId}
+              alt="Entry photo"
+              className="h-full w-full"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-sm font-medium text-brown-500">
+              {ACTIVITY_LABELS[entry.activityType].slice(0, 3)}
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <Badge>{ACTIVITY_LABELS[entry.activityType]}</Badge>
+            {plantName && (
+              <span className="truncate text-xs text-soil-500">
+                {plantName}
+              </span>
+            )}
+            <span className="ml-auto shrink-0 text-xs text-soil-400">
+              {timeAgo}
+            </span>
+          </div>
+          {entry.title && (
+            <p className="mt-0.5 truncate text-sm font-medium text-soil-800">
+              {entry.title}
+            </p>
+          )}
+          <p className="mt-0.5 line-clamp-2 text-sm text-soil-600">
+            {entry.body}
+          </p>
+        </div>
+      </button>
+    </div>
+  );
+}
+
+// ─── Entry detail overlay ───
+
+function EntryDetail({
+  entry,
+  plantName,
+  onClose,
+}: {
+  entry: JournalEntry;
+  plantName: string | undefined;
+  onClose: () => void;
+}) {
+  const [displayUrl, setDisplayUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const firstPhotoId = entry.photoIds[0];
+    if (!firstPhotoId) return;
+
+    let url: string | undefined;
+    let cancelled = false;
+
+    void photoRepository.getById(firstPhotoId).then((photo) => {
+      if (cancelled) return;
+      const blob = photo?.displayBlob ?? photo?.thumbnailBlob;
+      if (blob) {
+        url = URL.createObjectURL(blob);
+        setDisplayUrl(url);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [entry.photoIds]);
+
+  const timeAgo = formatDistanceToNow(new Date(entry.createdAt), {
+    addSuffix: true,
+  });
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 md:items-center"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Journal entry detail"
+    >
+      <div
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white md:rounded-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <div className="flex items-center justify-between px-4 pt-4">
+          <Badge>{ACTIVITY_LABELS[entry.activityType]}</Badge>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-soil-500 transition-colors hover:bg-cream-200 hover:text-soil-800"
+            aria-label="Close"
+          >
+            <CloseIcon className="h-5 w-5" />
+          </button>
+        </div>
+
+        {/* Photo */}
+        {displayUrl && (
+          <img
+            src={displayUrl}
+            alt="Entry photo"
+            className="mt-3 w-full object-cover"
+          />
+        )}
+
+        {/* Content */}
+        <div className="p-4">
+          {entry.title && (
+            <h2 className="font-display text-lg font-semibold text-soil-900">
+              {entry.title}
+            </h2>
+          )}
+
+          <p className="mt-2 text-sm leading-relaxed text-soil-700 whitespace-pre-wrap">
+            {entry.body}
+          </p>
+
+          {/* Metadata */}
+          <div className="mt-4 space-y-1 text-xs text-soil-500">
+            <p>{timeAgo}</p>
+            {plantName && (
+              <p>
+                Plant:{" "}
+                <Link
+                  to={`/plants/${entry.plantInstanceId}`}
+                  className="font-medium text-green-700 hover:underline"
+                >
+                  {plantName}
+                </Link>
+              </p>
+            )}
+            {entry.isMilestone && entry.milestoneType && (
+              <p>
+                Milestone:{" "}
+                <span className="font-medium text-soil-700">
+                  {entry.milestoneType.replace(/_/g, " ")}
+                </span>
+              </p>
+            )}
+            {entry.activityType === "harvest" &&
+              entry.harvestWeight != null && (
+                <p>
+                  Harvest:{" "}
+                  <span className="font-medium text-soil-700">
+                    {entry.harvestWeight}g
+                  </span>
+                </p>
+              )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── FAB speed dial ───
+
+function AddEntryFab() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="fixed bottom-24 right-4 z-40 md:bottom-6">
+      {/* Speed dial options */}
+      {open && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-30"
+            onClick={() => setOpen(false)}
+          />
+          <div className="absolute bottom-16 right-0 z-40 flex flex-col gap-2">
+            <Link
+              to="/quick-log"
+              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-terracotta-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-transform hover:bg-terracotta-600 active:scale-95"
+              onClick={() => setOpen(false)}
+            >
+              Quick Log
+            </Link>
+            <Link
+              to="/journal/new"
+              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-green-700 px-4 py-2.5 text-sm font-semibold text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95"
+              onClick={() => setOpen(false)}
+            >
+              New Entry
+            </Link>
+          </div>
+        </>
+      )}
+
+      {/* Main FAB */}
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        aria-label="Add journal entry"
+        className={`flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95 ${
+          open ? "rotate-45" : ""
+        }`}
+      >
+        <PlusIcon className="h-7 w-7" />
+      </button>
+    </div>
+  );
+}
+
+// ─── Main page component ───
 
 export default function JournalPage() {
+  const allEntries = useLiveQuery(() => journalRepository.getAll());
+  const allPlants = useLiveQuery(() => plantRepository.getAll());
+
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 250);
+  const [activityFilter, setActivityFilter] = useState<ActivityType | "">("");
+  const [plantFilter, setPlantFilter] = useState("");
+  const [dateRange, setDateRange] = useState<DateRange>("all");
+  const [indexReady, setIndexReady] = useState(false);
+
+  // Detail overlay
+  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(
+    null,
+  );
+
+  // List container height
+  const [listHeight, setListHeight] = useState(400);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Load search index on mount
+  useEffect(() => {
+    void loadIndex()
+      .then((loaded) => {
+        if (!loaded) {
+          return rebuildIndex();
+        }
+      })
+      .then(() => {
+        setIndexReady(true);
+      });
+  }, []);
+
+  // Measure container height for react-window
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      const first = entries[0];
+      if (first) setListHeight(first.contentRect.height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Build plant name map
+  const plantNames = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!allPlants) return map;
+    for (const p of allPlants) {
+      map.set(p.id, p.nickname ?? p.species);
+    }
+    return map;
+  }, [allPlants]);
+
+  // Filter entries
+  const filteredEntries = useMemo(() => {
+    if (!allEntries) return [];
+    let results = [...allEntries];
+
+    // Search filter
+    if (debouncedQuery.trim() && indexReady) {
+      const hits = searchIndex(debouncedQuery);
+      const journalHitIds = new Set(
+        hits
+          .filter((h) => h.entityType === "journal")
+          .map((h) => h.id),
+      );
+      results = results.filter((e) => journalHitIds.has(e.id));
+    }
+
+    // Activity type filter
+    if (activityFilter) {
+      results = results.filter((e) => e.activityType === activityFilter);
+    }
+
+    // Plant filter
+    if (plantFilter) {
+      results = results.filter(
+        (e) => e.plantInstanceId === plantFilter,
+      );
+    }
+
+    // Date range filter
+    if (dateRange === "week") {
+      const weekStart = startOfWeek(new Date());
+      results = results.filter(
+        (e) => new Date(e.createdAt) >= weekStart,
+      );
+    } else if (dateRange === "month") {
+      const monthStart = startOfMonth(new Date());
+      results = results.filter(
+        (e) => new Date(e.createdAt) >= monthStart,
+      );
+    }
+
+    return results;
+  }, [
+    allEntries,
+    debouncedQuery,
+    activityFilter,
+    plantFilter,
+    dateRange,
+    indexReady,
+  ]);
+
+  // Row data for react-window (memoized to prevent re-renders)
+  const handleSelect = useCallback((entry: JournalEntry) => {
+    setSelectedEntry(entry);
+  }, []);
+
+  const rowData = useMemo<RowData>(
+    () => ({
+      entries: filteredEntries,
+      plantNames,
+      onSelect: handleSelect,
+    }),
+    [filteredEntries, plantNames, handleSelect],
+  );
+
+  // Loading state
+  if (allEntries === undefined) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <p className="text-soil-600">Loading journal...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4">
-      <h1 className="font-display text-2xl font-bold text-green-800">
-        Journal
-      </h1>
-      <Card className="mt-4">
-        <p className="text-soil-700">Your journal entries will appear here.</p>
-      </Card>
+    <div className="flex h-full flex-col">
+      <div className="mx-auto w-full max-w-3xl px-4 pt-4">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <h1 className="font-display text-2xl font-bold text-green-800">
+            Journal
+          </h1>
+          <span className="text-sm text-soil-500">
+            {allEntries.length}{" "}
+            {allEntries.length === 1 ? "entry" : "entries"}
+          </span>
+        </div>
+
+        {/* Search bar */}
+        <div className="mt-4">
+          <Input
+            type="search"
+            placeholder="Search journal..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search journal"
+          />
+        </div>
+
+        {/* Filters */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {/* Plant filter */}
+          <select
+            value={plantFilter}
+            onChange={(e) => setPlantFilter(e.target.value)}
+            className={selectClass}
+            aria-label="Filter by plant"
+          >
+            <option value="">All plants</option>
+            {allPlants?.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nickname ?? p.species}
+              </option>
+            ))}
+          </select>
+
+          {/* Activity type filter */}
+          <select
+            value={activityFilter}
+            onChange={(e) =>
+              setActivityFilter(e.target.value as ActivityType | "")
+            }
+            className={selectClass}
+            aria-label="Filter by activity"
+          >
+            <option value="">All activities</option>
+            {ALL_ACTIVITY_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {ACTIVITY_LABELS[t]}
+              </option>
+            ))}
+          </select>
+
+          {/* Date range filter */}
+          <div className="flex overflow-hidden rounded-lg border border-brown-200">
+            {(["all", "week", "month"] as const).map((range) => (
+              <button
+                key={range}
+                type="button"
+                onClick={() => setDateRange(range)}
+                className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                  dateRange === range
+                    ? "bg-green-700 text-cream-50"
+                    : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                }`}
+              >
+                {range === "all"
+                  ? "All"
+                  : range === "week"
+                    ? "This Week"
+                    : "This Month"}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Feed */}
+      {filteredEntries.length === 0 ? (
+        <div className="mt-12 text-center">
+          {allEntries.length === 0 ? (
+            <>
+              <p className="text-lg font-medium text-soil-700">
+                No journal entries yet
+              </p>
+              <p className="mt-1 text-sm text-soil-500">
+                Start logging with the + button below.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-lg font-medium text-soil-700">
+                No entries match your filters
+              </p>
+              <p className="mt-1 text-sm text-soil-500">
+                Try adjusting your search or filters.
+              </p>
+            </>
+          )}
+        </div>
+      ) : (
+        <div ref={containerRef} className="mt-3 flex-1">
+          <FixedSizeList
+            height={listHeight}
+            width="100%"
+            itemCount={filteredEntries.length}
+            itemSize={ITEM_HEIGHT}
+            itemData={rowData}
+            overscanCount={5}
+          >
+            {EntryRow}
+          </FixedSizeList>
+        </div>
+      )}
+
+      {/* FAB */}
+      <AddEntryFab />
+
+      {/* Entry detail overlay */}
+      {selectedEntry && (
+        <EntryDetail
+          entry={selectedEntry}
+          plantName={
+            selectedEntry.plantInstanceId
+              ? plantNames.get(selectedEntry.plantInstanceId)
+              : undefined
+          }
+          onClose={() => setSelectedEntry(null)}
+        />
+      )}
     </div>
   );
 }

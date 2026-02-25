@@ -3,7 +3,10 @@ import type {
   PlantSource,
   PlantStatus,
 } from "../types/index.ts";
-import type { ActivityType } from "../validation/journalEntry.schema.ts";
+import type {
+  ActivityType,
+  MilestoneType,
+} from "../validation/journalEntry.schema.ts";
 
 // ─── Badge variant type (matches Badge component) ───
 
@@ -92,3 +95,41 @@ export const SOURCE_OPTIONS: { value: PlantSource; label: string }[] = [
 
 export const STATUS_OPTIONS: { value: PlantStatus; label: string }[] =
   ALL_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] }));
+
+// ─── Activity type arrays ───
+
+export const ALL_ACTIVITY_TYPES: ActivityType[] = [
+  "watering",
+  "fertilizing",
+  "pruning",
+  "pest",
+  "disease",
+  "harvest",
+  "transplant",
+  "milestone",
+  "general",
+];
+
+export const ACTIVITY_OPTIONS: { value: ActivityType; label: string }[] =
+  ALL_ACTIVITY_TYPES.map((t) => ({ value: t, label: ACTIVITY_LABELS[t] }));
+
+// ─── Milestone labels ───
+
+export const MILESTONE_LABELS: Record<MilestoneType, string> = {
+  first_sprout: "First Sprout",
+  first_flower: "First Flower",
+  first_fruit: "First Fruit",
+  peak_harvest: "Peak Harvest",
+  other: "Other",
+};
+
+export const ALL_MILESTONE_TYPES: MilestoneType[] = [
+  "first_sprout",
+  "first_flower",
+  "first_fruit",
+  "peak_harvest",
+  "other",
+];
+
+export const MILESTONE_OPTIONS: { value: MilestoneType; label: string }[] =
+  ALL_MILESTONE_TYPES.map((m) => ({ value: m, label: MILESTONE_LABELS[m] }));

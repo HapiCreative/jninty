@@ -114,6 +114,14 @@ export async function getByActivityType(
   return records.filter((r) => r.deletedAt == null);
 }
 
+export async function getAll(): Promise<JournalEntry[]> {
+  const records = await db.journalEntries
+    .orderBy("createdAt")
+    .reverse()
+    .toArray();
+  return records.filter((r) => r.deletedAt == null);
+}
+
 export async function getByDateRange(
   start: string,
   end: string,
