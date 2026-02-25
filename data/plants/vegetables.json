@@ -17,7 +17,7 @@
     "matureSpreadInches": 24,
     "growthRate": "fast",
     "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill"],
+    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
     "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
     "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
   },
@@ -39,7 +39,7 @@
     "matureSpreadInches": 30,
     "growthRate": "fast",
     "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill"],
+    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
     "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
     "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
   },
@@ -61,7 +61,7 @@
     "matureSpreadInches": 24,
     "growthRate": "fast",
     "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill"],
+    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
     "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
     "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
   },
@@ -177,7 +177,7 @@
     "isPerennial": false,
     "directSowWeeksBeforeLastFrost": 6,
     "daysToGermination": 14,
-    "daysToMaturity": 90,
+    "daysToMaturity": 240,
     "spacingInches": 6,
     "sunNeeds": "full_sun",
     "waterNeeds": "moderate",
