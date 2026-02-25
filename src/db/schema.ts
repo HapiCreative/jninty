@@ -5,6 +5,8 @@ import type { Photo } from "../validation/photo.schema.ts";
 import type { Task } from "../validation/task.schema.ts";
 import type { GardenBed } from "../validation/gardenBed.schema.ts";
 import type { Settings } from "../validation/settings.schema.ts";
+import type { Season } from "../validation/season.schema.ts";
+import type { Planting } from "../validation/planting.schema.ts";
 
 // Settings doesn't extend BaseEntity — wrap it with an id for Dexie.
 export type SettingsRecord = { id: string } & Settings;
@@ -20,6 +22,8 @@ export class JnintyDB extends Dexie {
   gardenBeds!: Table<GardenBed, string>;
   settings!: Table<SettingsRecord, string>;
   searchIndex!: Table<SearchIndexRecord, string>;
+  seasons!: Table<Season, string>;
+  plantings!: Table<Planting, string>;
 
   constructor(name = "jninty") {
     super(name);
@@ -37,19 +41,68 @@ export class JnintyDB extends Dexie {
       searchIndex: "id",
     });
 
-    // ─── Version 2 placeholder (Phase 2) ───
-    // Will add: seasons, plantings, seeds, taskRules stores.
-    // Will run data migration to split PlantInstance → PlantInstance + Planting.
-    //
-    // db.version(2).stores({
-    //   seasons: "id, year, isActive",
-    //   plantings: "id, plantInstanceId, seasonId, bedId",
-    //   seeds: "id, species, expiryDate",
-    //   taskRules: "id, isBuiltIn",
-    //   // existing stores keep their indexes (only list changed ones)
-    // }).upgrade(tx => {
-    //   // migration logic here
-    // });
+    // ─── Version 2: Phase 2 — Season + Planting model ───
+    // Adds seasons and plantings stores. Migrates existing data to link
+    // to a default season.
+    this.version(2)
+      .stores({
+        seasons: "id, year, isActive",
+        plantings: "id, plantInstanceId, seasonId, bedId",
+      })
+      .upgrade(async (tx) => {
+        const timestamp = new Date().toISOString();
+        const currentYear = new Date().getFullYear();
+        const seasonId = crypto.randomUUID();
+
+        // 1. Create a default season
+        const defaultSeason: Season = {
+          id: seasonId,
+          name: `${currentYear} Growing Season`,
+          year: currentYear,
+          startDate: `${currentYear}-01-01`,
+          endDate: `${currentYear}-12-31`,
+          isActive: true,
+          version: 1,
+          createdAt: timestamp,
+          updatedAt: timestamp,
+        };
+        await tx.table("seasons").add(defaultSeason);
+
+        // 2. Create a Planting for each PlantInstance
+        const plants = await tx.table("plantInstances").toArray();
+        for (const plant of plants) {
+          const planting: Planting = {
+            id: crypto.randomUUID(),
+            plantInstanceId: plant.id as string,
+            seasonId,
+            datePlanted: (plant.dateAcquired as string | undefined) ?? undefined,
+            version: 1,
+            createdAt: timestamp,
+            updatedAt: timestamp,
+          };
+          await tx.table("plantings").add(planting);
+        }
+
+        // 3. Back-fill seasonId on all JournalEntries
+        await tx
+          .table("journalEntries")
+          .toCollection()
+          .modify((entry: Record<string, unknown>) => {
+            if (!entry["seasonId"]) {
+              entry["seasonId"] = seasonId;
+            }
+          });
+
+        // 4. Back-fill seasonId on all Tasks
+        await tx
+          .table("tasks")
+          .toCollection()
+          .modify((entry: Record<string, unknown>) => {
+            if (!entry["seasonId"]) {
+              entry["seasonId"] = seasonId;
+            }
+          });
+      });
   }
 }
 

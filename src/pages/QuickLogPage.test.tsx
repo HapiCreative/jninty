@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { db } from "../db/schema.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
 import * as journalRepository from "../db/repositories/journalRepository.ts";
+import * as seasonRepository from "../db/repositories/seasonRepository.ts";
 import { _resetIndex } from "../db/search.ts";
 import QuickLogPage from "./QuickLogPage.tsx";
 
@@ -47,6 +48,15 @@ beforeEach(async () => {
   _resetIndex();
   blobUrlCounter = 0;
   vi.clearAllMocks();
+
+  // Seed an active season (migration only runs on upgrade, not fresh DB)
+  await seasonRepository.create({
+    name: "2026 Growing Season",
+    year: 2026,
+    startDate: "2026-01-01",
+    endDate: "2026-12-31",
+    isActive: true,
+  });
 });
 
 function renderPage(initialEntries = ["/quick-log"]) {

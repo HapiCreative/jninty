@@ -7,6 +7,7 @@ const validEntry = {
   version: 0,
   createdAt: "2026-03-15T14:30:00Z",
   updatedAt: "2026-03-15T14:30:00Z",
+  seasonId: "880e8400-e29b-41d4-a716-446655440003",
   activityType: "watering" as const,
   body: "Watered all the tomatoes this morning",
   photoIds: [],

@@ -53,6 +53,7 @@ function makeJournalEntry(overrides?: Record<string, unknown>) {
     body: "Watered the tomatoes",
     photoIds: [] as string[],
     isMilestone: false,
+    seasonId: "00000000-0000-0000-0000-000000000099",
     ...overrides,
   };
 }
@@ -102,7 +103,7 @@ function makeManifest(
 ): ExportManifest {
   return {
     exportVersion: 1,
-    schemaVersion: 1,
+    schemaVersion: 2,
     exportedAt: timestamp,
     appVersion: "0.1.0",
     ...overrides,
@@ -186,7 +187,7 @@ describe("exportAll", () => {
     const manifest: unknown = JSON.parse(manifestRaw);
     expect(manifest).toMatchObject({
       exportVersion: 1,
-      schemaVersion: 1,
+      schemaVersion: 2,
       appVersion: "0.0.0-test",
     });
     expect(
@@ -200,6 +201,8 @@ describe("exportAll", () => {
     expect(zip.file("data/gardenBeds.json")).not.toBeNull();
     expect(zip.file("data/settings.json")).not.toBeNull();
     expect(zip.file("data/photos.json")).not.toBeNull();
+    expect(zip.file("data/seasons.json")).not.toBeNull();
+    expect(zip.file("data/plantings.json")).not.toBeNull();
 
     // Verify data content
     const plants: unknown = JSON.parse(
@@ -319,6 +322,8 @@ describe("importFromZip", () => {
       gardenBeds: 1,
       settings: 1,
       photos: 1,
+      seasons: 0,
+      plantings: 0,
     });
   });
 
@@ -410,6 +415,8 @@ describe("importFromZip", () => {
       gardenBeds: 0,
       settings: 0,
       photos: 0,
+      seasons: 0,
+      plantings: 0,
     });
   });
 

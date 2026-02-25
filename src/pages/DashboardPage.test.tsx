@@ -111,6 +111,7 @@ describe("DashboardPage", () => {
       body: "Watered the roses",
       photoIds: [],
       isMilestone: false,
+      seasonId: "00000000-0000-0000-0000-000000000099",
     });
 
     renderPage();
@@ -275,6 +276,7 @@ describe("DashboardPage", () => {
       body: "Watered the basil this morning",
       photoIds: [],
       isMilestone: false,
+      seasonId: "00000000-0000-0000-0000-000000000099",
     });
 
     renderPage();
@@ -303,6 +305,7 @@ describe("DashboardPage", () => {
       plantInstanceId: plant.id,
       photoIds: [],
       isMilestone: false,
+      seasonId: "00000000-0000-0000-0000-000000000099",
     });
 
     renderPage();

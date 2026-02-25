@@ -3,6 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { format, parseISO, formatISO, startOfDay } from "date-fns";
 import * as taskRepository from "../db/repositories/taskRepository";
 import * as plantRepository from "../db/repositories/plantRepository";
+import * as seasonRepository from "../db/repositories/seasonRepository";
 import type { Task, TaskPriority, PlantInstance } from "../types";
 import {
   PRIORITY_LABELS,
@@ -163,10 +164,12 @@ function TaskItem({
 function TaskFormModal({
   task,
   plants,
+  activeSeasonId,
   onClose,
 }: {
   task: Task | null;
   plants: PlantInstance[];
+  activeSeasonId: string | undefined;
   onClose: () => void;
 }) {
   const [title, setTitle] = useState(task?.title ?? "");
@@ -229,7 +232,10 @@ function TaskFormModal({
       if (task) {
         await taskRepository.update(task.id, input);
       } else {
-        await taskRepository.create(input);
+        await taskRepository.create({
+          ...input,
+          ...(activeSeasonId ? { seasonId: activeSeasonId } : {}),
+        });
       }
 
       onClose();
@@ -392,12 +398,19 @@ export default function TasksPage() {
   const { toast } = useToast();
   const allTasks = useLiveQuery(() => taskRepository.getAll());
   const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const allSeasons = useLiveQuery(() => seasonRepository.getAll());
+  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
 
   const [showCompleted, setShowCompleted] = useState(false);
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [sortBy, setSortBy] = useState<"dueDate" | "priority">("dueDate");
+  const [seasonFilter, setSeasonFilter] = useState<string | null>(null);
+
+  // Resolve effective filter: null = not yet user-chosen, fall back to active season
+  const effectiveSeasonFilter =
+    seasonFilter !== null ? seasonFilter : (activeSeason?.id ?? "");
 
   // Build plant name map
   const plantNames = useMemo(() => {
@@ -414,8 +427,13 @@ export default function TasksPage() {
     if (!allTasks)
       return { pendingTasks: [] as Task[], completedTasks: [] as Task[] };
 
-    const pending = allTasks.filter((t) => !t.isCompleted);
-    const completed = allTasks.filter((t) => t.isCompleted);
+    // Filter by season when a season is selected
+    const filtered = effectiveSeasonFilter
+      ? allTasks.filter((t) => t.seasonId === effectiveSeasonFilter)
+      : allTasks;
+
+    const pending = filtered.filter((t) => !t.isCompleted);
+    const completed = filtered.filter((t) => t.isCompleted);
 
     const today = todayDate();
 
@@ -450,7 +468,7 @@ export default function TasksPage() {
     });
 
     return { pendingTasks: pending, completedTasks: completed };
-  }, [allTasks, sortBy]);
+  }, [allTasks, sortBy, effectiveSeasonFilter]);
 
   async function handleToggleComplete(task: Task) {
     try {
@@ -518,6 +536,28 @@ export default function TasksPage() {
           )}
         </span>
       </div>
+
+      {/* Season filter */}
+      {allSeasons && allSeasons.length > 0 && (
+        <div className="mt-3">
+          <label htmlFor="season-filter" className="sr-only">
+            Filter by season
+          </label>
+          <select
+            id="season-filter"
+            value={effectiveSeasonFilter}
+            onChange={(e) => setSeasonFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="">All Seasons</option>
+            {allSeasons.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.year})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Sort control */}
       {pendingTasks.length > 0 && (
@@ -652,6 +692,7 @@ export default function TasksPage() {
         <TaskFormModal
           task={editingTask}
           plants={allPlants ?? []}
+          activeSeasonId={activeSeason?.id}
           onClose={handleFormClose}
         />
       )}

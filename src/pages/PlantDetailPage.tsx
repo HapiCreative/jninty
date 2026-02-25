@@ -6,6 +6,8 @@ import * as plantRepository from "../db/repositories/plantRepository";
 import * as journalRepository from "../db/repositories/journalRepository";
 import * as taskRepository from "../db/repositories/taskRepository";
 import * as photoRepository from "../db/repositories/photoRepository";
+import * as plantingRepository from "../db/repositories/plantingRepository";
+import * as seasonRepository from "../db/repositories/seasonRepository";
 import { removeFromIndex, serializeIndex } from "../db/search";
 import {
   TYPE_LABELS,
@@ -50,6 +52,15 @@ export default function PlantDetailPage() {
     () => (id ? taskRepository.getByPlantId(id) : Promise.resolve([])),
     [id],
   );
+
+  // Plantings for this plant
+  const plantings = useLiveQuery(
+    () => (id ? plantingRepository.getByPlant(id) : Promise.resolve([])),
+    [id],
+  );
+
+  // All seasons (for looking up season names)
+  const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
 
   // Hero photo
   const [heroUrl, setHeroUrl] = useState<string | null>(null);
@@ -175,6 +186,14 @@ export default function PlantDetailPage() {
   const displayName = plant.nickname ?? plant.species;
   const pendingTasks = tasks?.filter((t) => !t.isCompleted) ?? [];
 
+  const seasonMap = new Map(seasons?.map((s) => [s.id, s.name]));
+  const outcomeVariant: Record<string, "success" | "warning" | "danger" | "default"> = {
+    thrived: "success",
+    ok: "warning",
+    failed: "danger",
+    unknown: "default",
+  };
+
   return (
     <div className="mx-auto max-w-2xl pb-8">
       {/* Hero photo */}
@@ -275,6 +294,57 @@ export default function PlantDetailPage() {
                 {plant.careNotes}
               </p>
             </div>
+          )}
+        </Card>
+
+        {/* Plantings */}
+        <Card>
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg font-semibold text-green-800">
+              Plantings
+            </h2>
+            <span className="text-sm text-soil-500">
+              {plantings?.length ?? 0}
+            </span>
+          </div>
+          {plantings && plantings.length > 0 ? (
+            <ul className="mt-3 divide-y divide-cream-200">
+              {plantings.map((planting) => (
+                <li key={planting.id} className="py-2">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-soil-900">
+                        {seasonMap.get(planting.seasonId) ?? "Unknown Season"}
+                      </p>
+                      {planting.datePlanted && (
+                        <p className="mt-0.5 text-xs text-soil-500">
+                          Planted: {format(parseISO(planting.datePlanted), "MMM d, yyyy")}
+                        </p>
+                      )}
+                      {planting.dateRemoved && (
+                        <p className="text-xs text-soil-500">
+                          Removed: {format(parseISO(planting.dateRemoved), "MMM d, yyyy")}
+                        </p>
+                      )}
+                      {planting.notes && (
+                        <p className="mt-0.5 text-sm text-soil-600 line-clamp-2">
+                          {planting.notes}
+                        </p>
+                      )}
+                    </div>
+                    {planting.outcome && (
+                      <Badge variant={outcomeVariant[planting.outcome] ?? "default"}>
+                        {planting.outcome}
+                      </Badge>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-sm text-soil-500">
+              No plantings yet.
+            </p>
           )}
         </Card>
 

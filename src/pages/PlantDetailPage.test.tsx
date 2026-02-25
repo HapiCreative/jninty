@@ -177,6 +177,7 @@ describe("PlantDetailPage", () => {
       body: "Gave it a good soak",
       photoIds: [],
       isMilestone: false,
+      seasonId: "00000000-0000-0000-0000-000000000099",
     });
 
     renderDetailPage(plant.id);

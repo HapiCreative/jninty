@@ -6,6 +6,7 @@ import * as photoRepository from "../db/repositories/photoRepository";
 import * as journalRepository from "../db/repositories/journalRepository";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
+import { useActiveSeason } from "../hooks/useActiveSeason";
 import type { ProcessedPhoto } from "../services/photoProcessor";
 import type { ActivityType } from "../types";
 import { ACTIVITY_LABELS } from "../constants/plantLabels";
@@ -54,8 +55,9 @@ export default function QuickLogPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // Load active plants for dropdown
+  // Load active plants for dropdown + active season
   const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
+  const activeSeason = useActiveSeason();
 
   // Cleanup preview URL on unmount
   useEffect(() => {
@@ -130,11 +132,18 @@ export default function QuickLogPage() {
 
       // Build journal entry input — use spread for optional fields
       // to satisfy exactOptionalPropertyTypes
+      if (!activeSeason) {
+        setError("No active season found. Create one in Settings.");
+        setSaving(false);
+        return;
+      }
+
       const entry = await journalRepository.create({
         activityType: (activityType || "general") as ActivityType,
         body: note.trim() || "Quick log",
         photoIds,
         isMilestone: false,
+        seasonId: activeSeason.id,
         ...(plantId ? { plantInstanceId: plantId } : {}),
       });
 

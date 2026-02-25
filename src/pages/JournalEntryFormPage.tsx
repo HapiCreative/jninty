@@ -8,6 +8,7 @@ import * as journalRepository from "../db/repositories/journalRepository";
 import * as gardenBedRepository from "../db/repositories/gardenBedRepository";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
+import { useActiveSeason } from "../hooks/useActiveSeason";
 import type { ProcessedPhoto } from "../services/photoProcessor";
 import type { ActivityType, MilestoneType } from "../types";
 import {
@@ -73,9 +74,10 @@ export default function JournalEntryFormPage() {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  // Load data for dropdowns
+  // Load data for dropdowns + active season
   const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
   const gardenBeds = useLiveQuery(() => gardenBedRepository.getAll());
+  const activeSeason = useActiveSeason();
 
   // Cleanup preview URLs on unmount
   useEffect(() => {
@@ -149,6 +151,12 @@ export default function JournalEntryFormPage() {
 
       // Build input — use conditional spread for optional fields
       // to satisfy exactOptionalPropertyTypes
+      if (!activeSeason) {
+        setErrors(["No active season found. Create one in Settings."]);
+        setSaving(false);
+        return;
+      }
+
       const weight = parseFloat(harvestWeight);
 
       const entry = await journalRepository.create({
@@ -156,6 +164,7 @@ export default function JournalEntryFormPage() {
         body: body.trim(),
         photoIds,
         isMilestone,
+        seasonId: activeSeason.id,
         ...(plantId ? { plantInstanceId: plantId } : {}),
         ...(bedId ? { bedId } : {}),
         ...(title.trim() ? { title: title.trim() } : {}),

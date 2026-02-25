@@ -132,3 +132,13 @@ export async function getByDateRange(
     .toArray();
   return records.filter((r) => r.deletedAt == null);
 }
+
+export async function getBySeasonId(
+  seasonId: string,
+): Promise<JournalEntry[]> {
+  const records = await db.journalEntries
+    .where("seasonId")
+    .equals(seasonId)
+    .toArray();
+  return records.filter((r) => r.deletedAt == null);
+}

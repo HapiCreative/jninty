@@ -6,12 +6,14 @@ import { journalEntrySchema } from "../validation/journalEntry.schema.ts";
 import { taskSchema } from "../validation/task.schema.ts";
 import { gardenBedSchema } from "../validation/gardenBed.schema.ts";
 import { settingsSchema } from "../validation/settings.schema.ts";
+import { seasonSchema } from "../validation/season.schema.ts";
+import { plantingSchema } from "../validation/planting.schema.ts";
 import { z } from "zod";
 
 // ─── Constants ───
 
 const EXPORT_VERSION = 1;
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 // ─── Manifest schema ───
 
@@ -38,6 +40,8 @@ export type ImportResult = {
     gardenBeds: number;
     settings: number;
     photos: number;
+    seasons: number;
+    plantings: number;
   };
 };
 
@@ -93,24 +97,37 @@ export async function exportAll(): Promise<Blob> {
   const photosFolder = zip.folder("photos")!;
 
   // Query all non-deleted records from each table
-  const [plantInstances, journalEntries, tasks, gardenBeds, photos] =
-    await Promise.all([
-      db.plantInstances
-        .toArray()
-        .then((rows) => rows.filter((r) => r.deletedAt == null)),
-      db.journalEntries
-        .toArray()
-        .then((rows) => rows.filter((r) => r.deletedAt == null)),
-      db.tasks
-        .toArray()
-        .then((rows) => rows.filter((r) => r.deletedAt == null)),
-      db.gardenBeds
-        .toArray()
-        .then((rows) => rows.filter((r) => r.deletedAt == null)),
-      db.photos
-        .toArray()
-        .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    ]);
+  const [
+    plantInstances,
+    journalEntries,
+    tasks,
+    gardenBeds,
+    photos,
+    seasons,
+    plantings,
+  ] = await Promise.all([
+    db.plantInstances
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.journalEntries
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.tasks
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.gardenBeds
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.photos
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.seasons
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+    db.plantings
+      .toArray()
+      .then((rows) => rows.filter((r) => r.deletedAt == null)),
+  ]);
 
   // Settings (single record, id = "singleton") — strip Dexie wrapper `id`
   const settingsRecord = await db.settings.get("singleton");
@@ -127,6 +144,8 @@ export async function exportAll(): Promise<Blob> {
   dataFolder.file("journalEntries.json", JSON.stringify(journalEntries));
   dataFolder.file("tasks.json", JSON.stringify(tasks));
   dataFolder.file("gardenBeds.json", JSON.stringify(gardenBeds));
+  dataFolder.file("seasons.json", JSON.stringify(seasons));
+  dataFolder.file("plantings.json", JSON.stringify(plantings));
   dataFolder.file("settings.json", JSON.stringify(settingsArray));
 
   // Photos: store metadata JSON + blob files
@@ -170,6 +189,8 @@ export async function importFromZip(file: File): Promise<ImportResult> {
     gardenBeds: 0,
     settings: 0,
     photos: 0,
+    seasons: 0,
+    plantings: 0,
   };
 
   let zip: JSZip;
@@ -242,6 +263,16 @@ export async function importFromZip(file: File): Promise<ImportResult> {
       filename: "data/photos.json",
       schema: photoImportSchema,
       countKey: "photos",
+    },
+    {
+      filename: "data/seasons.json",
+      schema: seasonSchema,
+      countKey: "seasons",
+    },
+    {
+      filename: "data/plantings.json",
+      schema: plantingSchema,
+      countKey: "plantings",
     },
   ];
 

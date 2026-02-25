@@ -33,7 +33,7 @@ export const journalEntrySchema = baseEntitySchema
   .extend({
     plantInstanceId: z.string().uuid().optional(),
     bedId: z.string().uuid().optional(),
-    seasonId: z.string().uuid().optional(),
+    seasonId: z.string().uuid(),
     activityType: activityTypeSchema,
     title: z.string().min(1).optional(),
     body: z.string(),

@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import Badge from "../components/ui/Badge";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
 import { useSettings } from "../hooks/useSettings";
+import * as seasonRepository from "../db/repositories/seasonRepository";
 import {
   getStorageUsage,
   formatBytes,
@@ -118,6 +121,45 @@ export default function SettingsPage() {
       toast("Rebuild failed", "error");
     } finally {
       setRebuildBusy(false);
+    }
+  };
+
+  // ─── Seasons ───
+
+  const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
+
+  const [showNewSeason, setShowNewSeason] = useState(false);
+  const [newSeason, setNewSeason] = useState({
+    name: "",
+    year: new Date().getFullYear(),
+    startDate: "",
+    endDate: "",
+  });
+
+  const handleCreateSeason = async () => {
+    if (!newSeason.name.trim() || !newSeason.startDate || !newSeason.endDate) return;
+    try {
+      await seasonRepository.create({
+        name: newSeason.name.trim(),
+        year: newSeason.year,
+        startDate: newSeason.startDate,
+        endDate: newSeason.endDate,
+        isActive: false,
+      });
+      setNewSeason({ name: "", year: new Date().getFullYear(), startDate: "", endDate: "" });
+      setShowNewSeason(false);
+      toast("Season created", "success");
+    } catch {
+      toast("Failed to create season", "error");
+    }
+  };
+
+  const handleSetActive = async (id: string) => {
+    try {
+      await seasonRepository.setActive(id);
+      toast("Active season updated", "success");
+    } catch {
+      toast("Failed to set active season", "error");
     }
   };
 
@@ -283,6 +325,114 @@ export default function SettingsPage() {
               onChange={(theme) => void updateSettings({ theme })}
             />
           </div>
+        </div>
+      </Card>
+
+      {/* ── Seasons ── */}
+      <Card>
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-lg font-semibold text-green-800">
+            Seasons
+          </h2>
+          <Button
+            variant="ghost"
+            onClick={() => setShowNewSeason((v) => !v)}
+          >
+            {showNewSeason ? "Cancel" : "New Season"}
+          </Button>
+        </div>
+
+        {showNewSeason && (
+          <div className="mt-4 space-y-3 rounded-lg border border-cream-200 bg-cream-50 p-3">
+            <div>
+              <label htmlFor="season-name" className="mb-1 block text-sm font-medium text-soil-700">
+                Name
+              </label>
+              <Input
+                id="season-name"
+                type="text"
+                placeholder="e.g. Spring 2026"
+                value={newSeason.name}
+                onChange={(e) => setNewSeason((s) => ({ ...s, name: e.target.value }))}
+              />
+            </div>
+            <div>
+              <label htmlFor="season-year" className="mb-1 block text-sm font-medium text-soil-700">
+                Year
+              </label>
+              <Input
+                id="season-year"
+                type="number"
+                value={String(newSeason.year)}
+                onChange={(e) => setNewSeason((s) => ({ ...s, year: Number(e.target.value) }))}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="season-start" className="mb-1 block text-sm font-medium text-soil-700">
+                  Start Date
+                </label>
+                <Input
+                  id="season-start"
+                  type="date"
+                  value={newSeason.startDate}
+                  onChange={(e) => setNewSeason((s) => ({ ...s, startDate: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label htmlFor="season-end" className="mb-1 block text-sm font-medium text-soil-700">
+                  End Date
+                </label>
+                <Input
+                  id="season-end"
+                  type="date"
+                  value={newSeason.endDate}
+                  onChange={(e) => setNewSeason((s) => ({ ...s, endDate: e.target.value }))}
+                />
+              </div>
+            </div>
+            <Button onClick={() => void handleCreateSeason()}>
+              Create Season
+            </Button>
+          </div>
+        )}
+
+        <div className="mt-4 space-y-2">
+          {seasons === undefined ? (
+            <Skeleton className="h-12 w-full" />
+          ) : seasons.length === 0 ? (
+            <p className="text-sm text-soil-500">No seasons yet. Create one to get started.</p>
+          ) : (
+            seasons.map((season) => (
+              <div
+                key={season.id}
+                className={`flex items-center justify-between rounded-lg border p-3 ${
+                  season.isActive
+                    ? "border-green-600 bg-green-50"
+                    : "border-cream-200 bg-cream-50"
+                }`}
+              >
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-soil-900">{season.name}</span>
+                    <span className="text-sm text-soil-600">{String(season.year)}</span>
+                    {season.isActive && <Badge variant="success">Active</Badge>}
+                  </div>
+                  <p className="text-xs text-soil-500">
+                    {season.startDate} &ndash; {season.endDate}
+                  </p>
+                </div>
+                {!season.isActive && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => void handleSetActive(season.id)}
+                  >
+                    Set Active
+                  </Button>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </Card>
 

@@ -81,6 +81,7 @@ async function createEntry(
     body: "Test entry",
     photoIds: [],
     isMilestone: false,
+    seasonId: "00000000-0000-0000-0000-000000000099",
     ...overrides,
   });
   addToIndex(entry);

@@ -6,6 +6,7 @@ import { formatDistanceToNow, startOfWeek, startOfMonth } from "date-fns";
 import * as journalRepository from "../db/repositories/journalRepository";
 import * as plantRepository from "../db/repositories/plantRepository";
 import * as photoRepository from "../db/repositories/photoRepository";
+import * as seasonRepository from "../db/repositories/seasonRepository";
 import {
   search as searchIndex,
   loadIndex,
@@ -300,12 +301,16 @@ function AddEntryFab() {
 export default function JournalPage() {
   const allEntries = useLiveQuery(() => journalRepository.getAll());
   const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const allSeasons = useLiveQuery(() => seasonRepository.getAll());
+  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
 
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
   const [activityFilter, setActivityFilter] = useState<ActivityType | "">("");
   const [plantFilter, setPlantFilter] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>("all");
+  // null = user hasn't interacted yet, use active season; "" = "All Seasons"; string = specific season
+  const [seasonFilter, setSeasonFilter] = useState<string | null>(null);
   const [indexReady, setIndexReady] = useState(false);
 
   // Detail overlay
@@ -316,6 +321,10 @@ export default function JournalPage() {
   // List container height
   const [listHeight, setListHeight] = useState(400);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Derive effective season filter: default to active season until user interacts
+  const effectiveSeasonFilter =
+    seasonFilter === null ? (activeSeason?.id ?? "") : seasonFilter;
 
   // Load search index on mount
   useEffect(() => {
@@ -380,6 +389,11 @@ export default function JournalPage() {
       );
     }
 
+    // Season filter
+    if (effectiveSeasonFilter) {
+      results = results.filter((e) => e.seasonId === effectiveSeasonFilter);
+    }
+
     // Date range filter
     if (dateRange === "week") {
       const weekStart = startOfWeek(new Date());
@@ -399,6 +413,7 @@ export default function JournalPage() {
     debouncedQuery,
     activityFilter,
     plantFilter,
+    effectiveSeasonFilter,
     dateRange,
     indexReady,
   ]);
@@ -459,6 +474,21 @@ export default function JournalPage() {
 
         {/* Filters */}
         <div className="mt-3 flex flex-wrap items-center gap-2">
+          {/* Season filter */}
+          <select
+            value={effectiveSeasonFilter}
+            onChange={(e) => setSeasonFilter(e.target.value)}
+            className={selectClass}
+            aria-label="Filter by season"
+          >
+            <option value="">All Seasons</option>
+            {allSeasons?.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+
           {/* Plant filter */}
           <select
             value={plantFilter}

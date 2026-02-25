@@ -7,6 +7,7 @@ import { db } from "../db/schema.ts";
 import * as journalRepository from "../db/repositories/journalRepository.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
 import * as gardenBedRepository from "../db/repositories/gardenBedRepository.ts";
+import * as seasonRepository from "../db/repositories/seasonRepository.ts";
 import { _resetIndex } from "../db/search.ts";
 import JournalEntryFormPage from "./JournalEntryFormPage.tsx";
 
@@ -37,6 +38,15 @@ beforeEach(async () => {
   await db.open();
   _resetIndex();
   vi.clearAllMocks();
+
+  // Seed an active season (migration only runs on upgrade, not fresh DB)
+  await seasonRepository.create({
+    name: "2026 Growing Season",
+    year: 2026,
+    startDate: "2026-01-01",
+    endDate: "2026-12-31",
+    isActive: true,
+  });
 });
 
 function renderPage() {

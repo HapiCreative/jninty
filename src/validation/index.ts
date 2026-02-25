@@ -37,6 +37,13 @@ export { gardenBedSchema, bedTypeSchema } from "./gardenBed.schema.ts";
 export type { BedType, GardenBed } from "./gardenBed.schema.ts";
 export { settingsSchema } from "./settings.schema.ts";
 export type { Settings } from "./settings.schema.ts";
+export { seasonSchema } from "./season.schema.ts";
+export type { Season } from "./season.schema.ts";
+export {
+  plantingSchema,
+  plantingOutcomeSchema,
+} from "./planting.schema.ts";
+export type { PlantingOutcome, Planting } from "./planting.schema.ts";
 export { validateEntity } from "./helpers.ts";
 export type {
   ValidationResult,

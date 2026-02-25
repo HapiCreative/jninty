@@ -10,6 +10,7 @@ beforeEach(async () => {
 
 const baseEntry = {
   activityType: "general" as const,
+  seasonId: "00000000-0000-0000-0000-000000000099",
   body: "Noticed some new growth on the tomato.",
   photoIds: [] as string[],
   isMilestone: false,

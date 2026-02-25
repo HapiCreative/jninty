@@ -21,6 +21,11 @@ export type {
 } from "../validation/task.schema.ts";
 export type { BedType, GardenBed } from "../validation/gardenBed.schema.ts";
 export type { Settings } from "../validation/settings.schema.ts";
+export type { Season } from "../validation/season.schema.ts";
+export type {
+  PlantingOutcome,
+  Planting,
+} from "../validation/planting.schema.ts";
 
 // SunExposure is not yet used by any Phase 1 entity schema,
 // but exported for Phase 2 readiness.

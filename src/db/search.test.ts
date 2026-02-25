@@ -46,6 +46,7 @@ function makeJournal(
     version: 1,
     createdAt: timestamp,
     updatedAt: timestamp,
+    seasonId: "00000000-0000-0000-0000-000000000099",
     activityType: "general",
     body: "Noticed some new growth today.",
     photoIds: [],

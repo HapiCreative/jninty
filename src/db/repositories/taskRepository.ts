@@ -156,3 +156,11 @@ export async function getByPlantId(
       r.deletedAt == null && r.plantInstanceId === plantInstanceId,
   );
 }
+
+export async function getBySeasonId(seasonId: string): Promise<Task[]> {
+  const records = await db.tasks
+    .where("seasonId")
+    .equals(seasonId)
+    .toArray();
+  return records.filter((r) => r.deletedAt == null);
+}
