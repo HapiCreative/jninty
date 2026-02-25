@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  /* Jninty color palette — warm & organic */
+  --color-green-900: #1a3a0a;
+  --color-green-800: #2D5016;
+  --color-green-700: #3d6b1e;
+  --color-green-600: #4d8626;
+  --color-green-500: #5da02e;
+  --color-green-400: #7dbf4e;
+  --color-green-300: #a3d67a;
+  --color-green-200: #c5e8a8;
+  --color-green-100: #e3f5d0;
+  --color-green-50: #f2fae8;
+
+  --color-cream-50: #FFFDF7;
+  --color-cream-100: #FDF6EC;
+  --color-cream-200: #F5EBDA;
+  --color-cream-300: #EDE0C8;
+
+  --color-brown-900: #3b2506;
+  --color-brown-800: #5c3a0e;
+  --color-brown-700: #7d4f16;
+  --color-brown-600: #9e641e;
+  --color-brown-500: #b87a2a;
+  --color-brown-400: #d49a4e;
+  --color-brown-300: #e4bb7e;
+  --color-brown-200: #f0d6aa;
+  --color-brown-100: #f8ebd0;
+  --color-brown-50: #fdf5e8;
+
+  --color-terracotta-600: #b84c2a;
+  --color-terracotta-500: #d4623a;
+  --color-terracotta-400: #e8825a;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-cream-100);
+  color: var(--color-green-900);
+}
