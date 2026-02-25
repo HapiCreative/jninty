@@ -84,7 +84,7 @@ export async function exportAll(): Promise<Blob> {
     exportVersion: EXPORT_VERSION,
     schemaVersion: SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
-    appVersion: "0.1.0",
+    appVersion: __APP_VERSION__,
   };
   zip.file("manifest.json", JSON.stringify(manifest, null, 2));
 
@@ -107,27 +107,19 @@ export async function exportAll(): Promise<Blob> {
       db.gardenBeds
         .toArray()
         .then((rows) => rows.filter((r) => r.deletedAt == null)),
-      db.photos.toArray(),
+      db.photos
+        .toArray()
+        .then((rows) => rows.filter((r) => r.deletedAt == null)),
     ]);
 
-  // Settings (single record, id = "singleton")
+  // Settings (single record, id = "singleton") — strip Dexie wrapper `id`
   const settingsRecord = await db.settings.get("singleton");
   const settingsArray = settingsRecord
     ? [
-        {
-          growingZone: settingsRecord.growingZone,
-          lastFrostDate: settingsRecord.lastFrostDate,
-          firstFrostDate: settingsRecord.firstFrostDate,
-          gridUnit: settingsRecord.gridUnit,
-          temperatureUnit: settingsRecord.temperatureUnit,
-          ...(settingsRecord.gardenName != null
-            ? { gardenName: settingsRecord.gardenName }
-            : {}),
-          theme: settingsRecord.theme,
-          keepOriginalPhotos: settingsRecord.keepOriginalPhotos,
-          dbSchemaVersion: settingsRecord.dbSchemaVersion,
-          exportVersion: settingsRecord.exportVersion,
-        },
+        (() => {
+          const { id: _, ...settings } = settingsRecord;
+          return settings;
+        })(),
       ]
     : [];
 

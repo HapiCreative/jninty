@@ -2,7 +2,15 @@ import "fake-indexeddb/auto";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import JSZip from "jszip";
 import { db } from "../db/schema.ts";
-import { exportAll, importFromZip, type ExportManifest } from "./exporter.ts";
+import {
+  exportAll,
+  importFromZip,
+  triggerDownload,
+  type ExportManifest,
+} from "./exporter.ts";
+import { saveAs } from "file-saver";
+
+vi.mock("file-saver", () => ({ saveAs: vi.fn() }));
 
 // ─── DB setup ───
 
@@ -179,7 +187,7 @@ describe("exportAll", () => {
     expect(manifest).toMatchObject({
       exportVersion: 1,
       schemaVersion: 1,
-      appVersion: "0.1.0",
+      appVersion: "0.0.0-test",
     });
     expect(
       (manifest as ExportManifest).exportedAt,
@@ -463,5 +471,15 @@ describe("importFromZip", () => {
 
     expect(result.valid).toBe(false);
     expect(result.errors[0]).toContain("Invalid manifest");
+  });
+});
+
+// ─── triggerDownload ───
+
+describe("triggerDownload", () => {
+  it("calls saveAs with blob and filename", () => {
+    const blob = new Blob(["test"]);
+    triggerDownload(blob, "export.zip");
+    expect(saveAs).toHaveBeenCalledWith(blob, "export.zip");
   });
 });
