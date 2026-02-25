@@ -9,6 +9,7 @@ import JournalEntryFormPage from "./pages/JournalEntryFormPage";
 import TasksPage from "./pages/TasksPage";
 import SettingsPage from "./pages/SettingsPage";
 import QuickLogPage from "./pages/QuickLogPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="tasks" element={<TasksPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="quick-log" element={<QuickLogPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

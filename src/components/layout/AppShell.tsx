@@ -347,6 +347,7 @@ export default function AppShell() {
         {/* Quick Log — center prominent button */}
         <button
           onClick={() => navigate("/quick-log")}
+          aria-label="Quick Log"
           className="-mt-4 flex flex-col items-center"
         >
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-terracotta-500 shadow-lg transition-transform active:scale-95">
