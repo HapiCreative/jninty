@@ -122,6 +122,29 @@ export async function getOverdue(): Promise<Task[]> {
   return records.filter((r) => r.deletedAt == null && !r.isCompleted);
 }
 
+export async function getAll(): Promise<Task[]> {
+  const records = await db.tasks.toArray();
+  return records.filter((r) => r.deletedAt == null);
+}
+
+export async function uncomplete(id: string): Promise<Task> {
+  const existing = await db.tasks.get(id);
+  if (!existing || existing.deletedAt != null) {
+    throw new Error(`Task not found: ${id}`);
+  }
+
+  const { completedAt: _, ...rest } = existing;
+  const updated = taskSchema.parse({
+    ...rest,
+    isCompleted: false,
+    version: existing.version + 1,
+    updatedAt: now(),
+  });
+
+  await db.tasks.put(updated);
+  return updated;
+}
+
 // Full table scan — plantInstanceId is not indexed for tasks per design doc
 // section 5.5. Acceptable for Phase 1 dataset sizes; add an index if needed.
 export async function getByPlantId(
