@@ -123,7 +123,7 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-2xl space-y-6 p-4">
+      <div className="mx-auto max-w-2xl space-y-6 p-4" role="status" aria-label="Loading settings">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-48 w-full" />
         <Skeleton className="h-36 w-full" />

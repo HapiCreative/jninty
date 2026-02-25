@@ -420,7 +420,7 @@ export default function JournalPage() {
   // Loading state
   if (allEntries === undefined) {
     return (
-      <div className="mx-auto max-w-3xl p-4">
+      <div className="mx-auto max-w-3xl p-4" role="status" aria-label="Loading journal">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="mt-4 h-10 w-full" />
         <div className="mt-4 space-y-2">

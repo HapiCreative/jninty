@@ -121,7 +121,7 @@ export default function PlantsListPage() {
 
   if (allPlants === undefined) {
     return (
-      <div className="mx-auto max-w-5xl p-4">
+      <div className="mx-auto max-w-5xl p-4" role="status" aria-label="Loading plants">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="mt-4 h-10 w-full" />
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

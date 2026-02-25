@@ -488,7 +488,7 @@ export default function TasksPage() {
   // Loading state
   if (allTasks === undefined) {
     return (
-      <div className="mx-auto max-w-2xl p-4">
+      <div className="mx-auto max-w-2xl p-4" role="status" aria-label="Loading tasks">
         <Skeleton className="h-8 w-24" />
         <div className="mt-4 space-y-2">
           {[1, 2, 3].map((i) => (

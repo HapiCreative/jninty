@@ -76,7 +76,7 @@ export default function DashboardPage() {
     recentEntries === undefined
   ) {
     return (
-      <div className="mx-auto max-w-2xl space-y-4 p-4">
+      <div className="mx-auto max-w-2xl space-y-4 p-4" role="status" aria-label="Loading dashboard">
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-6 w-40" />
         <Skeleton className="h-16 w-full" />

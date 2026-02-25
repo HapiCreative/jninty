@@ -146,7 +146,7 @@ export default function PlantDetailPage() {
 
   if (plant === undefined) {
     return (
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-2xl" role="status" aria-label="Loading plant details">
         <Skeleton className="aspect-[16/9] w-full rounded-none" />
         <div className="space-y-4 p-4">
           <Skeleton className="h-8 w-3/4" />

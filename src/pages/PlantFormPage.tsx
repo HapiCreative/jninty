@@ -258,7 +258,7 @@ export default function PlantFormPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-2xl p-4">
+      <div className="mx-auto max-w-2xl p-4" role="status" aria-label="Loading form">
         <Skeleton className="h-8 w-40" />
         <div className="mt-6 space-y-6">
           <Skeleton className="h-48 w-full" />

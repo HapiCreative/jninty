@@ -17,23 +17,23 @@ export default function App() {
   return (
     <SettingsProvider>
       <ToastProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="plants" element={<PlantsListPage />} />
-            <Route path="plants/new" element={<PlantFormPage />} />
-            <Route path="plants/:id" element={<PlantDetailPage />} />
-            <Route path="plants/:id/edit" element={<PlantFormPage />} />
-            <Route path="journal" element={<JournalPage />} />
-            <Route path="journal/new" element={<JournalEntryFormPage />} />
-            <Route path="tasks" element={<TasksPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="quick-log" element={<QuickLogPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="plants" element={<PlantsListPage />} />
+              <Route path="plants/new" element={<PlantFormPage />} />
+              <Route path="plants/:id" element={<PlantDetailPage />} />
+              <Route path="plants/:id/edit" element={<PlantFormPage />} />
+              <Route path="journal" element={<JournalPage />} />
+              <Route path="journal/new" element={<JournalEntryFormPage />} />
+              <Route path="tasks" element={<TasksPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="quick-log" element={<QuickLogPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </ToastProvider>
     </SettingsProvider>
   );

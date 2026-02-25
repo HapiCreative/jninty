@@ -75,7 +75,7 @@ function ToastCard({
 
   return (
     <div
-      role="status"
+      role={item.variant === "error" ? "alert" : "status"}
       className={`pointer-events-auto animate-[slideUp_0.2s_ease-out] rounded-lg px-4 py-2.5 text-sm font-medium shadow-lg ${variantClasses[item.variant]}`}
     >
       {item.message}
