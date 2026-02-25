@@ -136,6 +136,23 @@ function EntryDetail({
     };
   }, [entry.photoIds]);
 
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  // Prevent body scroll while overlay is open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   const timeAgo = formatDistanceToNow(new Date(entry.createdAt), {
     addSuffix: true,
   });

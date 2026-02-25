@@ -200,7 +200,7 @@ export default function JournalEntryFormPage() {
       <div className="flex items-center gap-3">
         <button
           type="button"
-          onClick={() => void navigate("/journal")}
+          onClick={() => void navigate(-1)}
           className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
           aria-label="Go back"
         >
@@ -416,7 +416,7 @@ export default function JournalEntryFormPage() {
           {photoPreviews.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-2">
               {photoPreviews.map((url, i) => (
-                <div key={i} className="relative">
+                <div key={url} className="relative">
                   <img
                     src={url}
                     alt={`Photo ${i + 1}`}
@@ -443,7 +443,7 @@ export default function JournalEntryFormPage() {
               disabled={isProcessing}
               onClick={() => void handlePhoto(capturePhoto)}
             >
-              <CameraIcon className="mr-1.5 h-4 w-4" />
+              <CameraIcon className="-ml-0.5 mr-1.5 h-4 w-4" />
               {isProcessing ? "Processing..." : "Take Photo"}
             </Button>
             <Button
@@ -452,7 +452,7 @@ export default function JournalEntryFormPage() {
               disabled={isProcessing}
               onClick={() => void handlePhoto(selectPhoto)}
             >
-              <ImageIcon className="mr-1.5 h-4 w-4" />
+              <ImageIcon className="-ml-0.5 mr-1.5 h-4 w-4" />
               {isProcessing ? "Processing..." : "Choose"}
             </Button>
           </div>

@@ -59,11 +59,23 @@ export default function QuickLogPage() {
 
   // Cleanup preview URL on unmount
   useEffect(() => {
+    const ref = previewUrlRef;
     return () => {
-      if (previewUrlRef.current) {
-        URL.revokeObjectURL(previewUrlRef.current);
+      if (ref.current) {
+        URL.revokeObjectURL(ref.current);
       }
     };
+  }, []);
+
+  // Auto-launch camera on mount for 3-tap speed
+  const autoLaunched = useRef(false);
+  useEffect(() => {
+    if (autoLaunched.current) return;
+    autoLaunched.current = true;
+    void handlePhoto(capturePhoto).catch(() => {
+      // Camera dismissed or unavailable — user can tap manually
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ─── Photo handlers ───
