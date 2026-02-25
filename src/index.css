@@ -33,11 +33,19 @@
   --color-terracotta-500: #d4623a;
   --color-terracotta-400: #e8825a;
 
+  --color-soil-900: #1c1108;
+  --color-soil-800: #2e1d0e;
+  --color-soil-700: #3f2914;
+  --color-soil-600: #51351a;
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
   background-color: var(--color-cream-100);
-  color: var(--color-green-900);
+  color: var(--color-soil-900);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
