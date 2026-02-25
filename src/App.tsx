@@ -14,6 +14,7 @@ import SeedBankPage from "./pages/SeedBankPage";
 import SeedDetailPage from "./pages/SeedDetailPage";
 import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
+import PlantingCalendarPage from "./pages/PlantingCalendarPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
               <Route path="seeds/new" element={<SeedFormPage />} />
               <Route path="seeds/:id" element={<SeedDetailPage />} />
               <Route path="seeds/:id/edit" element={<SeedFormPage />} />
+              <Route path="calendar" element={<PlantingCalendarPage />} />
               <Route path="tasks" element={<TasksPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="quick-log" element={<QuickLogPage />} />

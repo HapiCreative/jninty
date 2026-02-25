@@ -179,7 +179,7 @@ const primaryNav: NavItem[] = [
   { to: "/", label: "Home", icon: HomeIcon },
   { to: "/plants", label: "Plants", icon: PlantIcon },
   // Quick Log is rendered separately (center prominent button)
-  { to: "/calendar", label: "Calendar", icon: CalendarIcon, disabled: true },
+  { to: "/calendar", label: "Calendar", icon: CalendarIcon },
   { to: "/map", label: "Map", icon: MapIcon, disabled: true },
 ];
 
