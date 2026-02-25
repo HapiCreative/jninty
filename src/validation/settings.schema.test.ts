@@ -6,6 +6,7 @@ const validSettings = {
   growingZone: "7b",
   lastFrostDate: "2026-04-15",
   firstFrostDate: "2026-10-20",
+  gridUnit: "feet" as const,
   temperatureUnit: "fahrenheit" as const,
   theme: "light" as const,
   keepOriginalPhotos: false,

@@ -5,6 +5,7 @@ export const settingsSchema = z
     growingZone: z.string().min(1),
     lastFrostDate: z.string().date(),
     firstFrostDate: z.string().date(),
+    gridUnit: z.enum(["feet", "meters"]),
     temperatureUnit: z.enum(["fahrenheit", "celsius"]),
     gardenName: z.string().min(1).optional(),
     theme: z.enum(["light", "dark", "auto"]),
