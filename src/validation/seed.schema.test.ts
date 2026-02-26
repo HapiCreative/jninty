@@ -43,14 +43,12 @@ describe("seedSchema", () => {
   });
 
   it("rejects missing name", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { name: _, ...noName } = validSeed;
     const result = seedSchema.safeParse(noName);
     expect(result.success).toBe(false);
   });
 
   it("rejects missing species", () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { species: _, ...noSpecies } = validSeed;
     const result = seedSchema.safeParse(noSpecies);
     expect(result.success).toBe(false);
