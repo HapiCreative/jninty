@@ -25,6 +25,15 @@ import type {
 import { useSettings } from "../hooks/useSettings";
 import { useActiveSeason } from "../hooks/useActiveSeason";
 import Button from "../components/ui/Button";
+import {
+  analyzeBedCompanions,
+  getPlantTokenStatuses,
+} from "../services/companionAnalysis.ts";
+import type {
+  PlantTokenStatus,
+  CompanionReport,
+} from "../services/companionAnalysis.ts";
+import CompanionReportSection from "../components/garden/CompanionReportSection.tsx";
 
 // ── Constants ──
 
@@ -130,10 +139,16 @@ function PlantTokens({
   bed,
   plantings,
   plants,
+  companionStatuses,
+  onTokenHover,
+  onTokenLeave,
 }: {
   bed: GardenBed;
   plantings: Planting[];
   plants: Map<string, PlantInstance>;
+  companionStatuses?: Map<string, PlantTokenStatus> | undefined;
+  onTokenHover?: ((x: number, y: number, messages: string[]) => void) | undefined;
+  onTokenLeave?: (() => void) | undefined;
 }) {
   const bedPx = {
     x: gridToPx(bed.gridX),
@@ -164,17 +179,50 @@ function PlantTokens({
           ? PLANT_TOKEN_COLORS[plant.type] ?? PLANT_TOKEN_COLORS["other"]!
           : PLANT_TOKEN_COLORS["other"]!;
 
+        const tokenStatus = plant
+          ? companionStatuses?.get(plant.id)
+          : undefined;
+        const hasStatus = tokenStatus && tokenStatus.status !== "neutral";
+        const ringColor =
+          tokenStatus?.status === "bad" ? "#dc2626" : "#16a34a";
+
         return (
-          <Circle
-            key={planting.id}
-            x={cx}
-            y={cy}
-            radius={tokenRadius}
-            fill={color}
-            stroke="#fff"
-            strokeWidth={1.5}
-            listening={false}
-          />
+          <Group key={planting.id}>
+            {hasStatus && (
+              <Circle
+                x={cx}
+                y={cy}
+                radius={tokenRadius + 2.5}
+                fill="transparent"
+                stroke={ringColor}
+                strokeWidth={2}
+                listening={false}
+              />
+            )}
+            <Circle
+              x={cx}
+              y={cy}
+              radius={tokenRadius}
+              fill={color}
+              stroke="#fff"
+              strokeWidth={1.5}
+              listening={!!hasStatus}
+              onMouseEnter={(e) => {
+                if (hasStatus && onTokenHover) {
+                  const stage = e.target.getStage();
+                  const pos = stage?.getPointerPosition();
+                  onTokenHover(
+                    pos?.x ?? cx,
+                    pos?.y ?? cy,
+                    tokenStatus.messages,
+                  );
+                }
+              }}
+              onMouseLeave={() => {
+                onTokenLeave?.();
+              }}
+            />
+          </Group>
         );
       })}
       {overflow > 0 && (
@@ -200,6 +248,8 @@ function BedDetailPanel({
   plants,
   unit,
   hasActiveSeason,
+  companionReport,
+  companionStatuses,
   onClose,
   onDelete,
   onQuickLog,
@@ -212,6 +262,8 @@ function BedDetailPanel({
   plants: Map<string, PlantInstance>;
   unit: string;
   hasActiveSeason: boolean;
+  companionReport: CompanionReport;
+  companionStatuses: Map<string, PlantTokenStatus>;
   onClose: () => void;
   onDelete: () => void;
   onQuickLog: () => void;
@@ -466,10 +518,21 @@ function BedDetailPanel({
                 <ul className="space-y-1.5">
                   {bedPlantings.map((planting) => {
                     const plant = plants.get(planting.plantInstanceId);
+                    const tokenStatus = plant
+                      ? companionStatuses.get(plant.id)
+                      : undefined;
+                    const statusDotColor =
+                      tokenStatus?.status === "bad"
+                        ? "#dc2626"
+                        : tokenStatus?.status === "good"
+                          ? "#16a34a"
+                          : undefined;
+                    const tooltipText = tokenStatus?.messages.join("; ");
                     return (
                       <li
                         key={planting.id}
                         className="group flex items-center gap-2 rounded-md bg-cream-50 px-2.5 py-1.5 text-sm"
+                        title={tooltipText}
                       >
                         <span
                           className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
@@ -485,6 +548,12 @@ function BedDetailPanel({
                             plant?.species ??
                             "Unknown plant"}
                         </span>
+                        {statusDotColor && (
+                          <span
+                            className="inline-block h-2 w-2 flex-shrink-0 rounded-full"
+                            style={{ backgroundColor: statusDotColor }}
+                          />
+                        )}
                         <button
                           onClick={() => onRemovePlant(planting.id)}
                           className="rounded p-0.5 text-soil-300 opacity-0 transition-opacity hover:text-terracotta-500 group-hover:opacity-100"
@@ -506,6 +575,9 @@ function BedDetailPanel({
                 </ul>
               )}
             </div>
+
+            {/* Companion planting report */}
+            <CompanionReportSection report={companionReport} />
           </>
         )}
       </div>
@@ -799,6 +871,11 @@ export default function GardenMapPage() {
     gridWidth: number;
     gridHeight: number;
   } | null>(null);
+  const [tooltip, setTooltip] = useState<{
+    x: number;
+    y: number;
+    messages: string[];
+  } | null>(null);
 
   // Refs for drawing — avoids stale closure in mouseUp when mouseDown
   // state hasn't been committed yet (React batches updates)
@@ -825,6 +902,25 @@ export default function GardenMapPage() {
     }
     return map;
   }, [rawPlants]);
+
+  const allCompanionData = useMemo(() => {
+    const statuses = new Map<string, Map<string, PlantTokenStatus>>();
+    const reports = new Map<string, CompanionReport>();
+    for (const bed of beds) {
+      const report = analyzeBedCompanions(bed.id, allPlantings, plantsMap);
+      const bedStatuses = getPlantTokenStatuses(
+        bed.id,
+        allPlantings,
+        plantsMap,
+        report,
+      );
+      reports.set(bed.id, report);
+      if (bedStatuses.size > 0) {
+        statuses.set(bed.id, bedStatuses);
+      }
+    }
+    return { statuses, reports };
+  }, [beds, allPlantings, plantsMap]);
 
   const selectedBed = beds.find((b) => b.id === selectedBedId);
 
@@ -1019,6 +1115,19 @@ export default function GardenMapPage() {
     },
     [selectedBedId],
   );
+
+  // ── Companion token hover ──
+
+  const handleTokenHover = useCallback(
+    (x: number, y: number, messages: string[]) => {
+      setTooltip({ x, y, messages });
+    },
+    [],
+  );
+
+  const handleTokenLeave = useCallback(() => {
+    setTooltip(null);
+  }, []);
 
   // ── Transformer / resize ──
 
@@ -1235,6 +1344,9 @@ export default function GardenMapPage() {
                       bed={bed}
                       plantings={allPlantings}
                       plants={plantsMap}
+                      companionStatuses={allCompanionData.statuses.get(bed.id)}
+                      onTokenHover={handleTokenHover}
+                      onTokenLeave={handleTokenLeave}
                     />
                   </Group>
                 );
@@ -1259,6 +1371,21 @@ export default function GardenMapPage() {
           </Stage>
         </div>
 
+        {/* Companion tooltip overlay */}
+        {tooltip && (
+          <div
+            className="pointer-events-none absolute z-30 max-w-48 rounded-md bg-soil-800 px-2.5 py-1.5 text-xs text-white shadow-lg"
+            style={{
+              left: tooltip.x + 12,
+              top: tooltip.y - 8,
+            }}
+          >
+            {tooltip.messages.map((msg, i) => (
+              <div key={i}>{msg}</div>
+            ))}
+          </div>
+        )}
+
         {/* Bed detail sidebar */}
         {selectedBed && (
           <BedDetailPanel
@@ -1267,6 +1394,16 @@ export default function GardenMapPage() {
             plants={plantsMap}
             unit={settings.gridUnit === "feet" ? "ft" : "m"}
             hasActiveSeason={activeSeason != null}
+            companionReport={
+              allCompanionData.reports.get(selectedBed.id) ?? {
+                goodPairings: [],
+                badPairings: [],
+                suggestions: [],
+              }
+            }
+            companionStatuses={
+              allCompanionData.statuses.get(selectedBed.id) ?? new Map()
+            }
             onClose={() => setSelectedBedId(null)}
             onDelete={() => void handleDeleteBed()}
             onQuickLog={() =>
