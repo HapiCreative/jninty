@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { Stage, Layer, Rect, Text, Group, Line, Circle } from "react-konva";
 import type Konva from "konva";
@@ -24,6 +23,7 @@ import type {
   PlantType,
 } from "../validation/plantInstance.schema.ts";
 import { useSettings } from "../hooks/useSettings";
+import { useActiveSeason } from "../hooks/useActiveSeason";
 import Button from "../components/ui/Button";
 
 // ── Constants ──
@@ -199,17 +199,23 @@ function BedDetailPanel({
   plantings,
   plants,
   unit,
+  hasActiveSeason,
   onClose,
   onDelete,
   onQuickLog,
+  onAssignPlant,
+  onRemovePlant,
 }: {
   bed: GardenBed;
   plantings: Planting[];
   plants: Map<string, PlantInstance>;
   unit: string;
+  hasActiveSeason: boolean;
   onClose: () => void;
   onDelete: () => void;
   onQuickLog: () => void;
+  onAssignPlant: () => void;
+  onRemovePlant: (plantingId: string) => void;
 }) {
   const bedPlantings = plantings.filter((p) => p.bedId === bed.id);
 
@@ -267,9 +273,33 @@ function BedDetailPanel({
         </dl>
 
         <div className="mt-5">
-          <h4 className="mb-2 text-sm font-medium text-soil-600">
-            Plants in this bed ({bedPlantings.length})
-          </h4>
+          <div className="mb-2 flex items-center justify-between">
+            <h4 className="text-sm font-medium text-soil-600">
+              Plants ({bedPlantings.length})
+            </h4>
+            {hasActiveSeason && (
+              <button
+                onClick={onAssignPlant}
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-50 transition-colors"
+              >
+                <svg
+                  className="h-3.5 w-3.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Assign Plant
+              </button>
+            )}
+          </div>
+          {!hasActiveSeason && (
+            <p className="mb-2 text-xs text-terracotta-500">
+              Create an active season in Settings to assign plants.
+            </p>
+          )}
           {bedPlantings.length === 0 ? (
             <p className="text-sm text-soil-400">No plants assigned yet.</p>
           ) : (
@@ -279,10 +309,10 @@ function BedDetailPanel({
                 return (
                   <li
                     key={planting.id}
-                    className="flex items-center gap-2 rounded-md bg-cream-50 px-2.5 py-1.5 text-sm"
+                    className="group flex items-center gap-2 rounded-md bg-cream-50 px-2.5 py-1.5 text-sm"
                   >
                     <span
-                      className="inline-block h-2.5 w-2.5 rounded-full"
+                      className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
                       style={{
                         backgroundColor: plant
                           ? PLANT_TOKEN_COLORS[plant.type] ??
@@ -290,9 +320,24 @@ function BedDetailPanel({
                           : PLANT_TOKEN_COLORS["other"],
                       }}
                     />
-                    <span className="text-soil-900">
+                    <span className="flex-1 text-soil-900">
                       {plant?.nickname ?? plant?.species ?? "Unknown plant"}
                     </span>
+                    <button
+                      onClick={() => onRemovePlant(planting.id)}
+                      className="rounded p-0.5 text-soil-300 opacity-0 transition-opacity hover:text-terracotta-500 group-hover:opacity-100"
+                      aria-label={`Remove ${plant?.nickname ?? plant?.species ?? "plant"} from bed`}
+                    >
+                      <svg
+                        className="h-3.5 w-3.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path d="M18 6L6 18M6 6l12 12" />
+                      </svg>
+                    </button>
                   </li>
                 );
               })}
@@ -443,6 +488,104 @@ function NewBedModal({
   );
 }
 
+// ── Assign plant to bed modal ──
+
+function AssignPlantModal({
+  bed,
+  plantings,
+  plants,
+  onAssign,
+  onClose,
+}: {
+  bed: GardenBed;
+  plantings: Planting[];
+  plants: PlantInstance[];
+  onAssign: (plantInstanceId: string) => void;
+  onClose: () => void;
+}) {
+  const [search, setSearch] = useState("");
+
+  const bedPlantIds = new Set(
+    plantings.filter((p) => p.bedId === bed.id).map((p) => p.plantInstanceId),
+  );
+
+  const availablePlants = plants
+    .filter((p) => !bedPlantIds.has(p.id) && p.status === "active")
+    .filter((p) => {
+      if (!search.trim()) return true;
+      const term = search.toLowerCase();
+      return (
+        p.nickname?.toLowerCase().includes(term) ||
+        p.species.toLowerCase().includes(term) ||
+        p.variety?.toLowerCase().includes(term)
+      );
+    });
+
+  const totalActive = plants.filter((p) => p.status === "active").length;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="flex max-h-[70vh] w-full max-w-sm flex-col rounded-xl bg-white shadow-xl">
+        <div className="p-5 pb-3">
+          <h3 className="mb-3 font-display text-lg font-bold text-green-800">
+            Assign Plant to {bed.name}
+          </h3>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+            placeholder="Search plants..."
+            autoFocus
+          />
+        </div>
+        <div className="flex-1 overflow-y-auto px-5 pb-2">
+          {availablePlants.length === 0 ? (
+            <p className="py-4 text-center text-sm text-soil-400">
+              {totalActive === 0
+                ? "No plants in your inventory yet. Add plants first."
+                : "All active plants are already assigned to this bed."}
+            </p>
+          ) : (
+            <ul className="space-y-1">
+              {availablePlants.map((plant) => (
+                <li key={plant.id}>
+                  <button
+                    onClick={() => onAssign(plant.id)}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-cream-100"
+                  >
+                    <span
+                      className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
+                      style={{
+                        backgroundColor:
+                          PLANT_TOKEN_COLORS[plant.type] ??
+                          PLANT_TOKEN_COLORS["other"],
+                      }}
+                    />
+                    <span className="font-medium text-soil-900">
+                      {plant.nickname ?? plant.species}
+                    </span>
+                    {plant.variety && (
+                      <span className="text-xs text-soil-400">
+                        ({plant.variety})
+                      </span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="border-t border-cream-200 p-4">
+          <Button variant="secondary" onClick={onClose} className="w-full">
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main GardenMapPage ──
 
 export default function GardenMapPage() {
@@ -460,12 +603,18 @@ export default function GardenMapPage() {
   const [drawRect, setDrawRect] = useState<DrawRect | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [showNewBedModal, setShowNewBedModal] = useState(false);
+  const [showAssignPlant, setShowAssignPlant] = useState(false);
   const [pendingDraw, setPendingDraw] = useState<{
     gridX: number;
     gridY: number;
     gridWidth: number;
     gridHeight: number;
   } | null>(null);
+
+  // Refs for drawing — avoids stale closure in mouseUp when mouseDown
+  // state hasn't been committed yet (React batches updates)
+  const isDrawingRef = useRef(false);
+  const drawRectRef = useRef<DrawRect | null>(null);
 
   // Data
   const emptyBeds: GardenBed[] = useMemo(() => [], []);
@@ -477,6 +626,8 @@ export default function GardenMapPage() {
     useLiveQuery(() => plantingRepository.getAll()) ?? emptyPlantings;
   const rawPlants =
     useLiveQuery(() => plantRepository.getAll()) ?? emptyPlants;
+
+  const activeSeason = useActiveSeason();
 
   const plantsMap = useMemo(() => {
     const map = new Map<string, PlantInstance>();
@@ -524,60 +675,67 @@ export default function GardenMapPage() {
       const pos = stage.getPointerPosition();
       if (!pos) return;
 
-      setIsDrawing(true);
-      setDrawRect({
+      const rect: DrawRect = {
         startX: pos.x,
         startY: pos.y,
         endX: pos.x,
         endY: pos.y,
-      });
+      };
+      isDrawingRef.current = true;
+      drawRectRef.current = rect;
+      setIsDrawing(true);
+      setDrawRect(rect);
     },
     [tool],
   );
 
   const handleStageMouseMove = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
-      if (!isDrawing || tool !== "draw") return;
+      if (!isDrawingRef.current || !drawRectRef.current) return;
 
       const stage = e.target.getStage();
       if (!stage) return;
       const pos = stage.getPointerPosition();
       if (!pos) return;
 
-      setDrawRect((prev) =>
-        prev ? { ...prev, endX: pos.x, endY: pos.y } : null,
-      );
+      const updated = { ...drawRectRef.current, endX: pos.x, endY: pos.y };
+      drawRectRef.current = updated;
+      setDrawRect(updated);
     },
-    [isDrawing, tool],
+    [],
   );
 
   const handleStageMouseUp = useCallback(() => {
-    if (!isDrawing || !drawRect) {
+    if (!isDrawingRef.current || !drawRectRef.current) {
+      isDrawingRef.current = false;
+      drawRectRef.current = null;
       setIsDrawing(false);
       setDrawRect(null);
       return;
     }
 
+    const dr = drawRectRef.current;
+    isDrawingRef.current = false;
+    drawRectRef.current = null;
     setIsDrawing(false);
+    setDrawRect(null);
 
-    const gx = snapToGrid(Math.min(drawRect.startX, drawRect.endX));
-    const gy = snapToGrid(Math.min(drawRect.startY, drawRect.endY));
+    const gx = snapToGrid(Math.min(dr.startX, dr.endX));
+    const gy = snapToGrid(Math.min(dr.startY, dr.endY));
     const gw = Math.max(
       1,
-      snapToGrid(Math.abs(drawRect.endX - drawRect.startX)),
+      snapToGrid(Math.abs(dr.endX - dr.startX)),
     );
     const gh = Math.max(
       1,
-      snapToGrid(Math.abs(drawRect.endY - drawRect.startY)),
+      snapToGrid(Math.abs(dr.endY - dr.startY)),
     );
-
-    setDrawRect(null);
 
     if (gw >= 1 && gh >= 1) {
       setPendingDraw({ gridX: gx, gridY: gy, gridWidth: gw, gridHeight: gh });
       setShowNewBedModal(true);
     }
-  }, [isDrawing, drawRect]);
+  }, []);
 
   // ── Bed interaction handlers ──
 
@@ -634,6 +792,25 @@ export default function GardenMapPage() {
     setSelectedBedId(null);
   }, [selectedBedId, beds]);
 
+  // ── Assign / remove plant from bed ──
+
+  const handleAssignPlant = useCallback(
+    async (plantInstanceId: string) => {
+      if (!selectedBedId || !activeSeason) return;
+      await plantingRepository.create({
+        plantInstanceId,
+        seasonId: activeSeason.id,
+        bedId: selectedBedId,
+      });
+      setShowAssignPlant(false);
+    },
+    [selectedBedId, activeSeason],
+  );
+
+  const handleRemovePlant = useCallback(async (plantingId: string) => {
+    await plantingRepository.softDelete(plantingId);
+  }, []);
+
   // ── Transformer / resize ──
 
   const handleTransformEnd = useCallback(
@@ -668,8 +845,16 @@ export default function GardenMapPage() {
     [beds],
   );
 
-  // Stage cursor
+  // Stage cursor — set directly on Konva's container element so it isn't
+  // overridden by the canvas element's inline styles.
   const stageCursor = tool === "draw" ? "crosshair" : "default";
+
+  useEffect(() => {
+    const container = stageRef.current?.container();
+    if (container) {
+      container.style.cursor = stageCursor;
+    }
+  }, [stageCursor]);
 
   return (
     <div className="flex h-full flex-col">
@@ -732,7 +917,13 @@ export default function GardenMapPage() {
           1 square = 1 {settings.gridUnit === "feet" ? "ft" : "m"}
         </span>
 
-        {selectedBed && (
+        {tool === "draw" && (
+          <span className="text-xs font-medium text-green-700">
+            Click and drag on the grid to draw a bed
+          </span>
+        )}
+
+        {selectedBed && tool === "select" && (
           <>
             <div className="h-5 w-px bg-cream-200" />
             <span className="text-sm font-medium text-green-800">
@@ -747,10 +938,9 @@ export default function GardenMapPage() {
         <div
           ref={containerRef}
           className="h-full w-full"
-          style={{ cursor: stageCursor }}
-          onPointerDown={(e: ReactPointerEvent) => {
-            // Prevent text selection while drawing
-            if (tool === "draw") e.preventDefault();
+          style={{
+            cursor: stageCursor,
+            userSelect: tool === "draw" ? "none" : undefined,
           }}
         >
           <Stage
@@ -867,11 +1057,14 @@ export default function GardenMapPage() {
             plantings={allPlantings}
             plants={plantsMap}
             unit={settings.gridUnit === "feet" ? "ft" : "m"}
+            hasActiveSeason={activeSeason != null}
             onClose={() => setSelectedBedId(null)}
             onDelete={() => void handleDeleteBed()}
             onQuickLog={() =>
               navigate(`/quick-log?bedId=${selectedBed.id}`)
             }
+            onAssignPlant={() => setShowAssignPlant(true)}
+            onRemovePlant={(id) => void handleRemovePlant(id)}
           />
         )}
       </div>
@@ -884,6 +1077,17 @@ export default function GardenMapPage() {
             setShowNewBedModal(false);
             setPendingDraw(null);
           }}
+        />
+      )}
+
+      {/* Assign plant modal */}
+      {showAssignPlant && selectedBed && (
+        <AssignPlantModal
+          bed={selectedBed}
+          plantings={allPlantings}
+          plants={rawPlants}
+          onAssign={(plantId) => void handleAssignPlant(plantId)}
+          onClose={() => setShowAssignPlant(false)}
         />
       )}
     </div>
