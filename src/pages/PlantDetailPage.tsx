@@ -10,7 +10,9 @@ import * as plantingRepository from "../db/repositories/plantingRepository";
 import * as seasonRepository from "../db/repositories/seasonRepository";
 import { removeFromIndex, serializeIndex } from "../db/search";
 import { useToast } from "../components/ui/Toast";
-import type { PlantingOutcome } from "../validation/planting.schema";
+import type { Planting, PlantingOutcome } from "../validation/planting.schema";
+import type { Season } from "../validation/season.schema";
+import type { JournalEntry } from "../validation/journalEntry.schema";
 import {
   TYPE_LABELS,
   STATUS_LABELS,
@@ -30,11 +32,15 @@ import {
 } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
+type Tab = "overview" | "season-history";
+
 // ─── Component ───
 
 export default function PlantDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState<Tab>("overview");
 
   // Plant data (reactive)
   const plant = useLiveQuery(
@@ -282,6 +288,38 @@ export default function PlantDetailPage() {
           </div>
         </div>
 
+        {/* Tab bar */}
+        <div className="flex overflow-hidden rounded-lg border border-brown-200">
+          {([
+            { key: "overview" as const, label: "Overview" },
+            { key: "season-history" as const, label: "Season History" },
+          ]).map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === tab.key
+                  ? "bg-green-700 text-cream-50"
+                  : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "season-history" && (
+          <SeasonHistoryTab
+            plantings={plantings ?? []}
+            seasonMap={seasonMap}
+            seasons={seasons ?? []}
+            journalEntries={journalEntries ?? []}
+          />
+        )}
+
+        {activeTab === "overview" && (
+        <>
         {/* Quick Log button */}
         <Link
           to={`/quick-log?plantId=${plant.id}`}
@@ -538,6 +576,8 @@ export default function PlantDetailPage() {
             <p className="mt-3 text-sm text-soil-500">No pending tasks.</p>
           )}
         </Card>
+        </>
+        )}
 
         {/* Action buttons */}
         <div className="flex gap-3">
@@ -613,6 +653,212 @@ export default function PlantDetailPage() {
           onClose={() => setShowLightbox(false)}
         />
       )}
+    </div>
+  );
+}
+
+// ─── Season History Tab ───
+
+const timelineOutcomeColor: Record<string, string> = {
+  thrived: "bg-green-600",
+  ok: "bg-amber-500",
+  failed: "bg-terracotta-500",
+  unknown: "bg-brown-300",
+};
+
+function SeasonHistoryTab({
+  plantings,
+  seasonMap,
+  seasons,
+  journalEntries,
+}: {
+  plantings: Planting[];
+  seasonMap: Map<string, string>;
+  seasons: Season[];
+  journalEntries: JournalEntry[];
+}) {
+  if (plantings.length === 0) {
+    return (
+      <Card>
+        <p className="text-center text-sm text-soil-500">
+          No season history yet.
+        </p>
+      </Card>
+    );
+  }
+
+  // Sort plantings by season year (descending)
+  const seasonYearMap = new Map(seasons.map((s) => [s.id, s.year]));
+  const sorted = [...plantings].sort((a, b) => {
+    const yearA = seasonYearMap.get(a.seasonId) ?? 0;
+    const yearB = seasonYearMap.get(b.seasonId) ?? 0;
+    return yearB - yearA;
+  });
+
+  // Compute timeline bounds across all plantings with dates
+  const datesWithValues = sorted.flatMap((p) => {
+    const dates: number[] = [];
+    if (p.datePlanted) dates.push(parseISO(p.datePlanted).getTime());
+    if (p.dateRemoved) dates.push(parseISO(p.dateRemoved).getTime());
+    return dates;
+  });
+
+  const minTime = datesWithValues.length > 0 ? Math.min(...datesWithValues) : 0;
+  const maxTime = datesWithValues.length > 0 ? Math.max(...datesWithValues) : 0;
+  const timeRange = maxTime - minTime;
+
+  // Group journal entry counts by seasonId
+  const entryCountBySeason = new Map<string, number>();
+  for (const e of journalEntries) {
+    const count = entryCountBySeason.get(e.seasonId) ?? 0;
+    entryCountBySeason.set(e.seasonId, count + 1);
+  }
+
+  // Harvest weight by seasonId
+  const harvestBySeason = new Map<string, number>();
+  for (const e of journalEntries) {
+    if (e.activityType === "harvest" && e.harvestWeight != null) {
+      const total = harvestBySeason.get(e.seasonId) ?? 0;
+      harvestBySeason.set(e.seasonId, total + e.harvestWeight);
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Visual timeline */}
+      {timeRange > 0 && (
+        <Card>
+          <h2 className="font-display text-lg font-semibold text-green-800">
+            Timeline
+          </h2>
+          <div className="mt-3 space-y-2">
+            {sorted.map((p) => {
+              if (!p.datePlanted) return null;
+              const startTime = parseISO(p.datePlanted).getTime();
+              const endTime = p.dateRemoved
+                ? parseISO(p.dateRemoved).getTime()
+                : maxTime;
+              const leftPct = ((startTime - minTime) / timeRange) * 100;
+              const widthPct = Math.max(
+                ((endTime - startTime) / timeRange) * 100,
+                2,
+              );
+              const outcome = p.outcome ?? "unknown";
+              const barColor = timelineOutcomeColor[outcome] ?? "bg-brown-300";
+
+              return (
+                <div key={p.id}>
+                  <div className="flex items-center justify-between text-xs text-soil-600">
+                    <span>{seasonMap.get(p.seasonId) ?? "Unknown"}</span>
+                    <Badge
+                      variant={
+                        outcome === "thrived"
+                          ? "success"
+                          : outcome === "ok"
+                            ? "warning"
+                            : outcome === "failed"
+                              ? "danger"
+                              : "default"
+                      }
+                    >
+                      {outcome}
+                    </Badge>
+                  </div>
+                  <div className="relative mt-1 h-3 w-full rounded-full bg-cream-200">
+                    <div
+                      className={`absolute top-0 h-3 rounded-full ${barColor}`}
+                      style={{
+                        left: `${String(leftPct)}%`,
+                        width: `${String(widthPct)}%`,
+                      }}
+                      title={`${format(parseISO(p.datePlanted), "MMM d, yyyy")}${p.dateRemoved ? ` – ${format(parseISO(p.dateRemoved), "MMM d, yyyy")}` : " – present"}`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+            {/* Timeline axis labels */}
+            <div className="flex justify-between text-[10px] text-soil-400">
+              <span>{format(new Date(minTime), "MMM yyyy")}</span>
+              <span>{format(new Date(maxTime), "MMM yyyy")}</span>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Season details */}
+      <Card>
+        <h2 className="font-display text-lg font-semibold text-green-800">
+          Season Details
+        </h2>
+        <ul className="mt-3 divide-y divide-cream-200">
+          {sorted.map((p) => {
+            const outcome = p.outcome ?? "unknown";
+            const journalCount = entryCountBySeason.get(p.seasonId) ?? 0;
+            const harvestWeight = harvestBySeason.get(p.seasonId) ?? 0;
+
+            return (
+              <li key={p.id} className="py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-soil-900">
+                    {seasonMap.get(p.seasonId) ?? "Unknown Season"}
+                  </span>
+                  <Badge
+                    variant={
+                      outcome === "thrived"
+                        ? "success"
+                        : outcome === "ok"
+                          ? "warning"
+                          : outcome === "failed"
+                            ? "danger"
+                            : "default"
+                    }
+                  >
+                    {outcome}
+                  </Badge>
+                </div>
+                <dl className="mt-1.5 grid grid-cols-2 gap-x-4 gap-y-1">
+                  {p.datePlanted && (
+                    <div className="flex justify-between">
+                      <dt className="text-xs text-soil-400">Planted</dt>
+                      <dd className="text-xs text-soil-600">
+                        {format(parseISO(p.datePlanted), "MMM d, yyyy")}
+                      </dd>
+                    </div>
+                  )}
+                  {p.dateRemoved && (
+                    <div className="flex justify-between">
+                      <dt className="text-xs text-soil-400">Removed</dt>
+                      <dd className="text-xs text-soil-600">
+                        {format(parseISO(p.dateRemoved), "MMM d, yyyy")}
+                      </dd>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <dt className="text-xs text-soil-400">Journal entries</dt>
+                    <dd className="text-xs text-soil-600">{String(journalCount)}</dd>
+                  </div>
+                  {harvestWeight > 0 && (
+                    <div className="flex justify-between">
+                      <dt className="text-xs text-soil-400">Harvest</dt>
+                      <dd className="text-xs text-soil-600">
+                        {harvestWeight >= 1000
+                          ? `${(harvestWeight / 1000).toFixed(1)} kg`
+                          : `${String(Math.round(harvestWeight))} g`}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                {p.notes && (
+                  <p className="mt-1.5 text-xs text-soil-500 line-clamp-2">
+                    {p.notes}
+                  </p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </Card>
     </div>
   );
 }

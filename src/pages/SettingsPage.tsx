@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -659,12 +660,22 @@ export default function SettingsPage() {
           <h2 className="font-display text-lg font-semibold text-green-800">
             Seasons
           </h2>
-          <Button
-            variant="ghost"
-            onClick={() => setShowNewSeason((v) => !v)}
-          >
-            {showNewSeason ? "Cancel" : "New Season"}
-          </Button>
+          <div className="flex items-center gap-2">
+            {seasons && seasons.length >= 2 && (
+              <Link
+                to="/seasons/compare"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-green-700 transition-colors hover:bg-cream-200"
+              >
+                Compare
+              </Link>
+            )}
+            <Button
+              variant="ghost"
+              onClick={() => setShowNewSeason((v) => !v)}
+            >
+              {showNewSeason ? "Cancel" : "New Season"}
+            </Button>
+          </div>
         </div>
 
         {showNewSeason && (

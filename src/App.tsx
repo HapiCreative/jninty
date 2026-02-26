@@ -16,6 +16,7 @@ import SeedDetailPage from "./pages/SeedDetailPage";
 import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
 import PlantingCalendarPage from "./pages/PlantingCalendarPage";
+import SeasonComparisonPage from "./pages/SeasonComparisonPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="seeds/:id" element={<SeedDetailPage />} />
               <Route path="seeds/:id/edit" element={<SeedFormPage />} />
               <Route path="calendar" element={<PlantingCalendarPage />} />
+              <Route path="seasons/compare" element={<SeasonComparisonPage />} />
               <Route
                 path="map"
                 element={
