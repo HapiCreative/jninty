@@ -221,6 +221,24 @@ describe("fetchCurrentWeather", () => {
     // Should not have fetched again — served from cache
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
+
+  it("does not return cached data for different coordinates", async () => {
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        new Response(validApiResponse, { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(validApiResponse, { status: 200 }),
+      );
+
+    await fetchCurrentWeather(45.5, -122.6);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    // Different coordinates should trigger a new fetch
+    await fetchCurrentWeather(40.7, -74.0);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+  });
 });
 
 // ─── Weather snapshot for journal ───

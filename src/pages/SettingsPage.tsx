@@ -7,6 +7,7 @@ import Badge from "../components/ui/Badge";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
 import { useSettings } from "../hooks/useSettings";
+import * as settingsRepository from "../db/repositories/settingsRepository";
 import * as seasonRepository from "../db/repositories/seasonRepository";
 import {
   getStorageUsage,
@@ -83,10 +84,22 @@ export default function SettingsPage() {
   const [locationResults, setLocationResults] = useState<GeoSearchResult[]>([]);
   const [locationSearching, setLocationSearching] = useState(false);
 
+  // Local state for manual coordinate inputs (saved on blur)
+  const [localLat, setLocalLat] = useState("");
+  const [localLon, setLocalLon] = useState("");
+
   // Sync gardenName from settings on load
   useEffect(() => {
     setGardenName(settings.gardenName ?? "");
   }, [settings.gardenName]);
+
+  // Sync lat/lon from settings on load
+  useEffect(() => {
+    setLocalLat(settings.latitude != null ? String(settings.latitude) : "");
+  }, [settings.latitude]);
+  useEffect(() => {
+    setLocalLon(settings.longitude != null ? String(settings.longitude) : "");
+  }, [settings.longitude]);
 
   // Load storage usage
   useEffect(() => {
@@ -99,6 +112,25 @@ export default function SettingsPage() {
     const trimmed = gardenName.trim();
     if (trimmed && trimmed !== (settings.gardenName ?? "")) {
       void updateSettings({ gardenName: trimmed });
+    }
+  };
+
+  const handleLatBlur = () => {
+    const val = parseFloat(localLat);
+    if (!isNaN(val) && val >= -90 && val <= 90 && val !== settings.latitude) {
+      void clearWeatherCache().then(() => updateSettings({ latitude: val }));
+    }
+  };
+
+  const handleLonBlur = () => {
+    const val = parseFloat(localLon);
+    if (
+      !isNaN(val) &&
+      val >= -180 &&
+      val <= 180 &&
+      val !== settings.longitude
+    ) {
+      void clearWeatherCache().then(() => updateSettings({ longitude: val }));
     }
   };
 
@@ -121,6 +153,8 @@ export default function SettingsPage() {
       latitude: result.latitude,
       longitude: result.longitude,
     });
+    setLocalLat(String(result.latitude));
+    setLocalLon(String(result.longitude));
     setLocationResults([]);
     setLocationQuery("");
     toast(`Location set to ${result.name}`, "success");
@@ -128,11 +162,9 @@ export default function SettingsPage() {
 
   const handleClearLocation = async () => {
     await clearWeatherCache();
-    // Remove lat/lon by setting to the full settings object without them
-    const { latitude: _lat, longitude: _lon, ...rest } = settings;
-    void _lat;
-    void _lon;
-    await updateSettings(rest);
+    const updated = await settingsRepository.clearLocation();
+    // Sync the context with the new settings (without lat/lon)
+    await updateSettings(updated);
     toast("Location cleared", "success");
   };
 
@@ -416,15 +448,9 @@ export default function SettingsPage() {
                 min="-90"
                 max="90"
                 placeholder="e.g. 45.5231"
-                value={settings.latitude != null ? String(settings.latitude) : ""}
-                onChange={(e) => {
-                  const val = parseFloat(e.target.value);
-                  if (!isNaN(val) && val >= -90 && val <= 90) {
-                    void clearWeatherCache().then(() =>
-                      updateSettings({ latitude: val }),
-                    );
-                  }
-                }}
+                value={localLat}
+                onChange={(e) => setLocalLat(e.target.value)}
+                onBlur={handleLatBlur}
               />
             </div>
             <div>
@@ -441,15 +467,9 @@ export default function SettingsPage() {
                 min="-180"
                 max="180"
                 placeholder="e.g. -122.6765"
-                value={settings.longitude != null ? String(settings.longitude) : ""}
-                onChange={(e) => {
-                  const val = parseFloat(e.target.value);
-                  if (!isNaN(val) && val >= -180 && val <= 180) {
-                    void clearWeatherCache().then(() =>
-                      updateSettings({ longitude: val }),
-                    );
-                  }
-                }}
+                value={localLon}
+                onChange={(e) => setLocalLon(e.target.value)}
+                onBlur={handleLonBlur}
               />
             </div>
           </div>

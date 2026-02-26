@@ -73,4 +73,39 @@ describe("settingsRepository", () => {
       expect(count).toBe(1);
     });
   });
+
+  describe("clearLocation", () => {
+    it("removes latitude and longitude from settings", async () => {
+      await settingsRepo.update({
+        ...defaultSettings,
+        latitude: 45.5,
+        longitude: -122.6,
+      });
+
+      const cleared = await settingsRepo.clearLocation();
+      expect(cleared.latitude).toBeUndefined();
+      expect(cleared.longitude).toBeUndefined();
+      // Other settings preserved
+      expect(cleared.growingZone).toBe("7b");
+    });
+
+    it("persists the change to the database", async () => {
+      await settingsRepo.update({
+        ...defaultSettings,
+        latitude: 45.5,
+        longitude: -122.6,
+      });
+
+      await settingsRepo.clearLocation();
+      const settings = await settingsRepo.get();
+      expect(settings?.latitude).toBeUndefined();
+      expect(settings?.longitude).toBeUndefined();
+    });
+
+    it("throws if settings not initialized", async () => {
+      await expect(settingsRepo.clearLocation()).rejects.toThrow(
+        "Settings not initialized",
+      );
+    });
+  });
 });

@@ -122,7 +122,12 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const CACHE_KEY = "current";
 
 // In-memory cache for instant reads within a session.
-let memoryCache: { data: WeatherData; fetchedAt: number } | null = null;
+let memoryCache: {
+  data: WeatherData;
+  fetchedAt: number;
+  latitude: number;
+  longitude: number;
+} | null = null;
 
 // ─── Core API function ───
 
@@ -171,9 +176,17 @@ async function fetchFromApi(
 
 // ─── Cache helpers ───
 
-async function readCache(): Promise<WeatherData | null> {
-  // Check memory cache first
-  if (memoryCache && Date.now() - memoryCache.fetchedAt < CACHE_TTL_MS) {
+async function readCache(
+  latitude: number,
+  longitude: number,
+): Promise<WeatherData | null> {
+  // Check memory cache first — must match coordinates
+  if (
+    memoryCache &&
+    memoryCache.latitude === latitude &&
+    memoryCache.longitude === longitude &&
+    Date.now() - memoryCache.fetchedAt < CACHE_TTL_MS
+  ) {
     return memoryCache.data;
   }
 
@@ -182,25 +195,44 @@ async function readCache(): Promise<WeatherData | null> {
     const record = await db.weatherCache.get(CACHE_KEY);
     if (!record) return null;
 
+    const parsed = JSON.parse(record.data) as {
+      weather: WeatherData;
+      latitude: number;
+      longitude: number;
+    };
+
+    // Verify coordinates match
+    if (parsed.latitude !== latitude || parsed.longitude !== longitude) {
+      return null;
+    }
+
     const fetchedAt = new Date(record.fetchedAt).getTime();
     if (Date.now() - fetchedAt >= CACHE_TTL_MS) return null;
 
-    const data = JSON.parse(record.data) as WeatherData;
-    memoryCache = { data, fetchedAt };
-    return data;
+    memoryCache = {
+      data: parsed.weather,
+      fetchedAt,
+      latitude,
+      longitude,
+    };
+    return parsed.weather;
   } catch {
     return null;
   }
 }
 
-async function writeCache(data: WeatherData): Promise<void> {
+async function writeCache(
+  data: WeatherData,
+  latitude: number,
+  longitude: number,
+): Promise<void> {
   const now = Date.now();
-  memoryCache = { data, fetchedAt: now };
+  memoryCache = { data, fetchedAt: now, latitude, longitude };
 
   try {
     await db.weatherCache.put({
       id: CACHE_KEY,
-      data: JSON.stringify(data),
+      data: JSON.stringify({ weather: data, latitude, longitude }),
       fetchedAt: new Date(now).toISOString(),
     });
   } catch {
@@ -219,14 +251,14 @@ export async function fetchCurrentWeather(
   latitude: number,
   longitude: number,
 ): Promise<WeatherData | null> {
-  // Check cache
-  const cached = await readCache();
+  // Check cache (coordinate-aware)
+  const cached = await readCache(latitude, longitude);
   if (cached) return cached;
 
   // Fetch fresh data
   try {
     const data = await fetchFromApi(latitude, longitude);
-    await writeCache(data);
+    await writeCache(data, latitude, longitude);
     return data;
   } catch {
     return null;
