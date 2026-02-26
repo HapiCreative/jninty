@@ -71,7 +71,7 @@ export default function JournalEntryFormPage() {
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const previewUrlsRef = useRef<string[]>([]);
   const { capturePhoto, selectPhoto, isProcessing, error: photoError } =
-    usePhotoCapture();
+    usePhotoCapture({ keepOriginals: settings.keepOriginalPhotos });
 
   // Submission state
   const [saving, setSaving] = useState(false);
@@ -142,10 +142,10 @@ export default function JournalEntryFormPage() {
       // Save photos
       const photoIds: string[] = [];
       for (const p of photos) {
-        const saved = await photoRepository.create({
+        const saved = await photoRepository.createWithFiles({
           thumbnailBlob: p.thumbnailBlob,
           displayBlob: p.displayBlob,
-          originalStored: false,
+          ...(p.originalFile ? { originalFile: p.originalFile } : {}),
           width: p.width,
           height: p.height,
         });

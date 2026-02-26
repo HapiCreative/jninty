@@ -111,9 +111,10 @@ describe("SettingsPage", () => {
     renderSettings();
 
     await waitFor(() => {
-      expect(screen.getByText(/Photos:/)).toBeInTheDocument();
+      expect(screen.getByText(/Thumbnails:/)).toBeInTheDocument();
     });
 
+    expect(screen.getByText(/Display:/)).toBeInTheDocument();
     expect(screen.getByText(/Data:/)).toBeInTheDocument();
     expect(screen.getByText(/Total:/)).toBeInTheDocument();
   });

@@ -7,6 +7,7 @@ export const photoSchema = baseEntitySchema
   .extend({
     thumbnailBlob: blobSchema,
     displayBlob: blobSchema.optional(),
+    displayStoredInOpfs: z.boolean().optional(),
     originalStored: z.boolean(),
     caption: z.string().min(1).optional(),
     width: z.number().int().positive().optional(),

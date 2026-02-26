@@ -5,6 +5,7 @@ import * as plantRepository from "../db/repositories/plantRepository";
 import * as photoRepository from "../db/repositories/photoRepository";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
+import { useSettings } from "../hooks/useSettings";
 import type { ProcessedPhoto } from "../services/photoProcessor";
 import type { PlantType, PlantSource, PlantStatus } from "../types";
 import {
@@ -65,8 +66,9 @@ export default function PlantFormPage() {
   const [newPhotoPreview, setNewPhotoPreview] = useState<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
 
+  const { settings } = useSettings();
   const { capturePhoto, selectPhoto, isProcessing, error: photoError } =
-    usePhotoCapture();
+    usePhotoCapture({ keepOriginals: settings.keepOriginalPhotos });
 
   // Submission state
   const [saving, setSaving] = useState(false);
@@ -180,10 +182,10 @@ export default function PlantFormPage() {
       // Save new photo if one was added
       let photoIds: string[] | undefined;
       if (newPhoto) {
-        const savedPhoto = await photoRepository.create({
+        const savedPhoto = await photoRepository.createWithFiles({
           thumbnailBlob: newPhoto.thumbnailBlob,
           displayBlob: newPhoto.displayBlob,
-          originalStored: false,
+          ...(newPhoto.originalFile ? { originalFile: newPhoto.originalFile } : {}),
           width: newPhoto.width,
           height: newPhoto.height,
         });

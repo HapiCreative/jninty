@@ -12,6 +12,7 @@ export const settingsSchema = z
     longitude: z.number().min(-180).max(180).optional(),
     theme: z.enum(["light", "dark", "auto"]),
     keepOriginalPhotos: z.boolean(),
+    lastExportDate: z.string().datetime().optional(),
     dbSchemaVersion: z.number().int().positive(),
     exportVersion: z.number().int().positive(),
   })

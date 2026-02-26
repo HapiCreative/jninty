@@ -42,12 +42,15 @@ export default function QuickLogPage() {
   const [searchParams] = useSearchParams();
   const plantIdParam = searchParams.get("plantId");
 
+  // Settings (must be before usePhotoCapture which needs keepOriginalPhotos)
+  const { settings } = useSettings();
+
   // Photo state
   const [photo, setPhoto] = useState<ProcessedPhoto | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
   const { capturePhoto, selectPhoto, isProcessing, error: photoError } =
-    usePhotoCapture();
+    usePhotoCapture({ keepOriginals: settings.keepOriginalPhotos });
 
   // Form state
   const [plantId, setPlantId] = useState(plantIdParam ?? "");
@@ -56,9 +59,6 @@ export default function QuickLogPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
-  // Settings for weather capture
-  const { settings } = useSettings();
 
   // Load active plants for dropdown + active season
   const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
@@ -125,10 +125,10 @@ export default function QuickLogPage() {
       // Save photo if captured
       const photoIds: string[] = [];
       if (photo) {
-        const savedPhoto = await photoRepository.create({
+        const savedPhoto = await photoRepository.createWithFiles({
           thumbnailBlob: photo.thumbnailBlob,
           displayBlob: photo.displayBlob,
-          originalStored: false,
+          ...(photo.originalFile ? { originalFile: photo.originalFile } : {}),
           width: photo.width,
           height: photo.height,
         });

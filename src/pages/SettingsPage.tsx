@@ -21,6 +21,12 @@ import {
   clearWeatherCache,
   type GeoSearchResult,
 } from "../services/weather";
+import {
+  isOpfsAvailable,
+  clearDirectory,
+  ORIGINALS_DIR,
+} from "../services/opfsStorage";
+import { db } from "../db/schema";
 
 // ─── Growing zones (USDA 1a–13b) ───
 
@@ -78,6 +84,7 @@ export default function SettingsPage() {
   const [rebuildBusy, setRebuildBusy] = useState(false);
   const [rebuildCount, setRebuildCount] = useState<number | null>(null);
   const [rebuildError, setRebuildError] = useState<string | null>(null);
+  const [clearingOriginals, setClearingOriginals] = useState(false);
 
   // Location search state
   const [locationQuery, setLocationQuery] = useState("");
@@ -175,12 +182,30 @@ export default function SettingsPage() {
       const blob = await exportAll();
       const date = new Date().toISOString().slice(0, 10);
       triggerDownload(blob, `jninty-export-${date}.zip`);
+      await updateSettings({ lastExportDate: new Date().toISOString() });
       toast("Export downloaded!", "success");
     } catch {
       setExportError("Export failed. Please try again.");
       toast("Export failed", "error");
     } finally {
       setExportBusy(false);
+    }
+  };
+
+  const handleClearOriginals = async () => {
+    setClearingOriginals(true);
+    try {
+      await clearDirectory(ORIGINALS_DIR);
+      // Update all photos to mark originals as cleared
+      await db.photos.toCollection().modify({ originalStored: false });
+      // Refresh storage display
+      const updated = await getStorageUsage();
+      setStorage(updated);
+      toast("Original photos cleared", "success");
+    } catch {
+      toast("Failed to clear originals", "error");
+    } finally {
+      setClearingOriginals(false);
     }
   };
 
@@ -530,6 +555,39 @@ export default function SettingsPage() {
               onChange={(theme) => void updateSettings({ theme })}
             />
           </div>
+
+          {/* Keep original photos */}
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-sm font-medium text-soil-700">
+                Keep Original Photos
+              </span>
+              <p className="text-xs text-soil-500">
+                Stores full-resolution originals (requires more space)
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={settings.keepOriginalPhotos}
+              onClick={() =>
+                void updateSettings({
+                  keepOriginalPhotos: !settings.keepOriginalPhotos,
+                })
+              }
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
+                settings.keepOriginalPhotos ? "bg-green-600" : "bg-brown-200"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                  settings.keepOriginalPhotos
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </Card>
 
@@ -654,12 +712,32 @@ export default function SettingsPage() {
               Storage
             </span>
             {storage ? (
-              <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-soil-600">
-                <span>Photos: {formatBytes(storage.photosBytes)}</span>
-                <span>Data: {formatBytes(storage.dataBytes)}</span>
-                <span className="font-medium text-soil-800">
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-soil-600">
+                  <span>Thumbnails: {formatBytes(storage.thumbnailBytes)}</span>
+                  <span>Display: {formatBytes(storage.displayBytes)}</span>
+                  <span>Originals: {formatBytes(storage.originalBytes)}</span>
+                  <span>Data: {formatBytes(storage.dataBytes)}</span>
+                </div>
+                <p className="text-sm font-medium text-soil-800">
                   Total: {formatBytes(storage.totalBytes)}
-                </span>
+                </p>
+                {storage.quotaBytes > 0 && (
+                  <div>
+                    <div className="h-2 w-full rounded-full bg-cream-200">
+                      <div
+                        className="h-2 rounded-full bg-green-600 transition-all"
+                        style={{
+                          width: `${String(Math.min(100, (storage.totalBytes / storage.quotaBytes) * 100))}%`,
+                        }}
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-soil-500">
+                      {formatBytes(storage.totalBytes)} of{" "}
+                      {formatBytes(storage.quotaBytes)} used
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-sm text-soil-500">Calculating…</p>
@@ -678,7 +756,31 @@ export default function SettingsPage() {
             {exportError && (
               <p className="mt-1 text-sm text-red-600">{exportError}</p>
             )}
+            {settings.lastExportDate && (
+              <p className="mt-1 text-xs text-soil-500">
+                Last export:{" "}
+                {new Date(settings.lastExportDate).toLocaleDateString()}
+              </p>
+            )}
           </div>
+
+          {/* Clear original photos */}
+          {isOpfsAvailable() && (
+            <div>
+              <Button
+                variant="ghost"
+                onClick={() => void handleClearOriginals()}
+                disabled={clearingOriginals}
+              >
+                {clearingOriginals
+                  ? "Clearing…"
+                  : "Clear Original Photos"}
+              </Button>
+              <p className="mt-1 text-xs text-soil-500">
+                Removes stored full-resolution originals to reclaim space
+              </p>
+            </div>
+          )}
 
           {/* Rebuild search index */}
           <div>

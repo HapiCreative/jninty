@@ -3,6 +3,7 @@ import { db } from "../db/schema.ts";
 export interface ProcessedPhoto {
   thumbnailBlob: Blob;
   displayBlob: Blob;
+  originalFile?: Blob;
   width: number;
   height: number;
 }
@@ -92,6 +93,22 @@ export async function processPhoto(
   ]);
 
   return { thumbnailBlob, displayBlob, width, height };
+}
+
+/**
+ * Process a photo, optionally preserving the original file in memory.
+ * The original file is kept as a reference for later OPFS storage
+ * when `keepOriginal` is true.
+ */
+export async function processPhotoWithOriginal(
+  file: File | Blob,
+  options: { keepOriginal: boolean },
+): Promise<ProcessedPhoto> {
+  const result = await processPhoto(file);
+  if (options.keepOriginal) {
+    return { ...result, originalFile: file };
+  }
+  return result;
 }
 
 /**

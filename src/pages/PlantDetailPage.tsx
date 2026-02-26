@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { format, parseISO } from "date-fns";
@@ -19,6 +19,8 @@ import {
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
+import PhotoThumbnail from "../components/PhotoThumbnail";
+import PhotoLightbox from "../components/PhotoLightbox";
 import {
   PlantPlaceholderIcon,
   ChevronLeftIcon,
@@ -64,6 +66,8 @@ export default function PlantDetailPage() {
 
   // Hero photo
   const [heroUrl, setHeroUrl] = useState<string | null>(null);
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -134,6 +138,14 @@ export default function PlantDetailPage() {
     }
   }, [showDeleteConfirm]);
 
+  // Collect all photo IDs from plant + journal entries (deduplicated)
+  const allPhotoIds = useMemo(() => {
+    if (!plant) return [];
+    const plantPhotos = plant.photoIds ?? [];
+    const journalPhotos = journalEntries?.flatMap((e) => e.photoIds) ?? [];
+    return Array.from(new Set([...plantPhotos, ...journalPhotos]));
+  }, [plant, journalEntries]);
+
   // ─── Delete handler ───
 
   const handleDelete = async () => {
@@ -199,11 +211,20 @@ export default function PlantDetailPage() {
       {/* Hero photo */}
       <div className="relative aspect-[16/9] bg-cream-200">
         {heroUrl ? (
-          <img
-            src={heroUrl}
-            alt={displayName}
-            className="h-full w-full object-cover"
-          />
+          <button
+            type="button"
+            className="h-full w-full"
+            onClick={() => {
+              setLightboxIndex(0);
+              setShowLightbox(true);
+            }}
+          >
+            <img
+              src={heroUrl}
+              alt={displayName}
+              className="h-full w-full object-cover"
+            />
+          </button>
         ) : (
           <div className="flex h-full items-center justify-center">
             <PlantPlaceholderIcon className="h-20 w-20 text-brown-300" />
@@ -296,6 +317,39 @@ export default function PlantDetailPage() {
             </div>
           )}
         </Card>
+
+        {/* Photo gallery */}
+        {allPhotoIds.length > 0 && (
+          <Card>
+            <div className="flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-green-800">
+                Photos
+              </h2>
+              <span className="text-sm text-soil-500">
+                {String(allPhotoIds.length)}
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {allPhotoIds.map((pId, index) => (
+                <button
+                  key={pId}
+                  type="button"
+                  onClick={() => {
+                    setLightboxIndex(index);
+                    setShowLightbox(true);
+                  }}
+                  className="aspect-square overflow-hidden rounded-lg"
+                >
+                  <PhotoThumbnail
+                    photoId={pId}
+                    alt={`Photo ${String(index + 1)}`}
+                    className="h-full w-full"
+                  />
+                </button>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {/* Plantings */}
         <Card>
@@ -496,6 +550,15 @@ export default function PlantDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Photo lightbox */}
+      {showLightbox && allPhotoIds.length > 0 && (
+        <PhotoLightbox
+          photoIds={allPhotoIds}
+          initialIndex={lightboxIndex}
+          onClose={() => setShowLightbox(false)}
+        />
+      )}
     </div>
   );
 }

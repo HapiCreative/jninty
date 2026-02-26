@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { db } from "../db/schema.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
 import { _resetIndex } from "../db/search.ts";
+import { SettingsProvider } from "../hooks/useSettings.tsx";
 import PlantFormPage from "./PlantFormPage.tsx";
 
 // Mock search module
@@ -39,25 +40,29 @@ beforeEach(async () => {
 
 function renderCreateForm() {
   return render(
-    <MemoryRouter initialEntries={["/plants/new"]}>
-      <Routes>
-        <Route path="plants/new" element={<PlantFormPage />} />
-        <Route path="plants/:id" element={<div>Detail Page</div>} />
-        <Route path="plants" element={<div>Plants List</div>} />
-      </Routes>
-    </MemoryRouter>,
+    <SettingsProvider>
+      <MemoryRouter initialEntries={["/plants/new"]}>
+        <Routes>
+          <Route path="plants/new" element={<PlantFormPage />} />
+          <Route path="plants/:id" element={<div>Detail Page</div>} />
+          <Route path="plants" element={<div>Plants List</div>} />
+        </Routes>
+      </MemoryRouter>
+    </SettingsProvider>,
   );
 }
 
 function renderEditForm(id: string) {
   return render(
-    <MemoryRouter initialEntries={[`/plants/${id}/edit`]}>
-      <Routes>
-        <Route path="plants/:id/edit" element={<PlantFormPage />} />
-        <Route path="plants/:id" element={<div>Detail Page</div>} />
-        <Route path="plants" element={<div>Plants List</div>} />
-      </Routes>
-    </MemoryRouter>,
+    <SettingsProvider>
+      <MemoryRouter initialEntries={[`/plants/${id}/edit`]}>
+        <Routes>
+          <Route path="plants/:id/edit" element={<PlantFormPage />} />
+          <Route path="plants/:id" element={<div>Detail Page</div>} />
+          <Route path="plants" element={<div>Plants List</div>} />
+        </Routes>
+      </MemoryRouter>
+    </SettingsProvider>,
   );
 }
 

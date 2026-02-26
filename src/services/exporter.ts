@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { db } from "../db/schema.ts";
+import { readFile, displayPath, originalPath } from "./opfsStorage.ts";
 import { plantInstanceSchema } from "../validation/plantInstance.schema.ts";
 import { journalEntrySchema } from "../validation/journalEntry.schema.ts";
 import { taskSchema } from "../validation/task.schema.ts";
@@ -58,6 +59,7 @@ const photoImportSchema = z
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     deletedAt: z.string().datetime().optional(),
+    displayStoredInOpfs: z.boolean().optional(),
     originalStored: z.boolean(),
     caption: z.string().min(1).optional(),
     width: z.number().int().positive().optional(),
@@ -162,6 +164,7 @@ export async function exportAll(): Promise<Blob> {
     createdAt: p.createdAt,
     updatedAt: p.updatedAt,
     ...(p.deletedAt != null ? { deletedAt: p.deletedAt } : {}),
+    ...(p.displayStoredInOpfs ? { displayStoredInOpfs: true } : {}),
     originalStored: p.originalStored,
     ...(p.caption != null ? { caption: p.caption } : {}),
     ...(p.width != null ? { width: p.width } : {}),
@@ -174,11 +177,27 @@ export async function exportAll(): Promise<Blob> {
       `${photo.id}-thumb.jpg`,
       await blobToArrayBuffer(photo.thumbnailBlob),
     );
-    if (photo.displayBlob) {
+
+    // Read display blob from OPFS or IndexedDB
+    const displayBlob = photo.displayStoredInOpfs
+      ? await readFile(displayPath(photo.id))
+      : photo.displayBlob;
+    if (displayBlob) {
       photosFolder.file(
         `${photo.id}-display.jpg`,
-        await blobToArrayBuffer(photo.displayBlob),
+        await blobToArrayBuffer(displayBlob),
       );
+    }
+
+    // Export original if stored in OPFS
+    if (photo.originalStored) {
+      const originalBlob = await readFile(originalPath(photo.id));
+      if (originalBlob) {
+        photosFolder.file(
+          `${photo.id}-original.jpg`,
+          await blobToArrayBuffer(originalBlob),
+        );
+      }
     }
   }
 

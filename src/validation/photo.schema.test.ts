@@ -21,12 +21,18 @@ describe("photoSchema", () => {
     const full = {
       ...validPhoto,
       displayBlob: new Blob(["display"], { type: "image/jpeg" }),
+      displayStoredInOpfs: true,
       originalStored: true,
       caption: "My tomato seedling",
       width: 320,
       height: 240,
     };
     const result = validateEntity(photoSchema, full);
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts photo without displayStoredInOpfs (defaults to absent)", () => {
+    const result = validateEntity(photoSchema, validPhoto);
     expect(result.success).toBe(true);
   });
 

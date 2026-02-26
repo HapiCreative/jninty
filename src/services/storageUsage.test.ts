@@ -40,7 +40,9 @@ describe("formatBytes", () => {
 describe("getStorageUsage", () => {
   it("returns zero when no photos exist", async () => {
     const usage = await getStorageUsage();
-    expect(usage.photosBytes).toBe(0);
+    expect(usage.thumbnailBytes).toBe(0);
+    expect(usage.displayBytes).toBe(0);
+    expect(usage.originalBytes).toBe(0);
   });
 
   // Note: fake-indexeddb does not preserve Blob objects through structured
@@ -63,9 +65,10 @@ describe("getStorageUsage", () => {
     });
 
     const usage = await getStorageUsage();
-    // Blob sizes are lost in fake-indexeddb, so photosBytes is 0
-    expect(typeof usage.photosBytes).toBe("number");
-    expect(Number.isNaN(usage.photosBytes)).toBe(false);
+    // Blob sizes are lost in fake-indexeddb, so bytes are 0
+    expect(typeof usage.thumbnailBytes).toBe("number");
+    expect(Number.isNaN(usage.thumbnailBytes)).toBe(false);
+    expect(typeof usage.displayBytes).toBe("number");
   });
 
   it("returns valid structure with photos missing displayBlob", async () => {
@@ -82,8 +85,9 @@ describe("getStorageUsage", () => {
     });
 
     const usage = await getStorageUsage();
-    expect(typeof usage.photosBytes).toBe("number");
-    expect(Number.isNaN(usage.photosBytes)).toBe(false);
+    expect(typeof usage.thumbnailBytes).toBe("number");
+    expect(Number.isNaN(usage.thumbnailBytes)).toBe(false);
     expect(typeof usage.totalBytes).toBe("number");
+    expect(typeof usage.quotaBytes).toBe("number");
   });
 });
