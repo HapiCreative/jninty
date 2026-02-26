@@ -1,6 +1,14 @@
+import { useMemo } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
+import { isWithinInterval, startOfWeek, endOfWeek } from "date-fns";
 import * as taskRepository from "../../db/repositories/taskRepository";
+import * as plantRepository from "../../db/repositories/plantRepository";
+import * as plantingRepository from "../../db/repositories/plantingRepository";
+import * as seasonRepository from "../../db/repositories/seasonRepository";
+import { useSettings } from "../../hooks/useSettings";
+import { getBySpecies } from "../../services/knowledgeBase";
+import { computePlantingWindows } from "../../services/calendar";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 
 // SVG icon components — inline to avoid extra dependencies
@@ -175,13 +183,15 @@ interface NavItem {
   badge?: number;
 }
 
-const primaryNav: NavItem[] = [
-  { to: "/", label: "Home", icon: HomeIcon },
-  { to: "/plants", label: "Plants", icon: PlantIcon },
-  // Quick Log is rendered separately (center prominent button)
-  { to: "/calendar", label: "Calendar", icon: CalendarIcon },
-  { to: "/map", label: "Map", icon: MapIcon },
-];
+function getPrimaryNav(calendarBadge: number): NavItem[] {
+  return [
+    { to: "/", label: "Home", icon: HomeIcon },
+    { to: "/plants", label: "Plants", icon: PlantIcon },
+    // Quick Log is rendered separately (center prominent button)
+    { to: "/calendar", label: "Calendar", icon: CalendarIcon, badge: calendarBadge },
+    { to: "/map", label: "Map", icon: MapIcon },
+  ];
+}
 
 function getSecondaryNav(overdueCount: number): NavItem[] {
   return [
@@ -217,13 +227,18 @@ function TabBarLink({ item }: { item: NavItem }) {
       to={item.to}
       end={item.to === "/"}
       className={({ isActive }) =>
-        `flex min-w-[3rem] flex-col items-center gap-0.5 px-2 py-1 transition-colors ${
+        `relative flex min-w-[3rem] flex-col items-center gap-0.5 px-2 py-1 transition-colors ${
           isActive ? "text-green-400" : "text-cream-200 hover:text-cream-50"
         }`
       }
     >
       <item.icon className="h-6 w-6" />
       <span className="text-[10px] leading-tight">{item.label}</span>
+      {item.badge != null && item.badge > 0 && (
+        <span className="absolute -right-0.5 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-terracotta-500 px-1 text-[10px] font-bold text-white">
+          {item.badge}
+        </span>
+      )}
     </NavLink>
   );
 }
@@ -267,8 +282,44 @@ function SidebarLink({ item }: { item: NavItem }) {
 export default function AppShell() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
+  const { settings } = useSettings();
   const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
   const overdueCount = overdueTasks?.length ?? 0;
+
+  // Calendar badge: count plants with active planting windows this week
+  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const seasonPlantings = useLiveQuery(
+    () => (activeSeason ? plantingRepository.getBySeason(activeSeason.id) : []),
+    [activeSeason],
+  );
+  const allPlants = useLiveQuery(() => plantRepository.getAll());
+
+  const calendarBadge = useMemo(() => {
+    if (!seasonPlantings || !allPlants) return 0;
+    const plantMap = new Map(allPlants.map((p) => [p.id, p]));
+    const now = new Date();
+    const weekStart = startOfWeek(now);
+    const weekEnd = endOfWeek(now);
+    let count = 0;
+
+    for (const planting of seasonPlantings) {
+      const plant = plantMap.get(planting.plantInstanceId);
+      if (!plant) continue;
+      const knowledge = getBySpecies(plant.species);
+      if (!knowledge) continue;
+      const windows = computePlantingWindows(knowledge, settings);
+      const hasActiveWindow =
+        (windows.indoorStart && isWithinInterval(now, windows.indoorStart)) ||
+        (windows.directSow && isWithinInterval(now, windows.directSow)) ||
+        (windows.transplant && isWithinInterval(now, windows.transplant)) ||
+        // Also check if window starts this week
+        (windows.indoorStart && isWithinInterval(windows.indoorStart.start, { start: weekStart, end: weekEnd })) ||
+        (windows.directSow && isWithinInterval(windows.directSow.start, { start: weekStart, end: weekEnd })) ||
+        (windows.transplant && isWithinInterval(windows.transplant.start, { start: weekStart, end: weekEnd }));
+      if (hasActiveWindow) count++;
+    }
+    return count;
+  }, [seasonPlantings, allPlants, settings]);
 
   return (
     <div className="flex min-h-svh flex-col md:flex-row">
@@ -291,7 +342,7 @@ export default function AppShell() {
 
         {/* Primary nav */}
         <nav className="flex flex-1 flex-col gap-1 px-3">
-          {primaryNav.map((item) => (
+          {getPrimaryNav(calendarBadge).map((item) => (
             <SidebarLink key={item.to} item={item} />
           ))}
 
@@ -398,8 +449,8 @@ export default function AppShell() {
       {/* ── Mobile bottom tab bar ── */}
       <nav className="fixed inset-x-0 bottom-0 z-50 flex items-end justify-around border-t border-green-900 bg-green-800 pb-[env(safe-area-inset-bottom)] md:hidden">
         {/* Home & Plants */}
-        <TabBarLink item={primaryNav[0]!} />
-        <TabBarLink item={primaryNav[1]!} />
+        <TabBarLink item={getPrimaryNav(calendarBadge)[0]!} />
+        <TabBarLink item={getPrimaryNav(calendarBadge)[1]!} />
 
         {/* Quick Log — center prominent button */}
         <button
@@ -416,8 +467,8 @@ export default function AppShell() {
         </button>
 
         {/* Calendar & Map */}
-        <TabBarLink item={primaryNav[2]!} />
-        <TabBarLink item={primaryNav[3]!} />
+        <TabBarLink item={getPrimaryNav(calendarBadge)[2]!} />
+        <TabBarLink item={getPrimaryNav(calendarBadge)[3]!} />
       </nav>
     </div>
   );

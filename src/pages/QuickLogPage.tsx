@@ -41,6 +41,7 @@ export default function QuickLogPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const plantIdParam = searchParams.get("plantId");
+  const bedIdParam = searchParams.get("bedId");
 
   // Settings (must be before usePhotoCapture which needs keepOriginalPhotos)
   const { settings } = useSettings();
@@ -164,6 +165,7 @@ export default function QuickLogPage() {
         isMilestone: false,
         seasonId: activeSeason.id,
         ...(plantId ? { plantInstanceId: plantId } : {}),
+        ...(bedIdParam ? { bedId: bedIdParam } : {}),
         ...(weatherSnapshot ? { weatherSnapshot } : {}),
       });
 

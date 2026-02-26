@@ -15,6 +15,8 @@ import Input from "../components/ui/Input";
 import { ChevronLeftIcon, SeedIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
+import { getBySpecies } from "../services/knowledgeBase";
+import type { PlantType } from "../validation/plantInstance.schema";
 
 export default function SeedDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -96,10 +98,12 @@ export default function SeedDetailPage() {
           // Optionally create PlantInstance + Planting
           if (createPlant) {
             const activeSeason = await seasonRepository.getActive();
+            const knowledge = getBySpecies(seed.species);
+            const plantType: PlantType = knowledge?.plantType ?? "other";
             const plant = await plantRepository.create({
               species: seed.species,
-              type: "vegetable",
-              isPerennial: false,
+              type: plantType,
+              isPerennial: knowledge?.isPerennial ?? false,
               source: "seed",
               seedId: id,
               status: "active",

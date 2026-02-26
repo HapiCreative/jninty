@@ -8,6 +8,7 @@ import * as plantRepository from "../db/repositories/plantRepository.ts";
 import * as journalRepository from "../db/repositories/journalRepository.ts";
 import * as taskRepository from "../db/repositories/taskRepository.ts";
 import { addToIndex, _resetIndex } from "../db/search.ts";
+import { ToastProvider } from "../components/ui/Toast.tsx";
 import PlantDetailPage from "./PlantDetailPage.tsx";
 
 // Mock search module
@@ -35,12 +36,14 @@ beforeEach(async () => {
 function renderDetailPage(id: string) {
   return render(
     <MemoryRouter initialEntries={[`/plants/${id}`]}>
-      <Routes>
-        <Route path="plants/:id" element={<PlantDetailPage />} />
-        <Route path="plants/:id/edit" element={<div>Edit Page</div>} />
-        <Route path="plants" element={<div>Plants List</div>} />
-        <Route path="quick-log" element={<div>Quick Log</div>} />
-      </Routes>
+      <ToastProvider>
+        <Routes>
+          <Route path="plants/:id" element={<PlantDetailPage />} />
+          <Route path="plants/:id/edit" element={<div>Edit Page</div>} />
+          <Route path="plants" element={<div>Plants List</div>} />
+          <Route path="quick-log" element={<div>Quick Log</div>} />
+        </Routes>
+      </ToastProvider>
     </MemoryRouter>,
   );
 }

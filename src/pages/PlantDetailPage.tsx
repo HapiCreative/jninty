@@ -9,6 +9,8 @@ import * as photoRepository from "../db/repositories/photoRepository";
 import * as plantingRepository from "../db/repositories/plantingRepository";
 import * as seasonRepository from "../db/repositories/seasonRepository";
 import { removeFromIndex, serializeIndex } from "../db/search";
+import { useToast } from "../components/ui/Toast";
+import type { PlantingOutcome } from "../validation/planting.schema";
 import {
   TYPE_LABELS,
   STATUS_LABELS,
@@ -64,6 +66,8 @@ export default function PlantDetailPage() {
   // All seasons (for looking up season names)
   const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
 
+  const { toast } = useToast();
+
   // Hero photo
   const [heroUrl, setHeroUrl] = useState<string | null>(null);
   const [showLightbox, setShowLightbox] = useState(false);
@@ -72,6 +76,9 @@ export default function PlantDetailPage() {
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Planting outcome editing
+  const [editingOutcome, setEditingOutcome] = useState<string | null>(null);
 
   // Load hero photo
   useEffect(() => {
@@ -144,6 +151,18 @@ export default function PlantDetailPage() {
     const journalPhotos = journalEntries?.flatMap((e) => e.photoIds) ?? [];
     return Array.from(new Set([...plantPhotos, ...journalPhotos]));
   }, [plant, journalEntries]);
+
+  // ─── Planting outcome handler ───
+
+  const handleSetOutcome = async (plantingId: string, outcome: PlantingOutcome) => {
+    try {
+      await plantingRepository.update(plantingId, { outcome });
+      setEditingOutcome(null);
+      toast("Outcome updated", "success");
+    } catch {
+      toast("Failed to update outcome", "error");
+    }
+  };
 
   // ─── Delete handler ───
 
@@ -385,11 +404,47 @@ export default function PlantDetailPage() {
                         </p>
                       )}
                     </div>
-                    {planting.outcome && (
-                      <Badge variant={outcomeVariant[planting.outcome] ?? "default"}>
-                        {planting.outcome}
-                      </Badge>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {editingOutcome === planting.id ? (
+                        <div className="flex flex-wrap gap-1">
+                          {(["thrived", "ok", "failed", "unknown"] as const).map(
+                            (o) => (
+                              <button
+                                key={o}
+                                type="button"
+                                onClick={() =>
+                                  void handleSetOutcome(planting.id, o)
+                                }
+                                className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
+                                  planting.outcome === o
+                                    ? "bg-green-700 text-white"
+                                    : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                                }`}
+                              >
+                                {o}
+                              </button>
+                            ),
+                          )}
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setEditingOutcome(planting.id)}
+                          className="flex items-center gap-1"
+                          title="Set outcome"
+                        >
+                          {planting.outcome ? (
+                            <Badge variant={outcomeVariant[planting.outcome] ?? "default"}>
+                              {planting.outcome}
+                            </Badge>
+                          ) : (
+                            <span className="rounded-full border border-dashed border-brown-300 px-2 py-0.5 text-xs text-soil-500 hover:border-green-600 hover:text-green-700">
+                              Set outcome
+                            </span>
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </li>
               ))}

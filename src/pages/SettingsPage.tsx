@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
@@ -9,6 +9,10 @@ import { useToast } from "../components/ui/Toast";
 import { useSettings } from "../hooks/useSettings";
 import * as settingsRepository from "../db/repositories/settingsRepository";
 import * as seasonRepository from "../db/repositories/seasonRepository";
+import * as plantingRepository from "../db/repositories/plantingRepository";
+import * as plantRepository from "../db/repositories/plantRepository";
+import type { PlantingOutcome } from "../validation/planting.schema";
+import type { Planting } from "../validation/planting.schema";
 import {
   getStorageUsage,
   formatBytes,
@@ -237,7 +241,44 @@ export default function SettingsPage() {
     endDate: "",
   });
 
+  // End-of-season review
+  const [showEndOfSeason, setShowEndOfSeason] = useState(false);
+  const [endOfSeasonPlantings, setEndOfSeasonPlantings] = useState<Planting[]>([]);
+  const [outcomeEdits, setOutcomeEdits] = useState<Record<string, PlantingOutcome>>({});
+  const [savingOutcomes, setSavingOutcomes] = useState(false);
+
+  const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const plantNameMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!allPlants) return map;
+    for (const p of allPlants) map.set(p.id, p.nickname ?? p.species);
+    return map;
+  }, [allPlants]);
+
   const handleCreateSeason = async () => {
+    if (!newSeason.name.trim() || !newSeason.startDate || !newSeason.endDate) return;
+
+    // Check if there's an active season with unrated plantings
+    const activeSeason = seasons?.find((s) => s.isActive);
+    if (activeSeason) {
+      const seasonPlantings = await plantingRepository.getBySeason(activeSeason.id);
+      const unrated = seasonPlantings.filter((p) => p.outcome == null);
+      if (unrated.length > 0) {
+        setEndOfSeasonPlantings(seasonPlantings);
+        const defaults: Record<string, PlantingOutcome> = {};
+        for (const p of seasonPlantings) {
+          defaults[p.id] = p.outcome ?? "unknown";
+        }
+        setOutcomeEdits(defaults);
+        setShowEndOfSeason(true);
+        return;
+      }
+    }
+
+    await doCreateSeason();
+  };
+
+  const doCreateSeason = async () => {
     if (!newSeason.name.trim() || !newSeason.startDate || !newSeason.endDate) return;
     try {
       await seasonRepository.create({
@@ -253,6 +294,27 @@ export default function SettingsPage() {
     } catch {
       toast("Failed to create season", "error");
     }
+  };
+
+  const handleSaveOutcomesAndCreate = async () => {
+    setSavingOutcomes(true);
+    try {
+      for (const [plantingId, outcome] of Object.entries(outcomeEdits)) {
+        await plantingRepository.update(plantingId, { outcome });
+      }
+      setShowEndOfSeason(false);
+      await doCreateSeason();
+      toast("Outcomes saved", "success");
+    } catch {
+      toast("Failed to save outcomes", "error");
+    } finally {
+      setSavingOutcomes(false);
+    }
+  };
+
+  const handleSkipOutcomes = async () => {
+    setShowEndOfSeason(false);
+    await doCreateSeason();
   };
 
   const handleSetActive = async (id: string) => {
@@ -807,6 +869,75 @@ export default function SettingsPage() {
       <p className="text-center text-xs text-soil-500">
         Jninty v{__APP_VERSION__}
       </p>
+
+      {/* End-of-season review modal */}
+      {showEndOfSeason && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-soil-900/50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowEndOfSeason(false);
+          }}
+        >
+          <div className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
+            <h3 className="font-display text-lg font-bold text-green-800">
+              End of Season Review
+            </h3>
+            <p className="mt-1 text-sm text-soil-600">
+              How did each planting do this season? Set outcomes before starting
+              a new season.
+            </p>
+
+            <div className="mt-4 space-y-3">
+              {endOfSeasonPlantings.map((planting) => (
+                <div
+                  key={planting.id}
+                  className="flex items-center justify-between rounded-lg border border-cream-200 bg-cream-50 p-3"
+                >
+                  <span className="text-sm font-medium text-soil-900">
+                    {plantNameMap.get(planting.plantInstanceId) ?? "Unknown Plant"}
+                  </span>
+                  <div className="flex gap-1">
+                    {(["thrived", "ok", "failed", "unknown"] as const).map((o) => (
+                      <button
+                        key={o}
+                        type="button"
+                        onClick={() =>
+                          setOutcomeEdits((prev) => ({ ...prev, [planting.id]: o }))
+                        }
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
+                          outcomeEdits[planting.id] === o
+                            ? o === "thrived"
+                              ? "bg-green-600 text-white"
+                              : o === "ok"
+                                ? "bg-amber-500 text-white"
+                                : o === "failed"
+                                  ? "bg-terracotta-500 text-white"
+                                  : "bg-soil-500 text-white"
+                            : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                        }`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <Button
+                onClick={() => void handleSaveOutcomesAndCreate()}
+                disabled={savingOutcomes}
+              >
+                {savingOutcomes ? "Saving..." : "Save & Create Season"}
+              </Button>
+              <Button variant="ghost" onClick={() => void handleSkipOutcomes()}>
+                Skip
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

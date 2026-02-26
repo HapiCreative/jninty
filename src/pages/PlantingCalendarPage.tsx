@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
@@ -27,6 +27,11 @@ import {
   computePlantingWindows,
   type PlantingWindows,
 } from "../services/calendar";
+import {
+  fetchCurrentWeather,
+  formatTemp,
+  type WeatherData,
+} from "../services/weather";
 import Card from "../components/ui/Card";
 import { ChevronLeftIcon, ChevronRightIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
@@ -104,6 +109,21 @@ export default function PlantingCalendarPage() {
   );
   const allPlants = useLiveQuery(() => plantRepository.getAll());
   const allTasks = useLiveQuery(() => taskRepository.getAll());
+
+  // Weather frost warning
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  useEffect(() => {
+    if (settings.latitude == null || settings.longitude == null) return;
+    let cancelled = false;
+    void fetchCurrentWeather(settings.latitude, settings.longitude).then(
+      (data) => {
+        if (!cancelled && data) setWeather(data);
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [settings.latitude, settings.longitude]);
 
   const prevMonth = useCallback(() => setCurrentMonth((m) => subMonths(m, 1)), []);
   const nextMonth = useCallback(() => setCurrentMonth((m) => addMonths(m, 1)), []);
@@ -254,6 +274,23 @@ export default function PlantingCalendarPage() {
       <h1 className="font-display text-2xl font-bold text-green-800">
         Planting Calendar
       </h1>
+
+      {/* Frost warning */}
+      {weather?.frostWarning && (
+        <div className="mt-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{"\u2744\uFE0F"}</span>
+            <div>
+              <p className="text-sm font-bold text-red-800">Frost Warning</p>
+              <p className="text-xs text-red-600">
+                Tonight&apos;s low is{" "}
+                {formatTemp(weather.lowC, settings.temperatureUnit)} — protect
+                sensitive plants
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Month navigation */}
       <div className="mt-4 flex items-center justify-between">
