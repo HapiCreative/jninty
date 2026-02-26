@@ -8,6 +8,8 @@ export const settingsSchema = z
     gridUnit: z.enum(["feet", "meters"]),
     temperatureUnit: z.enum(["fahrenheit", "celsius"]),
     gardenName: z.string().min(1).optional(),
+    latitude: z.number().min(-90).max(90).optional(),
+    longitude: z.number().min(-180).max(180).optional(),
     theme: z.enum(["light", "dark", "auto"]),
     keepOriginalPhotos: z.boolean(),
     dbSchemaVersion: z.number().int().positive(),

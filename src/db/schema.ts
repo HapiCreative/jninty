@@ -15,6 +15,9 @@ export type SettingsRecord = { id: string } & Settings;
 // Serialized MiniSearch index stored as a JSON string.
 export type SearchIndexRecord = { id: string; data: string };
 
+// Cached weather API response stored as JSON with a freshness timestamp.
+export type WeatherCacheRecord = { id: string; data: string; fetchedAt: string };
+
 export class JnintyDB extends Dexie {
   plantInstances!: Table<PlantInstance, string>;
   journalEntries!: Table<JournalEntry, string>;
@@ -26,6 +29,7 @@ export class JnintyDB extends Dexie {
   seasons!: Table<Season, string>;
   plantings!: Table<Planting, string>;
   seeds!: Table<Seed, string>;
+  weatherCache!: Table<WeatherCacheRecord, string>;
 
   constructor(name = "jninty") {
     super(name);
@@ -142,6 +146,12 @@ export class JnintyDB extends Dexie {
             }
           });
       });
+
+    // ─── Version 5: Phase 2 — Weather cache ───
+    // Stores cached Open-Meteo API responses with freshness timestamps.
+    this.version(5).stores({
+      weatherCache: "id",
+    });
   }
 }
 

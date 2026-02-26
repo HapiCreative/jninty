@@ -36,3 +36,21 @@ export async function update(
   await db.settings.put(record);
   return parsed;
 }
+
+/**
+ * Remove location fields (latitude/longitude) from settings.
+ * Needed because `update()` uses merge semantics and cannot delete fields.
+ */
+export async function clearLocation(): Promise<Settings> {
+  const existing = await db.settings.get(SETTINGS_ID);
+  if (!existing) throw new Error("Settings not initialized");
+
+  const settings = stripId(existing) as Record<string, unknown>;
+  delete settings["latitude"];
+  delete settings["longitude"];
+
+  const parsed = settingsSchema.parse(settings);
+  const record: SettingsRecord = { id: SETTINGS_ID, ...parsed };
+  await db.settings.put(record);
+  return parsed;
+}

@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { db } from "../db/schema.ts";
 import * as journalRepository from "../db/repositories/journalRepository.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
+import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { addToIndex, _resetIndex } from "../db/search.ts";
 import JournalPage from "./JournalPage.tsx";
 
@@ -67,9 +68,11 @@ beforeEach(async () => {
 
 function renderPage() {
   return render(
-    <MemoryRouter initialEntries={["/journal"]}>
-      <JournalPage />
-    </MemoryRouter>,
+    <SettingsProvider>
+      <MemoryRouter initialEntries={["/journal"]}>
+        <JournalPage />
+      </MemoryRouter>
+    </SettingsProvider>,
   );
 }
 

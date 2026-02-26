@@ -7,6 +7,7 @@ import Badge from "../components/ui/Badge";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
 import { useSettings } from "../hooks/useSettings";
+import * as settingsRepository from "../db/repositories/settingsRepository";
 import * as seasonRepository from "../db/repositories/seasonRepository";
 import {
   getStorageUsage,
@@ -15,6 +16,11 @@ import {
 } from "../services/storageUsage";
 import { exportAll, triggerDownload } from "../services/exporter";
 import { rebuildIndex } from "../db/search";
+import {
+  searchLocation,
+  clearWeatherCache,
+  type GeoSearchResult,
+} from "../services/weather";
 
 // ─── Growing zones (USDA 1a–13b) ───
 
@@ -73,10 +79,27 @@ export default function SettingsPage() {
   const [rebuildCount, setRebuildCount] = useState<number | null>(null);
   const [rebuildError, setRebuildError] = useState<string | null>(null);
 
+  // Location search state
+  const [locationQuery, setLocationQuery] = useState("");
+  const [locationResults, setLocationResults] = useState<GeoSearchResult[]>([]);
+  const [locationSearching, setLocationSearching] = useState(false);
+
+  // Local state for manual coordinate inputs (saved on blur)
+  const [localLat, setLocalLat] = useState("");
+  const [localLon, setLocalLon] = useState("");
+
   // Sync gardenName from settings on load
   useEffect(() => {
     setGardenName(settings.gardenName ?? "");
   }, [settings.gardenName]);
+
+  // Sync lat/lon from settings on load
+  useEffect(() => {
+    setLocalLat(settings.latitude != null ? String(settings.latitude) : "");
+  }, [settings.latitude]);
+  useEffect(() => {
+    setLocalLon(settings.longitude != null ? String(settings.longitude) : "");
+  }, [settings.longitude]);
 
   // Load storage usage
   useEffect(() => {
@@ -90,6 +113,59 @@ export default function SettingsPage() {
     if (trimmed && trimmed !== (settings.gardenName ?? "")) {
       void updateSettings({ gardenName: trimmed });
     }
+  };
+
+  const handleLatBlur = () => {
+    const val = parseFloat(localLat);
+    if (!isNaN(val) && val >= -90 && val <= 90 && val !== settings.latitude) {
+      void clearWeatherCache().then(() => updateSettings({ latitude: val }));
+    }
+  };
+
+  const handleLonBlur = () => {
+    const val = parseFloat(localLon);
+    if (
+      !isNaN(val) &&
+      val >= -180 &&
+      val <= 180 &&
+      val !== settings.longitude
+    ) {
+      void clearWeatherCache().then(() => updateSettings({ longitude: val }));
+    }
+  };
+
+  const handleLocationSearch = async () => {
+    if (!locationQuery.trim()) return;
+    setLocationSearching(true);
+    try {
+      const results = await searchLocation(locationQuery.trim());
+      setLocationResults(results);
+    } catch {
+      toast("Location search failed", "error");
+    } finally {
+      setLocationSearching(false);
+    }
+  };
+
+  const handleSelectLocation = async (result: GeoSearchResult) => {
+    await clearWeatherCache();
+    await updateSettings({
+      latitude: result.latitude,
+      longitude: result.longitude,
+    });
+    setLocalLat(String(result.latitude));
+    setLocalLon(String(result.longitude));
+    setLocationResults([]);
+    setLocationQuery("");
+    toast(`Location set to ${result.name}`, "success");
+  };
+
+  const handleClearLocation = async () => {
+    await clearWeatherCache();
+    const updated = await settingsRepository.clearLocation();
+    // Sync the context with the new settings (without lat/lon)
+    await updateSettings(updated);
+    toast("Location cleared", "success");
   };
 
   const handleExport = async () => {
@@ -267,6 +343,135 @@ export default function SettingsPage() {
               onChange={(e) => setGardenName(e.target.value)}
               onBlur={handleGardenNameBlur}
             />
+          </div>
+        </div>
+      </Card>
+
+      {/* ── Location (Weather) ── */}
+      <Card>
+        <h2 className="font-display text-lg font-semibold text-green-800">
+          Location
+        </h2>
+        <p className="mt-1 text-xs text-soil-500">
+          Used for weather on the dashboard and journal entries
+        </p>
+
+        <div className="mt-4 space-y-4">
+          {/* Current location display */}
+          {settings.latitude != null && settings.longitude != null && (
+            <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3">
+              <div>
+                <p className="text-sm font-medium text-soil-800">
+                  {String(settings.latitude.toFixed(4))},{" "}
+                  {String(settings.longitude.toFixed(4))}
+                </p>
+                <p className="text-xs text-soil-500">Current coordinates</p>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={() => void handleClearLocation()}
+              >
+                Clear
+              </Button>
+            </div>
+          )}
+
+          {/* City search */}
+          <div>
+            <label
+              htmlFor="location-search"
+              className="mb-1 block text-sm font-medium text-soil-700"
+            >
+              Search by city
+            </label>
+            <div className="flex gap-2">
+              <Input
+                id="location-search"
+                type="text"
+                placeholder="e.g. Portland, OR"
+                value={locationQuery}
+                onChange={(e) => setLocationQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") void handleLocationSearch();
+                }}
+              />
+              <Button
+                variant="secondary"
+                onClick={() => void handleLocationSearch()}
+                disabled={locationSearching || !locationQuery.trim()}
+              >
+                {locationSearching ? "..." : "Search"}
+              </Button>
+            </div>
+          </div>
+
+          {/* Search results */}
+          {locationResults.length > 0 && (
+            <div className="space-y-1">
+              {locationResults.map((r, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => void handleSelectLocation(r)}
+                  className="flex w-full items-center justify-between rounded-lg border border-cream-200 bg-cream-50 p-3 text-left transition-colors hover:bg-cream-200"
+                >
+                  <div>
+                    <span className="text-sm font-medium text-soil-800">
+                      {r.name}
+                    </span>
+                    <span className="ml-1 text-xs text-soil-500">
+                      {[r.admin1, r.country].filter(Boolean).join(", ")}
+                    </span>
+                  </div>
+                  <span className="text-xs text-soil-400">
+                    {String(r.latitude.toFixed(2))},{" "}
+                    {String(r.longitude.toFixed(2))}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Manual coordinate entry */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label
+                htmlFor="latitude"
+                className="mb-1 block text-sm font-medium text-soil-700"
+              >
+                Latitude
+              </label>
+              <Input
+                id="latitude"
+                type="number"
+                step="any"
+                min="-90"
+                max="90"
+                placeholder="e.g. 45.5231"
+                value={localLat}
+                onChange={(e) => setLocalLat(e.target.value)}
+                onBlur={handleLatBlur}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="longitude"
+                className="mb-1 block text-sm font-medium text-soil-700"
+              >
+                Longitude
+              </label>
+              <Input
+                id="longitude"
+                type="number"
+                step="any"
+                min="-180"
+                max="180"
+                placeholder="e.g. -122.6765"
+                value={localLon}
+                onChange={(e) => setLocalLon(e.target.value)}
+                onBlur={handleLonBlur}
+              />
+            </div>
           </div>
         </div>
       </Card>
