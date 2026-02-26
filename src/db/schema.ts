@@ -111,6 +111,37 @@ export class JnintyDB extends Dexie {
     this.version(3).stores({
       seeds: "id, species, expiryDate",
     });
+
+    // ─── Version 4: Phase 2 — Garden Map grid fields ───
+    // Adds grid position fields to gardenBeds for the Konva.js map.
+    // Existing beds get default position/dimensions so the map can render them.
+    this.version(4)
+      .stores({
+        gardenBeds: "id, type",
+      })
+      .upgrade(async (tx) => {
+        const timestamp = new Date().toISOString();
+        // Dexie.modify iterates sequentially within the transaction cursor,
+        // so offsetY increments deterministically per bed.
+        let offsetY = 0;
+
+        await tx
+          .table("gardenBeds")
+          .toCollection()
+          .modify((bed: Record<string, unknown>) => {
+            if (bed["gridX"] == null) {
+              bed["gridX"] = 0;
+              bed["gridY"] = offsetY;
+              bed["gridWidth"] = 4;
+              bed["gridHeight"] = 2;
+              bed["shape"] = "rectangle";
+              bed["color"] = "#7dbf4e";
+              bed["version"] = (bed["version"] as number) + 1;
+              bed["updatedAt"] = timestamp;
+              offsetY += 3;
+            }
+          });
+      });
   }
 }
 

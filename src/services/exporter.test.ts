@@ -80,6 +80,12 @@ function makeGardenBed(overrides?: Record<string, unknown>) {
     updatedAt: timestamp,
     name: "Raised Bed 1",
     type: "vegetable_bed" as const,
+    gridX: 0,
+    gridY: 0,
+    gridWidth: 4,
+    gridHeight: 2,
+    shape: "rectangle" as const,
+    color: "#7dbf4e",
     ...overrides,
   };
 }

@@ -180,7 +180,7 @@ const primaryNav: NavItem[] = [
   { to: "/plants", label: "Plants", icon: PlantIcon },
   // Quick Log is rendered separately (center prominent button)
   { to: "/calendar", label: "Calendar", icon: CalendarIcon },
-  { to: "/map", label: "Map", icon: MapIcon, disabled: true },
+  { to: "/map", label: "Map", icon: MapIcon },
 ];
 
 function getSecondaryNav(overdueCount: number): NavItem[] {

@@ -9,6 +9,12 @@ const validBed = {
   updatedAt: "2026-03-01T10:00:00Z",
   name: "North Raised Bed",
   type: "vegetable_bed" as const,
+  gridX: 0,
+  gridY: 0,
+  gridWidth: 4,
+  gridHeight: 2,
+  shape: "rectangle" as const,
+  color: "#7dbf4e",
 };
 
 describe("gardenBedSchema", () => {

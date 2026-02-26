@@ -194,6 +194,12 @@ describe("JournalEntryFormPage", () => {
     const bed = await gardenBedRepository.create({
       name: "Raised Bed A",
       type: "vegetable_bed",
+      gridX: 0,
+      gridY: 0,
+      gridWidth: 4,
+      gridHeight: 2,
+      shape: "rectangle" as const,
+      color: "#7dbf4e",
     });
 
     const user = userEvent.setup();

@@ -11,6 +11,12 @@ beforeEach(async () => {
 const baseBed = {
   name: "North Raised Bed",
   type: "vegetable_bed" as const,
+  gridX: 0,
+  gridY: 0,
+  gridWidth: 4,
+  gridHeight: 2,
+  shape: "rectangle" as const,
+  color: "#7dbf4e",
 };
 
 describe("gardenBedRepository", () => {
@@ -97,10 +103,16 @@ describe("gardenBedRepository", () => {
   describe("getAll", () => {
     it("returns all non-deleted beds", async () => {
       await gardenBedRepo.create(baseBed);
-      await gardenBedRepo.create({ name: "Herb Spiral", type: "herb_garden" });
+      await gardenBedRepo.create({ name: "Herb Spiral", type: "herb_garden", gridX: 0, gridY: 3, gridWidth: 3, gridHeight: 3, shape: "rectangle" as const, color: "#7dbf4e" });
       const toDelete = await gardenBedRepo.create({
         name: "Old Bed",
         type: "other",
+        gridX: 0,
+        gridY: 6,
+        gridWidth: 2,
+        gridHeight: 2,
+        shape: "rectangle" as const,
+        color: "#7dbf4e",
       });
       await gardenBedRepo.softDelete(toDelete.id);
 
@@ -112,7 +124,7 @@ describe("gardenBedRepository", () => {
   describe("getByType", () => {
     it("filters by type excluding soft-deleted", async () => {
       await gardenBedRepo.create(baseBed);
-      await gardenBedRepo.create({ name: "Herb Spiral", type: "herb_garden" });
+      await gardenBedRepo.create({ name: "Herb Spiral", type: "herb_garden", gridX: 0, gridY: 3, gridWidth: 3, gridHeight: 3, shape: "rectangle" as const, color: "#7dbf4e" });
 
       const vegBeds = await gardenBedRepo.getByType("vegetable_bed");
       expect(vegBeds).toHaveLength(1);

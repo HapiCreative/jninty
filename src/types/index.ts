@@ -19,7 +19,12 @@ export type {
   RecurrenceType,
   Task,
 } from "../validation/task.schema.ts";
-export type { BedType, GardenBed } from "../validation/gardenBed.schema.ts";
+export type {
+  BedType,
+  BedShape,
+  BedSunExposure,
+  GardenBed,
+} from "../validation/gardenBed.schema.ts";
 export type { Settings } from "../validation/settings.schema.ts";
 export type { Season } from "../validation/season.schema.ts";
 export type {

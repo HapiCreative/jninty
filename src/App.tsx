@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppShell from "./components/layout/AppShell";
 import { SettingsProvider } from "./hooks/useSettings";
@@ -16,6 +17,9 @@ import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
 import PlantingCalendarPage from "./pages/PlantingCalendarPage";
 import NotFoundPage from "./pages/NotFoundPage";
+
+// Lazy-load the map page to code-split the Konva.js bundle
+const GardenMapPage = lazy(() => import("./pages/GardenMapPage"));
 
 export default function App() {
   return (
@@ -36,6 +40,20 @@ export default function App() {
               <Route path="seeds/:id" element={<SeedDetailPage />} />
               <Route path="seeds/:id/edit" element={<SeedFormPage />} />
               <Route path="calendar" element={<PlantingCalendarPage />} />
+              <Route
+                path="map"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="flex h-64 items-center justify-center text-soil-400">
+                        Loading map...
+                      </div>
+                    }
+                  >
+                    <GardenMapPage />
+                  </Suspense>
+                }
+              />
               <Route path="tasks" element={<TasksPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="quick-log" element={<QuickLogPage />} />
