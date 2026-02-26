@@ -27,6 +27,9 @@ import {
   SeedIcon,
 } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
+import WeatherWidget from "../components/WeatherWidget";
+import { useSettings } from "../hooks/useSettings";
+import { formatTemp } from "../services/weather";
 import { useToast } from "../components/ui/Toast";
 
 function todayDate(): string {
@@ -34,6 +37,7 @@ function todayDate(): string {
 }
 
 export default function DashboardPage() {
+  const { settings } = useSettings();
   const { toast } = useToast();
   const upcomingTasks = useLiveQuery(() => taskRepository.getUpcoming(7));
   const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
@@ -160,6 +164,11 @@ export default function DashboardPage() {
           </div>
         </Card>
       </Link>
+
+      {/* Weather */}
+      <section className="mt-4">
+        <WeatherWidget />
+      </section>
 
       {/* Seeds Expiring Soon */}
       {expiringSoonSeeds && expiringSoonSeeds.length > 0 && (
@@ -311,6 +320,11 @@ export default function DashboardPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <Badge>{ACTIVITY_LABELS[entry.activityType]}</Badge>
+                        {entry.weatherSnapshot?.tempC != null && (
+                          <span className="text-xs text-soil-400">
+                            {formatTemp(entry.weatherSnapshot.tempC, settings.temperatureUnit)}
+                          </span>
+                        )}
                         {plantName && (
                           <span className="truncate text-sm font-medium text-soil-700">
                             {plantName}

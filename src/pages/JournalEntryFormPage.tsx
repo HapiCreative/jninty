@@ -10,6 +10,8 @@ import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import { useActiveSeason } from "../hooks/useActiveSeason";
 import type { ProcessedPhoto } from "../services/photoProcessor";
+import { useSettings } from "../hooks/useSettings";
+import { fetchWeatherSnapshot } from "../services/weather";
 import type { ActivityType, MilestoneType } from "../types";
 import {
   ACTIVITY_LABELS,
@@ -52,6 +54,7 @@ const FIELD_LABELS: Record<string, string> = {
 
 export default function JournalEntryFormPage() {
   const navigate = useNavigate();
+  const { settings } = useSettings();
 
   // Form state
   const [activityType, setActivityType] = useState<ActivityType | "">("");
@@ -159,6 +162,20 @@ export default function JournalEntryFormPage() {
 
       const weight = parseFloat(harvestWeight);
 
+      // Auto-capture weather snapshot if location is configured
+      let weatherSnapshot:
+        | { tempC: number; humidity: number; conditions: string }
+        | undefined;
+      if (settings.latitude != null && settings.longitude != null) {
+        const snapshot = await fetchWeatherSnapshot(
+          settings.latitude,
+          settings.longitude,
+        );
+        if (snapshot) {
+          weatherSnapshot = snapshot;
+        }
+      }
+
       const entry = await journalRepository.create({
         activityType: activityType as ActivityType,
         body: body.trim(),
@@ -174,6 +191,7 @@ export default function JournalEntryFormPage() {
         ...(activityType === "harvest" && !isNaN(weight) && weight >= 0
           ? { harvestWeight: weight }
           : {}),
+        ...(weatherSnapshot ? { weatherSnapshot } : {}),
       });
 
       // Update search index

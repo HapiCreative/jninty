@@ -8,6 +8,7 @@ import * as journalRepository from "../db/repositories/journalRepository.ts";
 import * as plantRepository from "../db/repositories/plantRepository.ts";
 import * as gardenBedRepository from "../db/repositories/gardenBedRepository.ts";
 import * as seasonRepository from "../db/repositories/seasonRepository.ts";
+import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { _resetIndex } from "../db/search.ts";
 import JournalEntryFormPage from "./JournalEntryFormPage.tsx";
 
@@ -51,12 +52,14 @@ beforeEach(async () => {
 
 function renderPage() {
   return render(
-    <MemoryRouter initialEntries={["/journal/new"]}>
-      <Routes>
-        <Route path="journal/new" element={<JournalEntryFormPage />} />
-        <Route path="journal" element={<div>Journal Page</div>} />
-      </Routes>
-    </MemoryRouter>,
+    <SettingsProvider>
+      <MemoryRouter initialEntries={["/journal/new"]}>
+        <Routes>
+          <Route path="journal/new" element={<JournalEntryFormPage />} />
+          <Route path="journal" element={<div>Journal Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    </SettingsProvider>,
   );
 }
 

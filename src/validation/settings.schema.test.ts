@@ -130,4 +130,70 @@ describe("settingsSchema", () => {
     const result = validateEntity(settingsSchema, {});
     expect(result.success).toBe(false);
   });
+
+  it("accepts settings with latitude and longitude", () => {
+    const result = validateEntity(settingsSchema, {
+      ...validSettings,
+      latitude: 45.5231,
+      longitude: -122.6765,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts settings without latitude and longitude (optional)", () => {
+    const result = validateEntity(settingsSchema, validSettings);
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects latitude out of range (> 90)", () => {
+    const result = validateEntity(settingsSchema, {
+      ...validSettings,
+      latitude: 91,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects latitude out of range (< -90)", () => {
+    const result = validateEntity(settingsSchema, {
+      ...validSettings,
+      latitude: -91,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects longitude out of range (> 180)", () => {
+    const result = validateEntity(settingsSchema, {
+      ...validSettings,
+      longitude: 181,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects longitude out of range (< -180)", () => {
+    const result = validateEntity(settingsSchema, {
+      ...validSettings,
+      longitude: -181,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts boundary latitude values", () => {
+    for (const lat of [-90, 0, 90]) {
+      const result = validateEntity(settingsSchema, {
+        ...validSettings,
+        latitude: lat,
+      });
+      expect(result.success).toBe(true);
+    }
+  });
+
+  it("accepts boundary longitude values", () => {
+    for (const lon of [-180, 0, 180]) {
+      const result = validateEntity(settingsSchema, {
+        ...validSettings,
+        longitude: lon,
+      });
+      expect(result.success).toBe(true);
+    }
+  });
 });

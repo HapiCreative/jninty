@@ -18,6 +18,8 @@ import {
   ALL_ACTIVITY_TYPES,
 } from "../constants/plantLabels";
 import { useDebounce } from "../hooks/useDebounce";
+import { useSettings } from "../hooks/useSettings";
+import { formatTemp } from "../services/weather";
 import Badge from "../components/ui/Badge";
 import Input from "../components/ui/Input";
 import PhotoThumbnail from "../components/PhotoThumbnail";
@@ -39,6 +41,7 @@ const selectClass =
 type RowData = {
   entries: JournalEntry[];
   plantNames: Map<string, string>;
+  temperatureUnit: "fahrenheit" | "celsius";
   onSelect: (entry: JournalEntry) => void;
 };
 
@@ -81,6 +84,11 @@ function EntryRow({ index, style, data }: ListChildComponentProps<RowData>) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <Badge>{ACTIVITY_LABELS[entry.activityType]}</Badge>
+            {entry.weatherSnapshot?.tempC != null && (
+              <span className="text-xs text-soil-400">
+                {formatTemp(entry.weatherSnapshot.tempC, data.temperatureUnit)}
+              </span>
+            )}
             {plantName && (
               <span className="truncate text-xs text-soil-500">
                 {plantName}
@@ -109,10 +117,12 @@ function EntryRow({ index, style, data }: ListChildComponentProps<RowData>) {
 function EntryDetail({
   entry,
   plantName,
+  temperatureUnit,
   onClose,
 }: {
   entry: JournalEntry;
   plantName: string | undefined;
+  temperatureUnit: "fahrenheit" | "celsius";
   onClose: () => void;
 }) {
   const [displayUrl, setDisplayUrl] = useState<string | null>(null);
@@ -223,6 +233,20 @@ function EntryDetail({
                 </Link>
               </p>
             )}
+            {entry.weatherSnapshot?.tempC != null && (
+              <p>
+                Weather:{" "}
+                <span className="font-medium text-soil-700">
+                  {formatTemp(entry.weatherSnapshot.tempC, temperatureUnit)}
+                  {entry.weatherSnapshot.conditions
+                    ? `, ${entry.weatherSnapshot.conditions}`
+                    : ""}
+                  {entry.weatherSnapshot.humidity != null
+                    ? ` (${String(entry.weatherSnapshot.humidity)}% humidity)`
+                    : ""}
+                </span>
+              </p>
+            )}
             {entry.isMilestone && entry.milestoneType && (
               <p>
                 Milestone:{" "}
@@ -299,6 +323,7 @@ function AddEntryFab() {
 // ─── Main page component ───
 
 export default function JournalPage() {
+  const { settings } = useSettings();
   const allEntries = useLiveQuery(() => journalRepository.getAll());
   const allPlants = useLiveQuery(() => plantRepository.getAll());
   const allSeasons = useLiveQuery(() => seasonRepository.getAll());
@@ -427,9 +452,10 @@ export default function JournalPage() {
     () => ({
       entries: filteredEntries,
       plantNames,
+      temperatureUnit: settings.temperatureUnit,
       onSelect: handleSelect,
     }),
-    [filteredEntries, plantNames, handleSelect],
+    [filteredEntries, plantNames, settings.temperatureUnit, handleSelect],
   );
 
   // Loading state
@@ -596,6 +622,7 @@ export default function JournalPage() {
               ? plantNames.get(selectedEntry.plantInstanceId)
               : undefined
           }
+          temperatureUnit={settings.temperatureUnit}
           onClose={() => setSelectedEntry(null)}
         />
       )}

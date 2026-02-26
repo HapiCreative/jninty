@@ -8,6 +8,8 @@ import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import { useActiveSeason } from "../hooks/useActiveSeason";
 import type { ProcessedPhoto } from "../services/photoProcessor";
+import { useSettings } from "../hooks/useSettings";
+import { fetchWeatherSnapshot } from "../services/weather";
 import type { ActivityType } from "../types";
 import { ACTIVITY_LABELS } from "../constants/plantLabels";
 import Button from "../components/ui/Button";
@@ -54,6 +56,9 @@ export default function QuickLogPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Settings for weather capture
+  const { settings } = useSettings();
 
   // Load active plants for dropdown + active season
   const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
@@ -138,6 +143,20 @@ export default function QuickLogPage() {
         return;
       }
 
+      // Auto-capture weather snapshot if location is configured
+      let weatherSnapshot:
+        | { tempC: number; humidity: number; conditions: string }
+        | undefined;
+      if (settings.latitude != null && settings.longitude != null) {
+        const snapshot = await fetchWeatherSnapshot(
+          settings.latitude,
+          settings.longitude,
+        );
+        if (snapshot) {
+          weatherSnapshot = snapshot;
+        }
+      }
+
       const entry = await journalRepository.create({
         activityType: (activityType || "general") as ActivityType,
         body: note.trim() || "Quick log",
@@ -145,6 +164,7 @@ export default function QuickLogPage() {
         isMilestone: false,
         seasonId: activeSeason.id,
         ...(plantId ? { plantInstanceId: plantId } : {}),
+        ...(weatherSnapshot ? { weatherSnapshot } : {}),
       });
 
       // Update search index
