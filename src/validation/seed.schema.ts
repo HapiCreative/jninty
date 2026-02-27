@@ -21,6 +21,7 @@ export const seedSchema = baseEntitySchema
     expiryDate: isoDate.optional(),
     germinationRate: z.number().int().min(0).max(100).optional(),
     cost: z.number().nonnegative().optional(),
+    purchaseStore: z.string().min(1).optional(),
     storageLocation: z.string().min(1).optional(),
     notes: z.string().min(1).optional(),
   })

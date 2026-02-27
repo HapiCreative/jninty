@@ -17,6 +17,8 @@ import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
 import PlantingCalendarPage from "./pages/PlantingCalendarPage";
 import SeasonComparisonPage from "./pages/SeasonComparisonPage";
+import ExpensesPage from "./pages/ExpensesPage";
+import ExpenseFormPage from "./pages/ExpenseFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 
@@ -61,6 +63,9 @@ export default function App() {
                   </Suspense>
                 }
               />
+              <Route path="expenses" element={<ExpensesPage />} />
+              <Route path="expenses/new" element={<ExpenseFormPage />} />
+              <Route path="expenses/:id/edit" element={<ExpenseFormPage />} />
               <Route path="tasks" element={<TasksPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="quick-log" element={<QuickLogPage />} />

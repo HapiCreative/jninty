@@ -7,6 +7,7 @@ import { QUANTITY_UNIT_OPTIONS } from "../constants/seedLabels";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import StoreAutosuggest from "../components/StoreAutosuggest";
 import { ChevronLeftIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
@@ -46,6 +47,7 @@ export default function SeedFormPage() {
   const [expiryDate, setExpiryDate] = useState("");
   const [germinationRate, setGerminationRate] = useState("");
   const [cost, setCost] = useState("");
+  const [purchaseStore, setPurchaseStore] = useState("");
   const [storageLocation, setStorageLocation] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -78,6 +80,7 @@ export default function SeedFormPage() {
         seed.germinationRate != null ? String(seed.germinationRate) : "",
       );
       setCost(seed.cost != null ? String(seed.cost) : "");
+      setPurchaseStore(seed.purchaseStore ?? "");
       setStorageLocation(seed.storageLocation ?? "");
       setNotes(seed.notes ?? "");
 
@@ -135,6 +138,9 @@ export default function SeedFormPage() {
       if (cost && !Number.isNaN(costNum)) {
         input.cost = costNum;
       }
+
+      const trimmedPurchaseStore = purchaseStore.trim();
+      if (trimmedPurchaseStore) input.purchaseStore = trimmedPurchaseStore;
 
       const trimmedLocation = storageLocation.trim();
       if (trimmedLocation) input.storageLocation = trimmedLocation;
@@ -443,6 +449,21 @@ export default function SeedFormPage() {
                 placeholder="0.00"
                 value={cost}
                 onChange={(e) => setCost(e.target.value)}
+              />
+            </div>
+
+            {/* Purchased at */}
+            <div>
+              <label
+                htmlFor="seed-purchase-store"
+                className="mb-1 block text-sm font-medium text-soil-700"
+              >
+                Purchased At
+              </label>
+              <StoreAutosuggest
+                id="seed-purchase-store"
+                value={purchaseStore}
+                onChange={setPurchaseStore}
               />
             </div>
 

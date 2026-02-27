@@ -29,6 +29,7 @@ import {
 import Skeleton from "../components/ui/Skeleton";
 import SuggestionsList from "../components/SuggestionsList";
 import WeatherWidget from "../components/WeatherWidget";
+import SpendingWidget from "../components/SpendingWidget";
 import { useSettings } from "../hooks/useSettings";
 import { formatTemp } from "../services/weather";
 import { useToast } from "../components/ui/Toast";
@@ -172,6 +173,11 @@ export default function DashboardPage() {
       {/* Weather */}
       <section className="mt-4">
         <WeatherWidget />
+      </section>
+
+      {/* Spending */}
+      <section className="mt-4">
+        <SpendingWidget />
       </section>
 
       {/* Suggested Tasks */}

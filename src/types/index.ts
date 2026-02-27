@@ -33,6 +33,10 @@ export type {
 } from "../validation/planting.schema.ts";
 export type { QuantityUnit, Seed } from "../validation/seed.schema.ts";
 export type {
+  ExpenseCategory,
+  Expense,
+} from "../validation/expense.schema.ts";
+export type {
   PlantKnowledge,
   SunExposure,
   WaterNeeds,

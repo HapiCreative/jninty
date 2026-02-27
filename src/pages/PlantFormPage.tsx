@@ -16,6 +16,7 @@ import {
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import StoreAutosuggest from "../components/StoreAutosuggest";
 import { ChevronLeftIcon, CloseIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
@@ -56,6 +57,8 @@ export default function PlantFormPage() {
   const [source, setSource] = useState<PlantSource>("unknown");
   const [status, setStatus] = useState<PlantStatus>("active");
   const [dateAcquired, setDateAcquired] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [purchaseStore, setPurchaseStore] = useState("");
   const [careNotes, setCareNotes] = useState("");
   const [tagsInput, setTagsInput] = useState("");
 
@@ -94,6 +97,8 @@ export default function PlantFormPage() {
       setSource(plant.source);
       setStatus(plant.status);
       setDateAcquired(plant.dateAcquired ?? "");
+      setPurchasePrice(plant.purchasePrice != null ? String(plant.purchasePrice) : "");
+      setPurchaseStore(plant.purchaseStore ?? "");
       setCareNotes(plant.careNotes ?? "");
       setTagsInput(plant.tags.join(", "));
 
@@ -218,6 +223,14 @@ export default function PlantFormPage() {
       if (trimmedVariety) input.variety = trimmedVariety;
 
       if (dateAcquired) input.dateAcquired = dateAcquired;
+
+      const priceNum = Number(purchasePrice);
+      if (purchasePrice && !Number.isNaN(priceNum)) {
+        input.purchasePrice = priceNum;
+      }
+
+      const trimmedStore = purchaseStore.trim();
+      if (trimmedStore) input.purchaseStore = trimmedStore;
 
       const trimmedNotes = careNotes.trim();
       if (trimmedNotes) input.careNotes = trimmedNotes;
@@ -505,6 +518,40 @@ export default function PlantFormPage() {
                 type="date"
                 value={dateAcquired}
                 onChange={(e) => setDateAcquired(e.target.value)}
+              />
+            </div>
+
+            {/* Purchase price */}
+            <div>
+              <label
+                htmlFor="purchase-price"
+                className="mb-1 block text-sm font-medium text-soil-700"
+              >
+                Purchase Price ($)
+              </label>
+              <Input
+                id="purchase-price"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value={purchasePrice}
+                onChange={(e) => setPurchasePrice(e.target.value)}
+              />
+            </div>
+
+            {/* Purchased at */}
+            <div>
+              <label
+                htmlFor="purchase-store"
+                className="mb-1 block text-sm font-medium text-soil-700"
+              >
+                Purchased At
+              </label>
+              <StoreAutosuggest
+                id="purchase-store"
+                value={purchaseStore}
+                onChange={setPurchaseStore}
               />
             </div>
 

@@ -41,6 +41,8 @@ export const plantInstanceSchema = baseEntitySchema
     tags: z.array(z.string().min(1)),
     careNotes: z.string().min(1).optional(),
     photoIds: z.array(z.string().uuid()).optional(),
+    purchasePrice: z.number().nonnegative().optional(),
+    purchaseStore: z.string().min(1).optional(),
   })
   .strict();
 

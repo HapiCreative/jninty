@@ -9,6 +9,7 @@ import type { Season } from "../validation/season.schema.ts";
 import type { Planting } from "../validation/planting.schema.ts";
 import type { Seed } from "../validation/seed.schema.ts";
 import type { TaskRule } from "../validation/taskRule.schema.ts";
+import type { Expense } from "../validation/expense.schema.ts";
 
 // Settings doesn't extend BaseEntity — wrap it with an id for Dexie.
 export type SettingsRecord = { id: string } & Settings;
@@ -32,6 +33,7 @@ export class JnintyDB extends Dexie {
   seeds!: Table<Seed, string>;
   weatherCache!: Table<WeatherCacheRecord, string>;
   taskRules!: Table<TaskRule, string>;
+  expenses!: Table<Expense, string>;
 
   constructor(name = "jninty") {
     super(name);
@@ -159,6 +161,13 @@ export class JnintyDB extends Dexie {
     // Adds taskRules store for automated task suggestion engine.
     this.version(6).stores({
       taskRules: "id, isBuiltIn",
+    });
+
+    // ─── Version 7: Expense Tracking ───
+    // Adds expenses store and purchaseStore/purchasePrice fields to
+    // plantInstances and seeds (no data migration needed — new fields are optional).
+    this.version(7).stores({
+      expenses: "id, date, category, store, seasonId, deletedAt",
     });
   }
 }
