@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  couchdb:
+    image: couchdb:3
+    container_name: jninty-couchdb
+    ports:
+      - "5984:5984"
+    environment:
+      - COUCHDB_USER=${COUCHDB_USER:-admin}
+      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:-jninty2026}
+    volumes:
+      - jninty_couchdb_data:/opt/couchdb/data
+    restart: unless-stopped
+volumes:
+  jninty_couchdb_data:

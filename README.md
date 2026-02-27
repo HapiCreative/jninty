@@ -72,6 +72,10 @@ src/
 
 All data is stored in IndexedDB via Dexie.js. Entities include `id` (UUID), `version`, `createdAt`, `updatedAt`, and `deletedAt` fields for future sync support.
 
+## Multi-Device Sync (Optional)
+
+Want to sync between your phone and desktop? See [sync/README.md](sync/README.md) — it's one command: `cd sync && ./setup.sh`
+
 ## License
 
 MIT
