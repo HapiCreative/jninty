@@ -3,9 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import { db } from "../db/schema.ts";
-import * as journalRepository from "../db/repositories/journalRepository.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { journalRepository, plantRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { addToIndex, _resetIndex } from "../db/search.ts";
 import JournalPage from "./JournalPage.tsx";
@@ -60,8 +59,7 @@ vi.mock("react-window", async () => {
 });
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   _resetIndex();
   vi.clearAllMocks();
 });
@@ -191,9 +189,12 @@ describe("JournalPage", () => {
       expect(screen.getByText("Looking healthy")).toBeInTheDocument();
     });
 
-    // "Big Red" appears in both the plant filter dropdown and the entry row
-    const bigRedTexts = screen.getAllByText("Big Red");
-    expect(bigRedTexts.length).toBeGreaterThanOrEqual(2);
+    // "Big Red" appears in both the plant filter dropdown and the entry row.
+    // Plant names load asynchronously via usePouchQuery, so wait for them.
+    await waitFor(() => {
+      const bigRedTexts = screen.getAllByText("Big Red");
+      expect(bigRedTexts.length).toBeGreaterThanOrEqual(2);
+    });
   });
 
   it("filters by activity type", async () => {

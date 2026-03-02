@@ -7,11 +7,9 @@ import {
 } from "react";
 import { Stage, Layer, Rect, Text, Group, Line, Circle } from "react-konva";
 import type Konva from "konva";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { useNavigate } from "react-router-dom";
-import * as gardenBedRepository from "../db/repositories/gardenBedRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
+import { gardenBedRepository, plantingRepository, plantRepository } from "../db/index.ts";
 import type {
   GardenBed,
   BedType,
@@ -887,11 +885,11 @@ export default function GardenMapPage() {
   const emptyPlantings: Planting[] = useMemo(() => [], []);
   const emptyPlants: PlantInstance[] = useMemo(() => [], []);
 
-  const beds = useLiveQuery(() => gardenBedRepository.getAll()) ?? emptyBeds;
+  const beds = usePouchQuery(() => gardenBedRepository.getAll()) ?? emptyBeds;
   const allPlantings =
-    useLiveQuery(() => plantingRepository.getAll()) ?? emptyPlantings;
+    usePouchQuery(() => plantingRepository.getAll()) ?? emptyPlantings;
   const rawPlants =
-    useLiveQuery(() => plantRepository.getAll()) ?? emptyPlants;
+    usePouchQuery(() => plantRepository.getAll()) ?? emptyPlants;
 
   const activeSeason = useActiveSeason();
 

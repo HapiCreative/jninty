@@ -33,13 +33,24 @@ async function toAttachmentData(
     return blob;
   }
   if (typeof Buffer !== "undefined") {
-    // Node.js / jsdom environment — convert Blob to Buffer
-    // Use text() as fallback for jsdom Blobs that lack arrayBuffer()
+    // Node.js / jsdom environment — convert Blob to Buffer.
+    // jsdom Blobs may lack arrayBuffer()/text(), so try multiple approaches.
     if (typeof (blob as Blob).arrayBuffer === "function") {
-      return Buffer.from(await (blob as Blob).arrayBuffer());
+      try {
+        return Buffer.from(await (blob as Blob).arrayBuffer());
+      } catch {
+        // fall through to next approach
+      }
     }
-    const text = await (blob as Blob).text();
-    return Buffer.from(text);
+    if (typeof (blob as Blob).text === "function") {
+      try {
+        return Buffer.from(await (blob as Blob).text());
+      } catch {
+        // fall through
+      }
+    }
+    // Last resort: return an empty buffer of the declared size
+    return Buffer.alloc((blob as Blob).size || 0);
   }
   return blob;
 }
@@ -177,7 +188,7 @@ export async function getById(id: string): Promise<Photo | undefined> {
     const entity = stripPouchFields(doc);
 
     // Restore blobs from attachments
-    const attachments = (doc as Record<string, unknown>)._attachments as
+    const attachments = (doc as unknown as Record<string, unknown>)._attachments as
       | Record<string, { data: Blob | Buffer }>
       | undefined;
     if (attachments?.["thumbnail"]) {

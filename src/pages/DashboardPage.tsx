@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import {
   format,
   parseISO,
@@ -8,10 +8,7 @@ import {
   startOfDay,
   formatDistanceToNow,
 } from "date-fns";
-import * as taskRepository from "../db/repositories/taskRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as journalRepository from "../db/repositories/journalRepository";
-import * as seedRepository from "../db/repositories/seedRepository";
+import { taskRepository, plantRepository, journalRepository, seedRepository } from "../db/index.ts";
 import { PRIORITY_VARIANT, PRIORITY_LABELS } from "../constants/taskLabels";
 import { ACTIVITY_LABELS } from "../constants/plantLabels";
 import Card from "../components/ui/Card";
@@ -42,11 +39,11 @@ function todayDate(): string {
 export default function DashboardPage() {
   const { settings } = useSettings();
   const { toast } = useToast();
-  const upcomingTasks = useLiveQuery(() => taskRepository.getUpcoming(7));
-  const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
-  const recentEntries = useLiveQuery(() => journalRepository.getRecent(5));
-  const expiringSoonSeeds = useLiveQuery(() =>
+  const upcomingTasks = usePouchQuery(() => taskRepository.getUpcoming(7));
+  const overdueTasks = usePouchQuery(() => taskRepository.getOverdue());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
+  const recentEntries = usePouchQuery(() => journalRepository.getRecent(5));
+  const expiringSoonSeeds = usePouchQuery(() =>
     seedRepository.getExpiringSoon(30),
   );
   const { suggestions, acceptSuggestion, dismissSuggestion } =

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ZodError } from "zod";
-import * as seedRepository from "../db/repositories/seedRepository";
+import { seedRepository } from "../db/index.ts";
 import type { QuantityUnit } from "../types";
 import { QUANTITY_UNIT_OPTIONS } from "../constants/seedLabels";
 import Card from "../components/ui/Card";

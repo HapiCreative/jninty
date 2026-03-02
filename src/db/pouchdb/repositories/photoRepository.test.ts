@@ -33,7 +33,6 @@ vi.mock("../../../validation/photo.schema.ts", async () => {
     })
     .strict();
 
-  type Photo = z.infer<typeof photoSchema>;
   return { photoSchema };
 });
 

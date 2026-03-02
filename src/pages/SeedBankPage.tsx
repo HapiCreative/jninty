@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { formatISO, startOfDay, differenceInDays, parseISO } from "date-fns";
-import * as seedRepository from "../db/repositories/seedRepository";
+import { seedRepository } from "../db/index.ts";
 import type { Seed } from "../types";
 import {
   QUANTITY_UNIT_LABELS,
@@ -82,7 +82,7 @@ function matchesTypeFilter(seed: Seed, filter: SeedTypeFilter): boolean {
 }
 
 export default function SeedBankPage() {
-  const allSeeds = useLiveQuery(() => seedRepository.getAll());
+  const allSeeds = usePouchQuery(() => seedRepository.getAll());
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
   const [typeFilter, setTypeFilter] = useState<SeedTypeFilter | "">("");

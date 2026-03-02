@@ -2,8 +2,8 @@ import "fake-indexeddb/auto";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { db } from "../db/schema.ts";
-import * as settingsRepo from "../db/repositories/settingsRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { settingsRepository as settingsRepo } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { ToastProvider } from "../components/ui/Toast.tsx";
 import SettingsPage from "./SettingsPage.tsx";
@@ -39,8 +39,7 @@ import { exportAll, triggerDownload } from "../services/exporter.ts";
 import { rebuildIndex } from "../db/search.ts";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   vi.clearAllMocks();
 });
 

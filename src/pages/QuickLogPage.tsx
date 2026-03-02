@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as photoRepository from "../db/repositories/photoRepository";
-import * as journalRepository from "../db/repositories/journalRepository";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
+import { plantRepository, photoRepository, journalRepository } from "../db/index.ts";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import { useActiveSeason } from "../hooks/useActiveSeason";
@@ -62,7 +60,7 @@ export default function QuickLogPage() {
   const [success, setSuccess] = useState(false);
 
   // Load active plants for dropdown + active season
-  const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
+  const plants = usePouchQuery(() => plantRepository.getByStatus("active"));
   const activeSeason = useActiveSeason();
 
   // Cleanup preview URL on unmount

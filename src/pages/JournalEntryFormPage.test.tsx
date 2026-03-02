@@ -3,11 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { db } from "../db/schema.ts";
-import * as journalRepository from "../db/repositories/journalRepository.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
-import * as gardenBedRepository from "../db/repositories/gardenBedRepository.ts";
-import * as seasonRepository from "../db/repositories/seasonRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { journalRepository, plantRepository, gardenBedRepository, seasonRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { _resetIndex } from "../db/search.ts";
 import JournalEntryFormPage from "./JournalEntryFormPage.tsx";
@@ -35,8 +32,7 @@ vi.mock("../hooks/usePhotoCapture.ts", () => ({
 }));
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   _resetIndex();
   vi.clearAllMocks();
 

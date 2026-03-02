@@ -5,7 +5,27 @@ import PouchDBAdapterIndexedDB from "pouchdb-adapter-indexeddb";
 PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(PouchDBAdapterIndexedDB);
 
-export const localDB = new PouchDB("jninty", { adapter: "indexeddb" });
+import { resetIndexState } from "./indexes.ts";
+
+let dbCounter = 0;
+
+function createLocalDB(name = "jninty") {
+  return new PouchDB(name, { adapter: "indexeddb" });
+}
+
+export let localDB = createLocalDB();
+
+/**
+ * Replace the local PouchDB instance with a fresh, empty one.
+ * For use in test cleanup — avoids stale PouchDB-Find views
+ * that happen when docs are bulk-deleted via allDocs in fake-indexeddb.
+ * Each call creates a uniquely-named DB to guarantee a clean slate.
+ */
+export function resetLocalDB(): void {
+  dbCounter++;
+  localDB = createLocalDB(`jninty-test-${dbCounter}`);
+  resetIndexState();
+}
 
 type SyncStatus = "syncing" | "paused" | "error" | "offline" | "disabled";
 

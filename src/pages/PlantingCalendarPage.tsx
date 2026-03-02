@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import {
   format,
   parseISO,
@@ -18,10 +18,7 @@ import {
   isAfter,
 } from "date-fns";
 import { useSettings } from "../hooks/useSettings";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
-import * as taskRepository from "../db/repositories/taskRepository";
+import { plantRepository, plantingRepository, seasonRepository, taskRepository } from "../db/index.ts";
 import { getBySpecies } from "../services/knowledgeBase";
 import {
   computePlantingWindows,
@@ -102,13 +99,13 @@ export default function PlantingCalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
-  const allPlantings = useLiveQuery(
-    () => (activeSeason ? plantingRepository.getBySeason(activeSeason.id) : []),
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
+  const allPlantings = usePouchQuery(
+    () => (activeSeason ? plantingRepository.getBySeason(activeSeason.id) : Promise.resolve([])),
     [activeSeason],
   );
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
-  const allTasks = useLiveQuery(() => taskRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
+  const allTasks = usePouchQuery(() => taskRepository.getAll());
 
   // Weather frost warning
   const [weather, setWeather] = useState<WeatherData | null>(null);

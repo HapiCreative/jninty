@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ZodError } from "zod";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as photoRepository from "../db/repositories/photoRepository";
+import { plantRepository, photoRepository } from "../db/index.ts";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import { useSettings } from "../hooks/useSettings";

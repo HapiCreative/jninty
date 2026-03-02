@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import "fake-indexeddb/auto";
-import { db } from "../db/schema.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
 import {
   getConditionLabel,
   getConditionEmoji,
@@ -109,8 +109,7 @@ describe("frost warning", () => {
     });
 
   beforeEach(async () => {
-    await db.delete();
-    await db.open();
+    await clearPouchDB();
     await clearWeatherCache();
   });
 
@@ -162,8 +161,7 @@ describe("fetchCurrentWeather", () => {
   });
 
   beforeEach(async () => {
-    await db.delete();
-    await db.open();
+    await clearPouchDB();
     await clearWeatherCache();
   });
 
@@ -245,8 +243,7 @@ describe("fetchCurrentWeather", () => {
 
 describe("fetchWeatherSnapshot", () => {
   beforeEach(async () => {
-    await db.delete();
-    await db.open();
+    await clearPouchDB();
     await clearWeatherCache();
   });
 

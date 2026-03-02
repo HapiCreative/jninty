@@ -62,7 +62,7 @@ describe("PouchDB plantRepository", () => {
     it("stores document with correct docType in PouchDB", async () => {
       const plant = await plantRepo.create(basePlant);
       const doc = await testDB.get(`plant:${plant.id}`);
-      expect((doc as Record<string, unknown>)["docType"]).toBe("plant");
+      expect((doc as unknown as Record<string, unknown>)["docType"]).toBe("plant");
     });
   });
 
@@ -106,8 +106,8 @@ describe("PouchDB plantRepository", () => {
 
       // Direct DB read to verify soft-delete
       const raw = await testDB.get(`plant:${plant.id}`);
-      expect((raw as Record<string, unknown>)["deletedAt"]).toBeDefined();
-      expect((raw as Record<string, unknown>)["version"]).toBe(2);
+      expect((raw as unknown as Record<string, unknown>)["deletedAt"]).toBeDefined();
+      expect((raw as unknown as Record<string, unknown>)["version"]).toBe(2);
     });
 
     it("throws when deleting a non-existent plant", async () => {

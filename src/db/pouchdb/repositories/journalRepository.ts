@@ -5,6 +5,7 @@ import {
   type JournalEntry,
   type ActivityType,
 } from "../../../validation/journalEntry.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "journal";
 
@@ -17,29 +18,6 @@ type UpdateJournalInput = Partial<CreateJournalInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({
-    index: { fields: ["docType", "plantInstanceId"] },
-  });
-  await localDB.createIndex({
-    index: { fields: ["docType", "activityType"] },
-  });
-  await localDB.createIndex({
-    index: { fields: ["docType", "createdAt"] },
-  });
-  await localDB.createIndex({
-    index: { fields: ["docType", "seasonId"] },
-  });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(
@@ -137,7 +115,7 @@ export async function getById(
 export async function getByPlantId(
   plantInstanceId: string,
 ): Promise<JournalEntry[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -150,6 +128,7 @@ export async function getByPlantId(
 }
 
 export async function getRecent(limit: number): Promise<JournalEntry[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -163,7 +142,7 @@ export async function getRecent(limit: number): Promise<JournalEntry[]> {
 export async function getByActivityType(
   activityType: ActivityType,
 ): Promise<JournalEntry[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -176,6 +155,7 @@ export async function getByActivityType(
 }
 
 export async function getAll(): Promise<JournalEntry[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -189,7 +169,7 @@ export async function getByDateRange(
   start: string,
   end: string,
 ): Promise<JournalEntry[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -204,7 +184,7 @@ export async function getByDateRange(
 export async function getBySeasonId(
   seasonId: string,
 ): Promise<JournalEntry[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,

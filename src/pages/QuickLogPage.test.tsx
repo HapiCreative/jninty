@@ -3,10 +3,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { db } from "../db/schema.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
-import * as journalRepository from "../db/repositories/journalRepository.ts";
-import * as seasonRepository from "../db/repositories/seasonRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { plantRepository, journalRepository, seasonRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { _resetIndex } from "../db/search.ts";
 import QuickLogPage from "./QuickLogPage.tsx";
@@ -44,8 +42,7 @@ vi.stubGlobal("URL", {
 });
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   _resetIndex();
   blobUrlCounter = 0;
   vi.clearAllMocks();

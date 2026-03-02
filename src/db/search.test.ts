@@ -1,6 +1,8 @@
 import "fake-indexeddb/auto";
 import { describe, it, expect, beforeEach } from "vitest";
-import { db } from "./schema.ts";
+import { clearPouchDB } from "./pouchdb/testUtils.ts";
+import { localDB } from "./pouchdb/client.ts";
+import { toPouchDoc } from "./pouchdb/utils.ts";
 import {
   addToIndex,
   removeFromIndex,
@@ -14,8 +16,7 @@ import type { PlantInstance } from "../validation/plantInstance.schema.ts";
 import type { JournalEntry } from "../validation/journalEntry.schema.ts";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   // Reset only the in-memory index; don't serialize to DB.
   _resetIndex();
 });
@@ -148,23 +149,18 @@ describe("search", () => {
   });
 
   describe("serializeIndex / loadIndex", () => {
-    it("round-trips the index through IndexedDB", async () => {
+    it("loadIndex always returns false (PouchDB rebuilds from allDocs)", async () => {
       const plant = makePlant({ nickname: "Persisted Plant" });
       addToIndex(plant);
 
       await serializeIndex();
 
-      // Clear the in-memory index without touching DB
       _resetIndex();
       expect(search("Persisted")).toHaveLength(0);
 
-      // Load from IndexedDB
+      // PouchDB search has no serialized index — loadIndex returns false
       const loaded = await loadIndex();
-      expect(loaded).toBe(true);
-
-      const results = search("Persisted");
-      expect(results).toHaveLength(1);
-      expect(results[0]?.id).toBe(plant.id);
+      expect(loaded).toBe(false);
     });
 
     it("loadIndex returns false when no saved index exists", async () => {
@@ -172,16 +168,15 @@ describe("search", () => {
       expect(loaded).toBe(false);
     });
 
-    it("addToIndex works after loadIndex without duplicate ID crash", async () => {
+    it("addToIndex works after rebuildIndex without duplicate ID crash", async () => {
       const plant = makePlant({ nickname: "Persisted Alpha" });
-      // Store the plant in the DB so loadIndex can rebuild docMap
-      await db.plantInstances.add(plant);
+      // Store the plant in PouchDB
+      await localDB.put(toPouchDoc(plant, "plant"));
       addToIndex(plant);
-      await serializeIndex();
 
-      // Simulate app restart: reset in-memory state, then load from DB
+      // Simulate app restart: reset in-memory state, then rebuild
       _resetIndex();
-      await loadIndex();
+      await rebuildIndex();
 
       // Updating the same document should NOT throw "duplicate ID"
       const updated = { ...plant, nickname: "Persisted Bravo" };
@@ -194,7 +189,7 @@ describe("search", () => {
 
   describe("rebuildIndex", () => {
     it("rebuilds from all non-deleted DB records", async () => {
-      // Add records directly to DB
+      // Add records directly to PouchDB
       const plant = makePlant();
       const deletedPlant = makePlant({
         deletedAt: timestamp,
@@ -206,26 +201,18 @@ describe("search", () => {
         body: "Deleted entry",
       });
 
-      await db.plantInstances.bulkAdd([plant, deletedPlant]);
-      await db.journalEntries.bulkAdd([entry, deletedEntry]);
+      await localDB.bulkDocs([
+        toPouchDoc(plant, "plant"),
+        toPouchDoc(deletedPlant, "plant"),
+        toPouchDoc(entry, "journal"),
+        toPouchDoc(deletedEntry, "journal"),
+      ]);
 
       const count = await rebuildIndex();
       expect(count).toBe(2); // only non-deleted
 
       expect(search("Solanum")).toHaveLength(1);
       expect(search("Deleted")).toHaveLength(0);
-    });
-
-    it("persists the rebuilt index to IndexedDB", async () => {
-      const plant = makePlant({ nickname: "Rebuilt" });
-      await db.plantInstances.add(plant);
-
-      await rebuildIndex();
-
-      // Verify it was saved
-      const record = await db.searchIndex.get("main");
-      expect(record).toBeDefined();
-      expect(record?.data).toBeTruthy();
     });
   });
 

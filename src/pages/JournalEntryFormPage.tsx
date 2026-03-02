@@ -1,11 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { ZodError } from "zod";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as photoRepository from "../db/repositories/photoRepository";
-import * as journalRepository from "../db/repositories/journalRepository";
-import * as gardenBedRepository from "../db/repositories/gardenBedRepository";
+import { plantRepository, photoRepository, journalRepository, gardenBedRepository } from "../db/index.ts";
 import { addToIndex, serializeIndex } from "../db/search";
 import { usePhotoCapture } from "../hooks/usePhotoCapture";
 import { useActiveSeason } from "../hooks/useActiveSeason";
@@ -78,8 +75,8 @@ export default function JournalEntryFormPage() {
   const [errors, setErrors] = useState<string[]>([]);
 
   // Load data for dropdowns + active season
-  const plants = useLiveQuery(() => plantRepository.getByStatus("active"));
-  const gardenBeds = useLiveQuery(() => gardenBedRepository.getAll());
+  const plants = usePouchQuery(() => plantRepository.getByStatus("active"));
+  const gardenBeds = usePouchQuery(() => gardenBedRepository.getAll());
   const activeSeason = useActiveSeason();
 
   // Cleanup preview URLs on unmount

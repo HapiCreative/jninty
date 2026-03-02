@@ -1,5 +1,5 @@
 import { taskRuleSchema, type TaskRule } from "../validation/taskRule.schema.ts";
-import * as taskRuleRepository from "../db/repositories/taskRuleRepository.ts";
+import { taskRuleRepository } from "../db/index.ts";
 
 // Import JSON rule files directly — Vite resolves these at build time
 import vegetableRules from "../../data/taskRules/vegetables.json";

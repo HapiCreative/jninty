@@ -1,14 +1,16 @@
 import "fake-indexeddb/auto";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { db } from "../db/schema.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
 import PhotoLightbox from "./PhotoLightbox.tsx";
 
-// Mock photoRepository
-vi.mock("../db/repositories/photoRepository.ts", () => ({
-  getDisplayBlob: vi.fn().mockResolvedValue(
-    new Blob(["display-data"], { type: "image/jpeg" }),
-  ),
+// Mock photoRepository via barrel export
+vi.mock("../db/index.ts", () => ({
+  photoRepository: {
+    getDisplayBlob: vi.fn().mockResolvedValue(
+      new Blob(["display-data"], { type: "image/jpeg" }),
+    ),
+  },
 }));
 
 // Mock URL.createObjectURL / revokeObjectURL for jsdom
@@ -16,8 +18,7 @@ globalThis.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
 globalThis.URL.revokeObjectURL = vi.fn();
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 describe("PhotoLightbox", () => {

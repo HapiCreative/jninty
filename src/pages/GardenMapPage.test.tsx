@@ -14,11 +14,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { SettingsProvider } from "../hooks/useSettings";
 import { ToastProvider } from "../components/ui/Toast";
-import { db } from "../db/schema";
-import * as gardenBedRepository from "../db/repositories/gardenBedRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { gardenBedRepository, plantRepository, plantingRepository, seasonRepository } from "../db/index.ts";
 
 // Mock react-konva since it requires a real canvas environment
 vi.mock("react-konva", () => {
@@ -97,8 +94,7 @@ function renderMap() {
 }
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 describe("GardenMapPage", () => {

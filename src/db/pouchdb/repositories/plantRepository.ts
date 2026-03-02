@@ -6,6 +6,7 @@ import {
   type PlantType,
   type PlantStatus,
 } from "../../../validation/plantInstance.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "plant";
 
@@ -18,19 +19,6 @@ type UpdatePlantInput = Partial<CreatePlantInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({ index: { fields: ["docType", "status"] } });
-  await localDB.createIndex({ index: { fields: ["docType", "type"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreatePlantInput): Promise<PlantInstance> {
@@ -124,7 +112,7 @@ export async function getById(
 }
 
 export async function getAll(): Promise<PlantInstance[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -138,7 +126,7 @@ export async function getAll(): Promise<PlantInstance[]> {
 export async function getByStatus(
   status: PlantStatus,
 ): Promise<PlantInstance[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -151,7 +139,7 @@ export async function getByStatus(
 }
 
 export async function getByType(type: PlantType): Promise<PlantInstance[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
