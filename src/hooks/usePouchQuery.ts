@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { localDB } from "../db/pouchdb/client.ts";
 
 /**
- * PouchDB-compatible replacement for Dexie's useLiveQuery.
+ * Reactive query hook for PouchDB.
  * Runs the querier function on mount, when deps change, and
  * when PouchDB emits a change event.
  *
