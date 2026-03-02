@@ -15,6 +15,30 @@ type CreateInput = Omit<
 
 type UpdateInput = Partial<CreateInput>;
 
+/**
+ * Optional plant knowledge fields that can be cleared on update.
+ * When a full replacement is intended, these are stripped from the existing
+ * entity before merging changes so that cleared fields don't persist.
+ */
+const OPTIONAL_DATA_KEYS: readonly string[] = [
+  "variety",
+  "soilPreference",
+  "growthRate",
+  "spacingInches",
+  "matureHeightInches",
+  "matureSpreadInches",
+  "indoorStartWeeksBeforeLastFrost",
+  "transplantWeeksAfterLastFrost",
+  "directSowWeeksBeforeLastFrost",
+  "directSowWeeksAfterLastFrost",
+  "daysToGermination",
+  "daysToMaturity",
+  "goodCompanions",
+  "badCompanions",
+  "commonPests",
+  "commonDiseases",
+];
+
 function now(): string {
   return new Date().toISOString();
 }
@@ -38,6 +62,7 @@ export async function create(input: CreateInput): Promise<UserPlantKnowledge> {
 export async function update(
   id: string,
   changes: UpdateInput,
+  options?: { replaceAll?: boolean },
 ): Promise<UserPlantKnowledge> {
   const docId = `${DOC_TYPE}:${id}`;
   let existing: PouchDoc<UserPlantKnowledge>;
@@ -52,8 +77,19 @@ export async function update(
     throw new Error(`UserPlantKnowledge not found: ${id}`);
   }
 
+  // When replaceAll is true, strip optional data fields from the existing
+  // entity before merging so that cleared fields don't persist.
+  let base: UserPlantKnowledge = entity;
+  if (options?.replaceAll) {
+    const stripped = { ...entity };
+    for (const key of OPTIONAL_DATA_KEYS) {
+      delete (stripped as Record<string, unknown>)[key];
+    }
+    base = stripped as UserPlantKnowledge;
+  }
+
   const updated: UserPlantKnowledge = {
-    ...entity,
+    ...base,
     ...changes,
     id: entity.id,
     version: entity.version + 1,

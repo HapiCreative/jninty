@@ -244,7 +244,7 @@ export default function PlantFormPage() {
       }
 
       // Update search index
-      addToIndex(plant);
+      addToIndex(plant, "plant");
       void serializeIndex();
 
       void navigate(`/plants/${plant.id}`, { replace: true });

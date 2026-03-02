@@ -246,7 +246,9 @@ export default function KnowledgeFormPage() {
 
       let entry;
       if (isEditing && id) {
-        entry = await userPlantKnowledgeRepository.update(id, input);
+        entry = await userPlantKnowledgeRepository.update(id, input, {
+          replaceAll: true,
+        });
       } else {
         entry = await userPlantKnowledgeRepository.create(input);
       }

@@ -100,6 +100,24 @@ export function builtInEntryId(species: string, variety?: string): string {
 }
 
 /**
+ * Convert a UserPlantKnowledge entry into a KnowledgeBaseItem,
+ * stripping base entity fields to extract just the PlantKnowledge data.
+ */
+function userEntryToItem(entry: UserPlantKnowledge): KnowledgeBaseItem {
+  const { id, version, createdAt, updatedAt, deletedAt, ...plantData } = entry;
+  void version;
+  void createdAt;
+  void updatedAt;
+  void deletedAt;
+  return {
+    id,
+    source: "custom",
+    data: plantData as PlantKnowledge,
+    userEntry: entry,
+  };
+}
+
+/**
  * Merge built-in plant knowledge with user-created entries into a unified list.
  * Sorted alphabetically by commonName.
  */
@@ -114,20 +132,7 @@ export function loadAllKnowledgeItems(
     data,
   }));
 
-  const customItems: KnowledgeBaseItem[] = userEntries.map((entry) => {
-    const { id, version, createdAt, updatedAt, deletedAt, ...plantData } =
-      entry;
-    void version;
-    void createdAt;
-    void updatedAt;
-    void deletedAt;
-    return {
-      id,
-      source: "custom" as const,
-      data: plantData as PlantKnowledge,
-      userEntry: entry,
-    };
-  });
+  const customItems: KnowledgeBaseItem[] = userEntries.map(userEntryToItem);
 
   return [...builtInItems, ...customItems].sort((a, b) =>
     a.data.commonName.localeCompare(b.data.commonName),
@@ -153,16 +158,5 @@ export function findKnowledgeItemById(
 
   const userEntry = userEntries.find((e) => e.id === id);
   if (!userEntry) return undefined;
-  const { id: uid, version, createdAt, updatedAt, deletedAt, ...plantData } =
-    userEntry;
-  void version;
-  void createdAt;
-  void updatedAt;
-  void deletedAt;
-  return {
-    id: uid,
-    source: "custom",
-    data: plantData as PlantKnowledge,
-    userEntry,
-  };
+  return userEntryToItem(userEntry);
 }

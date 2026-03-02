@@ -44,7 +44,7 @@ async function createPlant(overrides: Partial<Parameters<typeof plantRepository.
     tags: [],
     ...overrides,
   });
-  addToIndex(plant);
+  addToIndex(plant, "plant");
   return plant;
 }
 
