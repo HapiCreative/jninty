@@ -144,7 +144,7 @@ describe("PouchDB photoRepository", () => {
 
       // The synced PouchDB doc should NOT have an "original" attachment
       const doc = await testDB.get(`photo:${photo.id}`, { attachments: true });
-      const attachments = (doc as Record<string, unknown>)["_attachments"] as
+      const attachments = (doc as unknown as Record<string, unknown>)["_attachments"] as
         | Record<string, unknown>
         | undefined;
 

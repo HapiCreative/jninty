@@ -46,7 +46,7 @@ npm run test:watch   # Run tests (watch mode)
 | Framework | React 18 + TypeScript (strict mode) |
 | Build | Vite |
 | Styling | Tailwind CSS v4 |
-| Database | Dexie.js (IndexedDB) |
+| Database | PouchDB (IndexedDB) + optional CouchDB sync |
 | Routing | React Router DOM v7 |
 | Search | MiniSearch |
 | Validation | Zod |
@@ -62,7 +62,7 @@ src/
   components/      Shared UI components
   components/ui/   Primitive UI (Button, Card, Input, Badge, Toast, Skeleton)
   components/layout/  Layout (AppShell — sidebar + bottom nav)
-  db/              Dexie schema, repositories, search index
+  db/              PouchDB client, repositories, search index
   hooks/           Custom React hooks
   services/        Business logic (exporter, photo processor, storage)
   validation/      Zod schemas
@@ -70,7 +70,7 @@ src/
   constants/       Label and option constants
 ```
 
-All data is stored in IndexedDB via Dexie.js. Entities include `id` (UUID), `version`, `createdAt`, `updatedAt`, and `deletedAt` fields for future sync support.
+All data is stored in IndexedDB via PouchDB, with optional CouchDB replication for multi-device sync. Entities include `id` (UUID), `version`, `createdAt`, `updatedAt`, and `deletedAt` fields.
 
 ## Multi-Device Sync (Optional)
 

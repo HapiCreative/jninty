@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppShell from "./components/layout/AppShell";
 import { SettingsProvider } from "./hooks/useSettings";
@@ -21,58 +21,23 @@ import SeasonComparisonPage from "./pages/SeasonComparisonPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import ExpenseFormPage from "./pages/ExpenseFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import MigrationScreen from "./components/MigrationScreen.tsx";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 import { rebuildIndex, startListening } from "./db/search.ts";
-import {
-  isMigrationComplete,
-  dexieHasData,
-} from "./db/migration/dexieToPouchdb.ts";
 
 // Lazy-load the map page to code-split the Konva.js bundle
 const GardenMapPage = lazy(() => import("./pages/GardenMapPage"));
 
 export default function App() {
-  const [migrationNeeded, setMigrationNeeded] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    async function checkMigration() {
-      const alreadyDone = await isMigrationComplete();
-      if (alreadyDone) {
-        setMigrationNeeded(false);
-        return;
-      }
-      const hasData = await dexieHasData();
-      setMigrationNeeded(hasData);
-    }
-    checkMigration().catch(() => setMigrationNeeded(false));
-  }, []);
-
-  const handleMigrationComplete = useCallback(() => {
-    setMigrationNeeded(false);
-  }, []);
-
   useEffect(() => {
     loadBuiltInRules().catch(console.error);
   }, []);
 
   // Initialize PouchDB search index and start listening for changes
   useEffect(() => {
-    if (migrationNeeded !== false) return;
     rebuildIndex()
       .then(() => startListening())
       .catch(console.error);
-  }, [migrationNeeded]);
-
-  // Still checking migration status
-  if (migrationNeeded === null) {
-    return null;
-  }
-
-  // Show migration screen
-  if (migrationNeeded) {
-    return <MigrationScreen onComplete={handleMigrationComplete} />;
-  }
+  }, []);
 
   return (
     <SettingsProvider>

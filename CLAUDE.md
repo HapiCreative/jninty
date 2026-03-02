@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Jninty is a local-first, open-source garden journal and management PWA. All data lives in IndexedDB (via Dexie.js) — no account required, works offline. The full design document is at `docs/plans/Jninty-Design-v1.md`.
+Jninty is a local-first, open-source garden journal and management PWA. All data lives in IndexedDB (via PouchDB) with optional CouchDB sync for multi-device use — no account required, works offline. The full design document is at `docs/plans/Jninty-Design-v1.md`.
 
 ## Commands
 
@@ -22,7 +22,7 @@ npx vitest run src/App.test.tsx  # Run a single test file
 
 **Routing:** React Router DOM v7 with BrowserRouter. Route-level pages go in `src/pages/`, shared components in `src/components/`.
 
-**Data layer:** Dexie.js v4 wrapping IndexedDB. Schema and migrations defined in `src/db/`. Per-entity data access functions go in `src/db/repositories/`. All entities include `id` (UUID), `version`, `createdAt`, `updatedAt`, and `deletedAt` fields for future sync support.
+**Data layer:** PouchDB v9 wrapping IndexedDB, with optional CouchDB replication for multi-device sync. PouchDB client and helpers live in `src/db/pouchdb/`. Per-entity data access functions go in `src/db/pouchdb/repositories/`. All entities include `id` (UUID), `version`, `createdAt`, `updatedAt`, and `deletedAt` fields. Documents are prefixed with a `docType` (e.g. `plant:uuid`) for type isolation in the single-database model.
 
 **Validation:** Zod schemas in `src/validation/` validate all DB imports, exports, and plant knowledge base data at runtime.
 
