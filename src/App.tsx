@@ -22,6 +22,7 @@ import ExpenseFormPage from "./pages/ExpenseFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import MigrationScreen from "./components/MigrationScreen.tsx";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
+import { rebuildIndex, startListening } from "./db/search.ts";
 import {
   isMigrationComplete,
   dexieHasData,
@@ -53,6 +54,14 @@ export default function App() {
   useEffect(() => {
     loadBuiltInRules().catch(console.error);
   }, []);
+
+  // Initialize PouchDB search index and start listening for changes
+  useEffect(() => {
+    if (migrationNeeded !== false) return;
+    rebuildIndex()
+      .then(() => startListening())
+      .catch(console.error);
+  }, [migrationNeeded]);
 
   // Still checking migration status
   if (migrationNeeded === null) {

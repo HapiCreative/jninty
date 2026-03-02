@@ -4,6 +4,7 @@ import {
   taskRuleSchema,
   type TaskRule,
 } from "../../../validation/taskRule.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "taskRule";
 
@@ -112,6 +113,7 @@ export async function getById(id: string): Promise<TaskRule | undefined> {
 }
 
 export async function getAll(): Promise<TaskRule[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -121,6 +123,7 @@ export async function getAll(): Promise<TaskRule[]> {
 }
 
 export async function getBuiltIn(): Promise<TaskRule[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -130,6 +133,7 @@ export async function getBuiltIn(): Promise<TaskRule[]> {
 }
 
 export async function getUserCreated(): Promise<TaskRule[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });

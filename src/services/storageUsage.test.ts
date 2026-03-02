@@ -1,11 +1,11 @@
 import "fake-indexeddb/auto";
 import { describe, it, expect, beforeEach } from "vitest";
-import { db } from "../db/schema.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { localDB } from "../db/pouchdb/client.ts";
 import { formatBytes, getStorageUsage } from "./storageUsage.ts";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 describe("formatBytes", () => {
@@ -51,17 +51,19 @@ describe("getStorageUsage", () => {
   // error and returns a valid number.
   it("handles photos in DB without crashing", async () => {
     const now = new Date().toISOString();
-    const thumb = new Blob(["x".repeat(100)], { type: "image/jpeg" });
-    const display = new Blob(["y".repeat(500)], { type: "image/jpeg" });
-
-    await db.photos.add({
-      id: crypto.randomUUID(),
+    const photoId = crypto.randomUUID();
+    await localDB.put({
+      _id: `photo:${photoId}`,
+      docType: "photo",
+      id: photoId,
       version: 0,
       createdAt: now,
       updatedAt: now,
-      thumbnailBlob: thumb,
-      displayBlob: display,
       originalStored: false,
+      _attachments: {
+        thumbnail: { content_type: "image/jpeg", data: Buffer.from("x".repeat(100)) },
+        display: { content_type: "image/jpeg", data: Buffer.from("y".repeat(500)) },
+      },
     });
 
     const usage = await getStorageUsage();
@@ -73,15 +75,18 @@ describe("getStorageUsage", () => {
 
   it("returns valid structure with photos missing displayBlob", async () => {
     const now = new Date().toISOString();
-    const thumb = new Blob(["x".repeat(200)], { type: "image/jpeg" });
-
-    await db.photos.add({
-      id: crypto.randomUUID(),
+    const photoId = crypto.randomUUID();
+    await localDB.put({
+      _id: `photo:${photoId}`,
+      docType: "photo",
+      id: photoId,
       version: 0,
       createdAt: now,
       updatedAt: now,
-      thumbnailBlob: thumb,
       originalStored: false,
+      _attachments: {
+        thumbnail: { content_type: "image/jpeg", data: Buffer.from("x".repeat(200)) },
+      },
     });
 
     const usage = await getStorageUsage();

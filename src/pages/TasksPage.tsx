@@ -1,9 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { format, parseISO, formatISO, startOfDay } from "date-fns";
-import * as taskRepository from "../db/repositories/taskRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { taskRepository, plantRepository, seasonRepository } from "../db/index.ts";
 import type { Task, TaskPriority, PlantInstance } from "../types";
 import {
   PRIORITY_LABELS,
@@ -398,10 +396,10 @@ function TaskFormModal({
 
 export default function TasksPage() {
   const { toast } = useToast();
-  const allTasks = useLiveQuery(() => taskRepository.getAll());
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
-  const allSeasons = useLiveQuery(() => seasonRepository.getAll());
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const allTasks = usePouchQuery(() => taskRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
+  const allSeasons = usePouchQuery(() => seasonRepository.getAll());
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
   const { suggestions, acceptSuggestion, dismissSuggestion } =
     useTaskSuggestions();
 

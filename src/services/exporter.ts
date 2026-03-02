@@ -1,7 +1,18 @@
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { db } from "../db/schema.ts";
-import { readFile, displayPath, originalPath } from "./opfsStorage.ts";
+import {
+  plantRepository,
+  journalRepository,
+  taskRepository,
+  gardenBedRepository,
+  settingsRepository,
+  seasonRepository,
+  plantingRepository,
+  seedRepository,
+  taskRuleRepository,
+} from "../db/index.ts";
+import { localDB } from "../db/pouchdb/client.ts";
+import { stripPouchFields, type PouchDoc } from "../db/pouchdb/utils.ts";
 import { plantInstanceSchema } from "../validation/plantInstance.schema.ts";
 import { journalEntrySchema } from "../validation/journalEntry.schema.ts";
 import { taskSchema } from "../validation/task.schema.ts";
@@ -61,7 +72,6 @@ const photoImportSchema = z
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     deletedAt: z.string().datetime().optional(),
-    displayStoredInOpfs: z.boolean().optional(),
     originalStored: z.boolean(),
     caption: z.string().min(1).optional(),
     width: z.number().int().positive().optional(),
@@ -69,18 +79,41 @@ const photoImportSchema = z
   })
   .strict();
 
+// ─── Photo metadata type for PouchDB docs ───
+
+type PhotoMetaDoc = {
+  id: string;
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+  originalStored: boolean;
+  caption?: string;
+  width?: number;
+  height?: number;
+  thumbnailBlob?: unknown;
+  displayBlob?: unknown;
+  displayStoredInOpfs?: boolean;
+};
+
 // ─── Helpers ───
 
-async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  if (typeof blob.arrayBuffer === "function") {
-    return blob.arrayBuffer();
+async function blobToArrayBuffer(
+  blob: Blob | Buffer,
+): Promise<Uint8Array> {
+  if (typeof Buffer !== "undefined" && blob instanceof Buffer) {
+    // Copy into a clean Uint8Array so JSZip can handle it
+    return new Uint8Array(blob);
+  }
+  if (blob instanceof Blob && typeof blob.arrayBuffer === "function") {
+    return new Uint8Array(await blob.arrayBuffer());
   }
   // Fallback for environments where Blob.arrayBuffer isn't available
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as ArrayBuffer);
+    reader.onload = () => resolve(new Uint8Array(reader.result as ArrayBuffer));
     reader.onerror = () => reject(reader.error);
-    reader.readAsArrayBuffer(blob);
+    reader.readAsArrayBuffer(blob as Blob);
   });
 }
 
@@ -102,57 +135,48 @@ export async function exportAll(): Promise<Blob> {
   const dataFolder = zip.folder("data")!;
   const photosFolder = zip.folder("photos")!;
 
-  // Query all non-deleted records from each table
+  // Query all non-deleted records from each table via PouchDB repositories
   const [
     plantInstances,
     journalEntries,
     tasks,
     gardenBeds,
-    photos,
     seasons,
     plantings,
     seeds,
-    taskRules,
+    allTaskRules,
   ] = await Promise.all([
-    db.plantInstances
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.journalEntries
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.tasks
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.gardenBeds
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.photos
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.seasons
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.plantings
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.seeds
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null)),
-    db.taskRules
-      .toArray()
-      .then((rows) => rows.filter((r) => r.deletedAt == null && !r.isBuiltIn)),
+    plantRepository.getAll(),
+    journalRepository.getAll(),
+    taskRepository.getAll(),
+    gardenBedRepository.getAll(),
+    seasonRepository.getAll(),
+    plantingRepository.getAll(),
+    seedRepository.getAll(),
+    taskRuleRepository.getAll(),
   ]);
 
-  // Settings (single record, id = "singleton") — strip Dexie wrapper `id`
-  const settingsRecord = await db.settings.get("singleton");
-  const settingsArray = settingsRecord
-    ? [
-        (() => {
-          const { id: _, ...settings } = settingsRecord;
-          return settings;
-        })(),
-      ]
-    : [];
+  // Filter out built-in task rules
+  const taskRules = allTaskRules.filter((r) => !r.isBuiltIn);
+
+  // Settings (single record)
+  const settingsRecord = await settingsRepository.get();
+  const settingsArray = settingsRecord ? [settingsRecord] : [];
+
+  // Photos: query from PouchDB directly using allDocs range query
+  const photoResult = await localDB.allDocs({
+    startkey: "photo:",
+    endkey: "photo:\uffff",
+    include_docs: true,
+  });
+
+  const photos = photoResult.rows
+    .filter((row) => row.doc != null)
+    .map((row) => {
+      const doc = row.doc as PouchDoc<PhotoMetaDoc>;
+      return stripPouchFields(doc);
+    })
+    .filter((p) => p.deletedAt == null);
 
   dataFolder.file("plantInstances.json", JSON.stringify(plantInstances));
   dataFolder.file("journalEntries.json", JSON.stringify(journalEntries));
@@ -164,14 +188,13 @@ export async function exportAll(): Promise<Blob> {
   dataFolder.file("taskRules.json", JSON.stringify(taskRules));
   dataFolder.file("settings.json", JSON.stringify(settingsArray));
 
-  // Photos: store metadata JSON + blob files
+  // Photos: store metadata JSON + blob files from PouchDB attachments
   const photoMetadata = photos.map((p) => ({
     id: p.id,
     version: p.version,
     createdAt: p.createdAt,
     updatedAt: p.updatedAt,
     ...(p.deletedAt != null ? { deletedAt: p.deletedAt } : {}),
-    ...(p.displayStoredInOpfs ? { displayStoredInOpfs: true } : {}),
     originalStored: p.originalStored,
     ...(p.caption != null ? { caption: p.caption } : {}),
     ...(p.width != null ? { width: p.width } : {}),
@@ -180,30 +203,46 @@ export async function exportAll(): Promise<Blob> {
   dataFolder.file("photos.json", JSON.stringify(photoMetadata));
 
   for (const photo of photos) {
-    photosFolder.file(
-      `${photo.id}-thumb.jpg`,
-      await blobToArrayBuffer(photo.thumbnailBlob),
-    );
+    const docId = `photo:${photo.id}`;
 
-    // Read display blob from OPFS or IndexedDB
-    const displayBlob = photo.displayStoredInOpfs
-      ? await readFile(displayPath(photo.id))
-      : photo.displayBlob;
-    if (displayBlob) {
-      photosFolder.file(
-        `${photo.id}-display.jpg`,
-        await blobToArrayBuffer(displayBlob),
-      );
+    // Thumbnail attachment
+    try {
+      const thumbnailData = await localDB.getAttachment(docId, "thumbnail");
+      if (thumbnailData) {
+        photosFolder.file(
+          `${photo.id}-thumb.jpg`,
+          await blobToArrayBuffer(thumbnailData as Blob | Buffer),
+        );
+      }
+    } catch {
+      // Thumbnail attachment doesn't exist
     }
 
-    // Export original if stored in OPFS
-    if (photo.originalStored) {
-      const originalBlob = await readFile(originalPath(photo.id));
-      if (originalBlob) {
+    // Display attachment
+    try {
+      const displayData = await localDB.getAttachment(docId, "display");
+      if (displayData) {
         photosFolder.file(
-          `${photo.id}-original.jpg`,
-          await blobToArrayBuffer(originalBlob),
+          `${photo.id}-display.jpg`,
+          await blobToArrayBuffer(displayData as Blob | Buffer),
         );
+      }
+    } catch {
+      // Display attachment doesn't exist
+    }
+
+    // Original attachment
+    if (photo.originalStored) {
+      try {
+        const originalData = await localDB.getAttachment(docId, "original");
+        if (originalData) {
+          photosFolder.file(
+            `${photo.id}-original.jpg`,
+            await blobToArrayBuffer(originalData as Blob | Buffer),
+          );
+        }
+      } catch {
+        // Original attachment doesn't exist
       }
     }
   }

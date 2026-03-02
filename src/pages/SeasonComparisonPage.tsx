@@ -1,11 +1,8 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { format, parseISO } from "date-fns";
-import * as seasonRepository from "../db/repositories/seasonRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as journalRepository from "../db/repositories/journalRepository";
+import { seasonRepository, plantingRepository, plantRepository, journalRepository } from "../db/index.ts";
 import type { Planting } from "../validation/planting.schema";
 import type { JournalEntry } from "../validation/journalEntry.schema";
 import type { PlantInstance } from "../validation/plantInstance.schema";
@@ -108,10 +105,10 @@ export default function SeasonComparisonPage() {
   const [seasonIdA, setSeasonIdA] = useState("");
   const [seasonIdB, setSeasonIdB] = useState("");
 
-  const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
-  const allPlants = useLiveQuery(() => plantRepository.getAll(), []);
+  const seasons = usePouchQuery(() => seasonRepository.getAll(), []);
+  const allPlants = usePouchQuery(() => plantRepository.getAll(), []);
 
-  const plantingsA = useLiveQuery(
+  const plantingsA = usePouchQuery(
     () =>
       seasonIdA
         ? plantingRepository.getBySeason(seasonIdA)
@@ -119,7 +116,7 @@ export default function SeasonComparisonPage() {
     [seasonIdA],
   );
 
-  const plantingsB = useLiveQuery(
+  const plantingsB = usePouchQuery(
     () =>
       seasonIdB
         ? plantingRepository.getBySeason(seasonIdB)
@@ -127,7 +124,7 @@ export default function SeasonComparisonPage() {
     [seasonIdB],
   );
 
-  const entriesA = useLiveQuery(
+  const entriesA = usePouchQuery(
     () =>
       seasonIdA
         ? journalRepository.getBySeasonId(seasonIdA)
@@ -135,7 +132,7 @@ export default function SeasonComparisonPage() {
     [seasonIdA],
   );
 
-  const entriesB = useLiveQuery(
+  const entriesB = usePouchQuery(
     () =>
       seasonIdB
         ? journalRepository.getBySeasonId(seasonIdB)

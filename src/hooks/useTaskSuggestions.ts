@@ -1,10 +1,7 @@
 import { useMemo, useCallback } from "react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "./usePouchQuery.ts";
 import { formatISO, startOfDay } from "date-fns";
-import * as taskRuleRepository from "../db/repositories/taskRuleRepository.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
-import * as taskRepository from "../db/repositories/taskRepository.ts";
-import * as seasonRepository from "../db/repositories/seasonRepository.ts";
+import { taskRuleRepository, plantRepository, taskRepository, seasonRepository } from "../db/index.ts";
 import { useSettings } from "./useSettings.tsx";
 import { useToast } from "../components/ui/Toast.tsx";
 import { generateSuggestions, type TaskSuggestion } from "../services/taskEngine.ts";
@@ -26,10 +23,10 @@ export function useTaskSuggestions(): {
 } {
   const { settings } = useSettings();
   const { toast } = useToast();
-  const rules = useLiveQuery(() => taskRuleRepository.getAll());
-  const plants = useLiveQuery(() => plantRepository.getAll());
-  const tasks = useLiveQuery(() => taskRepository.getAll());
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const rules = usePouchQuery(() => taskRuleRepository.getAll());
+  const plants = usePouchQuery(() => plantRepository.getAll());
+  const tasks = usePouchQuery(() => taskRepository.getAll());
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
 
   const today = todayDate();
 

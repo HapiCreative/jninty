@@ -1,12 +1,9 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { FixedSizeList, type ListChildComponentProps } from "react-window";
 import { formatDistanceToNow, startOfWeek, startOfMonth } from "date-fns";
-import * as journalRepository from "../db/repositories/journalRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as photoRepository from "../db/repositories/photoRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { journalRepository, plantRepository, photoRepository, seasonRepository } from "../db/index.ts";
 import {
   search as searchIndex,
   loadIndex,
@@ -323,10 +320,10 @@ function AddEntryFab() {
 
 export default function JournalPage() {
   const { settings } = useSettings();
-  const allEntries = useLiveQuery(() => journalRepository.getAll());
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
-  const allSeasons = useLiveQuery(() => seasonRepository.getAll());
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const allEntries = usePouchQuery(() => journalRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
+  const allSeasons = usePouchQuery(() => seasonRepository.getAll());
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
 
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
@@ -353,7 +350,7 @@ export default function JournalPage() {
   // Load search index on mount
   useEffect(() => {
     void loadIndex()
-      .then((loaded) => {
+      .then((loaded: boolean) => {
         if (!loaded) {
           return rebuildIndex();
         }

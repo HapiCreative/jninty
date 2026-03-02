@@ -3,8 +3,8 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import { db } from "../db/schema.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { plantRepository } from "../db/index.ts";
 import { addToIndex, _resetIndex } from "../db/search.ts";
 import PlantsListPage from "./PlantsListPage.tsx";
 
@@ -21,8 +21,7 @@ vi.mock("../db/search.ts", async (importOriginal) => {
 });
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   _resetIndex();
   vi.clearAllMocks();
 });

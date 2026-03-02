@@ -1,12 +1,12 @@
 import "fake-indexeddb/auto";
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { db } from "../db/schema.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { photoRepository } from "../db/index.ts";
 import PhotoThumbnail from "./PhotoThumbnail.tsx";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 afterEach(() => {
@@ -34,19 +34,14 @@ describe("PhotoThumbnail", () => {
     globalThis.URL.createObjectURL = vi.fn().mockReturnValue(blobUrl);
     globalThis.URL.revokeObjectURL = vi.fn();
 
-    const id = crypto.randomUUID();
     const thumb = new Blob([new Uint8Array(100)], { type: "image/jpeg" });
 
-    await db.photos.add({
-      id,
-      version: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    const photo = await photoRepository.create({
       thumbnailBlob: thumb,
       originalStored: false,
     });
 
-    render(<PhotoThumbnail photoId={id} alt="My tomato" className="h-20" />);
+    render(<PhotoThumbnail photoId={photo.id} alt="My tomato" className="h-20" />);
 
     await waitFor(() => {
       const img = screen.getByRole("img", { name: "My tomato" });
@@ -57,8 +52,7 @@ describe("PhotoThumbnail", () => {
   });
 
   it("shows placeholder when DB lookup fails", async () => {
-    const photoRepo = await import("../db/repositories/photoRepository.ts");
-    vi.spyOn(photoRepo, "getById").mockRejectedValue(new Error("DB error"));
+    vi.spyOn(photoRepository, "getById").mockRejectedValue(new Error("DB error"));
 
     render(<PhotoThumbnail photoId="any-id" />);
 
@@ -72,18 +66,13 @@ describe("PhotoThumbnail", () => {
     globalThis.URL.createObjectURL = vi.fn().mockReturnValue(blobUrl);
     const revokeSpy = (globalThis.URL.revokeObjectURL = vi.fn());
 
-    const id = crypto.randomUUID();
-    await db.photos.add({
-      id,
-      version: 1,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    const photo = await photoRepository.create({
       thumbnailBlob: new Blob([new Uint8Array(50)], { type: "image/jpeg" }),
       originalStored: false,
     });
 
     const { unmount } = render(
-      <PhotoThumbnail photoId={id} alt="test photo" />,
+      <PhotoThumbnail photoId={photo.id} alt="test photo" />,
     );
 
     // Wait for the image to load

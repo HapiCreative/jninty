@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ZodError } from "zod";
-import { useLiveQuery } from "dexie-react-hooks";
-import * as expenseRepository from "../db/repositories/expenseRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
+import { expenseRepository, seasonRepository } from "../db/index.ts";
 import type { ExpenseCategory } from "../types";
 import { EXPENSE_CATEGORY_OPTIONS } from "../constants/expenseLabels";
 import Card from "../components/ui/Card";
@@ -35,7 +34,7 @@ export default function ExpenseFormPage() {
   const navigate = useNavigate();
   const isEditing = !!id;
 
-  const seasons = useLiveQuery(() => seasonRepository.getAll());
+  const seasons = usePouchQuery(() => seasonRepository.getAll());
 
   // Form state
   const [name, setName] = useState("");

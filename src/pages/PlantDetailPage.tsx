@@ -1,13 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { format, parseISO } from "date-fns";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as journalRepository from "../db/repositories/journalRepository";
-import * as taskRepository from "../db/repositories/taskRepository";
-import * as photoRepository from "../db/repositories/photoRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { plantRepository, journalRepository, taskRepository, photoRepository, plantingRepository, seasonRepository } from "../db/index.ts";
 import { removeFromIndex, serializeIndex } from "../db/search";
 import { useToast } from "../components/ui/Toast";
 import type { Planting, PlantingOutcome } from "../validation/planting.schema";
@@ -43,7 +38,7 @@ export default function PlantDetailPage() {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
 
   // Plant data (reactive)
-  const plant = useLiveQuery(
+  const plant = usePouchQuery(
     () =>
       id
         ? plantRepository.getById(id).then((p) => p ?? null)
@@ -52,25 +47,25 @@ export default function PlantDetailPage() {
   );
 
   // Journal entries for this plant
-  const journalEntries = useLiveQuery(
+  const journalEntries = usePouchQuery(
     () => (id ? journalRepository.getByPlantId(id) : Promise.resolve([])),
     [id],
   );
 
   // Tasks for this plant
-  const tasks = useLiveQuery(
+  const tasks = usePouchQuery(
     () => (id ? taskRepository.getByPlantId(id) : Promise.resolve([])),
     [id],
   );
 
   // Plantings for this plant
-  const plantings = useLiveQuery(
+  const plantings = usePouchQuery(
     () => (id ? plantingRepository.getByPlant(id) : Promise.resolve([])),
     [id],
   );
 
   // All seasons (for looking up season names)
-  const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
+  const seasons = usePouchQuery(() => seasonRepository.getAll(), []);
 
   const { toast } = useToast();
 

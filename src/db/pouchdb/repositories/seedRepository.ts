@@ -1,6 +1,7 @@
 import { localDB } from "../client.ts";
 import { type PouchDoc, stripPouchFields, toPouchDoc } from "../utils.ts";
 import { seedSchema, type Seed } from "../../../validation/seed.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "seed";
 
@@ -13,19 +14,6 @@ type UpdateSeedInput = Partial<CreateSeedInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({ index: { fields: ["docType", "species"] } });
-  await localDB.createIndex({ index: { fields: ["docType", "expiryDate"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreateSeedInput): Promise<Seed> {
@@ -117,6 +105,7 @@ export async function getById(id: string): Promise<Seed | undefined> {
 }
 
 export async function getAll(): Promise<Seed[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -126,7 +115,7 @@ export async function getAll(): Promise<Seed[]> {
 }
 
 export async function getBySpecies(species: string): Promise<Seed[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -139,7 +128,7 @@ export async function getBySpecies(species: string): Promise<Seed[]> {
 }
 
 export async function getExpiringSoon(days: number): Promise<Seed[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const today = new Date();
   const cutoff = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
   const todayDate = today.toISOString().split("T")[0]!;

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
-import * as plantRepository from "../db/repositories/plantRepository";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
+import { plantRepository } from "../db/index.ts";
 import {
   search as searchIndex,
   loadIndex,
@@ -73,7 +73,7 @@ const selectClass =
 // ─── Component ───
 
 export default function PlantsListPage() {
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
   const [typeFilter, setTypeFilter] = useState<PlantType | "">("");
@@ -83,7 +83,7 @@ export default function PlantsListPage() {
 
   // Load or rebuild search index on mount
   useEffect(() => {
-    void loadIndex().then((loaded) => {
+    void loadIndex().then((loaded: boolean) => {
       if (!loaded) {
         return rebuildIndex();
       }

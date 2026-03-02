@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
+import { seasonRepository } from "../db/index.ts";
 import {
   getTotalSpent,
   getSpendingByCategory,
@@ -15,7 +15,7 @@ function formatCurrency(amount: number): string {
 }
 
 export default function SpendingWidget() {
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
   const [total, setTotal] = useState<number | null>(null);
   const [topCategories, setTopCategories] = useState<CategoryTotal[]>([]);
 

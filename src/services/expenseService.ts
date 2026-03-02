@@ -1,6 +1,4 @@
-import * as expenseRepository from "../db/repositories/expenseRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
-import * as seedRepository from "../db/repositories/seedRepository";
+import { expenseRepository, plantRepository, seedRepository } from "../db/index.ts";
 import { EXPENSE_CATEGORY_LABELS } from "../constants/expenseLabels.ts";
 import type { ExpenseCategory } from "../validation/expense.schema.ts";
 

@@ -1,4 +1,4 @@
-import { db } from "../db/schema.ts";
+import { localDB } from "../db/pouchdb/client.ts";
 
 // ─── Types ───
 
@@ -119,7 +119,7 @@ type GeocodingResponse = {
 // ─── Cache config ───
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
-const CACHE_KEY = "current";
+const CACHE_DOC_ID = "weatherCache:current";
 
 // In-memory cache for instant reads within a session.
 let memoryCache: {
@@ -176,6 +176,13 @@ async function fetchFromApi(
 
 // ─── Cache helpers ───
 
+type WeatherCacheDoc = PouchDB.Core.IdMeta &
+  PouchDB.Core.GetMeta & {
+    docType: string;
+    data: string;
+    fetchedAt: string;
+  };
+
 async function readCache(
   latitude: number,
   longitude: number,
@@ -190,10 +197,9 @@ async function readCache(
     return memoryCache.data;
   }
 
-  // Fall back to IndexedDB
+  // Fall back to PouchDB
   try {
-    const record = await db.weatherCache.get(CACHE_KEY);
-    if (!record) return null;
+    const record = await localDB.get<WeatherCacheDoc>(CACHE_DOC_ID);
 
     const parsed = JSON.parse(record.data) as {
       weather: WeatherData;
@@ -230,8 +236,19 @@ async function writeCache(
   memoryCache = { data, fetchedAt: now, latitude, longitude };
 
   try {
-    await db.weatherCache.put({
-      id: CACHE_KEY,
+    // Get existing _rev for update, if the doc exists
+    let rev: string | undefined;
+    try {
+      const existing = await localDB.get(CACHE_DOC_ID);
+      rev = existing._rev;
+    } catch {
+      // Doc doesn't exist yet — that's fine, we'll create it
+    }
+
+    await localDB.put({
+      _id: CACHE_DOC_ID,
+      ...(rev ? { _rev: rev } : {}),
+      docType: "weatherCache",
       data: JSON.stringify({ weather: data, latitude, longitude }),
       fetchedAt: new Date(now).toISOString(),
     });
@@ -325,7 +342,8 @@ export async function searchLocation(
 export async function clearWeatherCache(): Promise<void> {
   memoryCache = null;
   try {
-    await db.weatherCache.delete(CACHE_KEY);
+    const doc = await localDB.get(CACHE_DOC_ID);
+    await localDB.remove(doc);
   } catch {
     // Non-critical
   }

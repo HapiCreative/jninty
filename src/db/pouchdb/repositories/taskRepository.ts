@@ -2,6 +2,7 @@ import { addDays, formatISO, startOfDay } from "date-fns";
 import { localDB } from "../client.ts";
 import { type PouchDoc, stripPouchFields, toPouchDoc } from "../utils.ts";
 import { taskSchema, type Task } from "../../../validation/task.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "task";
 
@@ -18,19 +19,6 @@ function now(): string {
 
 function todayDate(): string {
   return formatISO(startOfDay(new Date()), { representation: "date" });
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({ index: { fields: ["docType", "dueDate"] } });
-  await localDB.createIndex({ index: { fields: ["docType", "seasonId"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreateTaskInput): Promise<Task> {
@@ -180,7 +168,7 @@ export async function getById(id: string): Promise<Task | undefined> {
 }
 
 export async function getUpcoming(days: number): Promise<Task[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const today = todayDate();
   const future = formatISO(addDays(new Date(), days), {
     representation: "date",
@@ -199,7 +187,7 @@ export async function getUpcoming(days: number): Promise<Task[]> {
 }
 
 export async function getOverdue(): Promise<Task[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const today = todayDate();
 
   const result = await localDB.find({
@@ -215,6 +203,7 @@ export async function getOverdue(): Promise<Task[]> {
 }
 
 export async function getAll(): Promise<Task[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -226,6 +215,7 @@ export async function getAll(): Promise<Task[]> {
 export async function getByPlantId(
   plantInstanceId: string,
 ): Promise<Task[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -237,7 +227,7 @@ export async function getByPlantId(
 }
 
 export async function getBySeasonId(seasonId: string): Promise<Task[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,

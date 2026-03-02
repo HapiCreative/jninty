@@ -4,6 +4,7 @@ import {
   seasonSchema,
   type Season,
 } from "../../../validation/season.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "season";
 
@@ -16,18 +17,6 @@ type UpdateSeasonInput = Partial<CreateSeasonInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({ index: { fields: ["docType", "year"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreateSeasonInput): Promise<Season> {
@@ -119,6 +108,7 @@ export async function getById(id: string): Promise<Season | undefined> {
 }
 
 export async function getActive(): Promise<Season | undefined> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -129,6 +119,7 @@ export async function getActive(): Promise<Season | undefined> {
 }
 
 export async function getAll(): Promise<Season[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -160,6 +151,7 @@ export async function setActive(id: string): Promise<Season> {
   const timestamp = now();
 
   // Deactivate all other active seasons
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });

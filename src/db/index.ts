@@ -1,11 +1,21 @@
-export { db, JnintyDB } from "./schema.ts";
-export type { SettingsRecord, SearchIndexRecord } from "./schema.ts";
-export * as search from "./search.ts";
-export {
-  plantRepository,
-  journalRepository,
-  photoRepository,
-  taskRepository,
-  gardenBedRepository,
-  settingsRepository,
-} from "./repositories/index.ts";
+// Barrel export — single import point for the entire app.
+// Points to PouchDB repositories, search, and sync.
+
+// ─── Repositories ───
+export * as plantRepository from "./pouchdb/repositories/plantRepository.ts";
+export * as journalRepository from "./pouchdb/repositories/journalRepository.ts";
+export * as photoRepository from "./pouchdb/repositories/photoRepository.ts";
+export * as taskRepository from "./pouchdb/repositories/taskRepository.ts";
+export * as gardenBedRepository from "./pouchdb/repositories/gardenBedRepository.ts";
+export * as settingsRepository from "./pouchdb/repositories/settingsRepository.ts";
+export * as seasonRepository from "./pouchdb/repositories/seasonRepository.ts";
+export * as plantingRepository from "./pouchdb/repositories/plantingRepository.ts";
+export * as seedRepository from "./pouchdb/repositories/seedRepository.ts";
+export * as taskRuleRepository from "./pouchdb/repositories/taskRuleRepository.ts";
+export * as expenseRepository from "./pouchdb/repositories/expenseRepository.ts";
+
+// ─── Search ───
+export * as search from "./pouchdb/search.ts";
+
+// ─── Sync ───
+export { localDB, setupSync, stopSync, getSyncStatus } from "./pouchdb/client.ts";

@@ -1,10 +1,10 @@
-import { useLiveQuery } from "dexie-react-hooks";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { usePouchQuery } from "./usePouchQuery.ts";
+import { seasonRepository } from "../db/index.ts";
 
 /**
  * Returns the currently active season, or undefined while loading.
- * Uses Dexie live query for reactivity.
+ * Uses PouchDB live query for reactivity.
  */
 export function useActiveSeason() {
-  return useLiveQuery(() => seasonRepository.getActive());
+  return usePouchQuery(() => seasonRepository.getActive());
 }

@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import "fake-indexeddb/auto";
 import { loadBuiltInRules, parseRuleFile } from "./taskRuleLoader.ts";
-import * as taskRuleRepository from "../db/repositories/taskRuleRepository.ts";
+import { taskRuleRepository } from "../db/index.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
 
 beforeEach(async () => {
-  const { db } = await import("../db/schema.ts");
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 describe("parseRuleFile", () => {

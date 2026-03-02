@@ -2,13 +2,12 @@ import "fake-indexeddb/auto";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
 import type { ReactNode } from "react";
-import { db } from "../db/schema.ts";
-import * as settingsRepo from "../db/repositories/settingsRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { settingsRepository as settingsRepo } from "../db/index.ts";
 import { SettingsProvider, useSettings } from "./useSettings.tsx";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 function wrapper({ children }: { children: ReactNode }) {

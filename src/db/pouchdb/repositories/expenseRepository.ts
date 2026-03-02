@@ -4,6 +4,7 @@ import {
   expenseSchema,
   type Expense,
 } from "../../../validation/expense.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "expense";
 
@@ -16,18 +17,6 @@ type UpdateExpenseInput = Partial<CreateExpenseInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({ index: { fields: ["docType", "seasonId"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreateExpenseInput): Promise<Expense> {
@@ -119,6 +108,7 @@ export async function getById(id: string): Promise<Expense | undefined> {
 }
 
 export async function getAll(): Promise<Expense[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -128,7 +118,7 @@ export async function getAll(): Promise<Expense[]> {
 }
 
 export async function getBySeason(seasonId: string): Promise<Expense[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,

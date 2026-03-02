@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { db } from "../db/schema.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
 import { processPhoto } from "./photoProcessor.ts";
 
 // ─── Canvas / Image mocks for jsdom ───
@@ -94,8 +94,7 @@ function installCanvasWithSizeCapture(
 // ─── DB setup ───
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 afterEach(() => {

@@ -1,18 +1,19 @@
 import "fake-indexeddb/auto";
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import { db } from "./db/schema.ts";
+import { clearPouchDB } from "./db/pouchdb/testUtils.ts";
 import App from "./App.tsx";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
 });
 
 describe("App", () => {
   it("renders the app shell with navigation", async () => {
     render(<App />);
-    expect(screen.getAllByText("Jninty").length).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(screen.getAllByText("Jninty").length).toBeGreaterThan(0);
+    });
     await waitFor(() => {
       expect(
         screen.getByText("What's happening in your garden today?"),

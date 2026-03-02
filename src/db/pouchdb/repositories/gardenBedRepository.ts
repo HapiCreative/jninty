@@ -5,6 +5,7 @@ import {
   type GardenBed,
   type BedType,
 } from "../../../validation/gardenBed.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "gardenBed";
 
@@ -112,6 +113,7 @@ export async function getById(
 }
 
 export async function getAll(): Promise<GardenBed[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });
@@ -121,6 +123,7 @@ export async function getAll(): Promise<GardenBed[]> {
 }
 
 export async function getByType(type: BedType): Promise<GardenBed[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import * as photoRepository from "../db/repositories/photoRepository.ts";
+import { photoRepository } from "../db/index.ts";
 
 interface PhotoLightboxProps {
   photoIds: string[];

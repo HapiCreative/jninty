@@ -231,6 +231,25 @@ export function stopListening(): void {
   }
 }
 
+/**
+ * No-op for backward compatibility.
+ * With PouchDB, the search index is rebuilt from allDocs on startup
+ * and kept up-to-date via the changes feed — no serialization needed.
+ */
+export async function serializeIndex(): Promise<void> {
+  // no-op
+}
+
+/**
+ * No-op for backward compatibility.
+ * With PouchDB, the index is rebuilt from allDocs on startup — there is no
+ * serialized index to load. Always returns false so callers fall through
+ * to rebuildIndex().
+ */
+export async function loadIndex(): Promise<boolean> {
+  return false;
+}
+
 /** Reset the in-memory index and stop the changes listener. For testing. */
 export function _resetIndex(): void {
   stopListening();

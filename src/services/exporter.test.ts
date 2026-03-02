@@ -1,22 +1,37 @@
-import "fake-indexeddb/auto";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import JSZip from "jszip";
-import { db } from "../db/schema.ts";
+import PouchDB from "pouchdb";
+import PouchDBFind from "pouchdb-find";
+import PouchDBAdapterMemory from "pouchdb-adapter-memory";
 import {
-  exportAll,
-  importFromZip,
-  triggerDownload,
   type ExportManifest,
 } from "./exporter.ts";
 import { saveAs } from "file-saver";
 
+PouchDB.plugin(PouchDBFind);
+PouchDB.plugin(PouchDBAdapterMemory);
+
 vi.mock("file-saver", () => ({ saveAs: vi.fn() }));
+
+// Mock the PouchDB client module to use an in-memory DB for tests
+let testDB: PouchDB.Database;
+
+vi.mock("../db/pouchdb/client.ts", () => ({
+  get localDB() {
+    return testDB;
+  },
+}));
+
+// Import after mock setup so the modules pick up the mocked localDB
+const { exportAll, importFromZip, triggerDownload } = await import("./exporter.ts");
+const { toPouchDoc } = await import("../db/pouchdb/utils.ts");
 
 // ─── DB setup ───
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  testDB = new PouchDB(`test-exporter-${crypto.randomUUID()}`, {
+    adapter: "memory",
+  });
 });
 
 afterEach(() => {
@@ -145,43 +160,69 @@ async function buildZip(
   });
 }
 
+/**
+ * Helper to seed a PouchDB document for testing.
+ */
+async function seedDoc(entity: Record<string, unknown>, docType: string) {
+  const doc = toPouchDoc(entity as { id?: string }, docType);
+  await testDB.put(doc);
+}
+
+/**
+ * Helper to seed a photo document with PouchDB attachments.
+ */
+async function seedPhoto(
+  photoMeta: Record<string, unknown>,
+  attachments: Record<string, { content_type: string; data: Buffer }>,
+) {
+  const doc = toPouchDoc(photoMeta as { id?: string }, "photo");
+  const pouchDoc = {
+    ...doc,
+    _attachments: attachments,
+  };
+  await testDB.put(pouchDoc);
+}
+
 // ─── exportAll ───
 
 describe("exportAll", () => {
   it("creates a valid ZIP with correct structure", async () => {
-    // Seed the database
+    // Seed the database via PouchDB
     const plant = makePlant();
     const entry = makeJournalEntry();
     const task = makeTask();
     const bed = makeGardenBed();
 
-    await db.plantInstances.add(plant);
-    await db.journalEntries.add(entry);
-    await db.tasks.add(task);
-    await db.gardenBeds.add(bed);
-    await db.settings.add({ id: "singleton", ...makeSettings() });
+    await seedDoc(plant, "plant");
+    await seedDoc(entry, "journal");
+    await seedDoc(task, "task");
+    await seedDoc(bed, "gardenBed");
 
-    const thumbBlob = new Blob([new Uint8Array(100)], {
-      type: "image/jpeg",
+    // Settings
+    const settings = makeSettings();
+    await testDB.put({
+      _id: "settings:singleton",
+      docType: "settings",
+      ...settings,
     });
-    const displayBlob = new Blob([new Uint8Array(500)], {
-      type: "image/jpeg",
-    });
+
+    const thumbData = Buffer.from(new Uint8Array(100));
+    const displayData = Buffer.from(new Uint8Array(500));
     const photoId = crypto.randomUUID();
 
-    // fake-indexeddb doesn't preserve Blob objects through structured clone,
-    // so mock db.photos.toArray() to return real Blobs.
-    vi.spyOn(db.photos, "toArray").mockResolvedValue([
+    await seedPhoto(
       {
         id: photoId,
         version: 1,
         createdAt: timestamp,
         updatedAt: timestamp,
-        thumbnailBlob: thumbBlob,
-        displayBlob: displayBlob,
         originalStored: false,
       },
-    ]);
+      {
+        thumbnail: { content_type: "image/jpeg", data: thumbData },
+        display: { content_type: "image/jpeg", data: displayData },
+      },
+    );
 
     const blob = await exportAll();
     expect(blob).toBeInstanceOf(Blob);
@@ -233,10 +274,10 @@ describe("exportAll", () => {
     );
     expect(beds).toHaveLength(1);
 
-    const settings: unknown = JSON.parse(
+    const settingsArr: unknown = JSON.parse(
       await zip.file("data/settings.json")!.async("string"),
     );
-    expect(settings).toHaveLength(1);
+    expect(settingsArr).toHaveLength(1);
 
     // Verify photo metadata
     const photoMeta: unknown = JSON.parse(
@@ -251,7 +292,7 @@ describe("exportAll", () => {
 
   it("excludes soft-deleted records", async () => {
     const plant = makePlant({ deletedAt: timestamp });
-    await db.plantInstances.add(plant);
+    await seedDoc(plant, "plant");
 
     const blob = await exportAll();
     const zip = await JSZip.loadAsync(blob);
@@ -275,20 +316,20 @@ describe("exportAll", () => {
 
   it("omits displayBlob file when photo has no display blob", async () => {
     const photoId = crypto.randomUUID();
-    const thumbBlob = new Blob([new Uint8Array(50)], {
-      type: "image/jpeg",
-    });
+    const thumbData = Buffer.from(new Uint8Array(50));
 
-    vi.spyOn(db.photos, "toArray").mockResolvedValue([
+    await seedPhoto(
       {
         id: photoId,
         version: 1,
         createdAt: timestamp,
         updatedAt: timestamp,
-        thumbnailBlob: thumbBlob,
         originalStored: false,
       },
-    ]);
+      {
+        thumbnail: { content_type: "image/jpeg", data: thumbData },
+      },
+    );
 
     const blob = await exportAll();
     const zip = await JSZip.loadAsync(blob);

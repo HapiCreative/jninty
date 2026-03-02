@@ -4,16 +4,14 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { formatISO, addDays, subDays } from "date-fns";
-import { db } from "../db/schema.ts";
-import * as taskRepository from "../db/repositories/taskRepository.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { taskRepository, plantRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { ToastProvider } from "../components/ui/Toast.tsx";
 import TasksPage from "./TasksPage.tsx";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   vi.clearAllMocks();
 });
 
@@ -213,9 +211,13 @@ describe("TasksPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Water the tomato")).toBeInTheDocument();
     });
-    await waitFor(() => {
-      expect(screen.getByText(/Big Boy/)).toBeInTheDocument();
-    });
+    // Plant name loads asynchronously via a separate PouchDB query
+    await waitFor(
+      () => {
+        expect(screen.getByText(/Big Boy/)).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("deletes a task when delete action is confirmed", async () => {

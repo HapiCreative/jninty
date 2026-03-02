@@ -1,10 +1,4 @@
-import { db } from "../db/schema.ts";
-import {
-  isOpfsAvailable,
-  getDirectorySize,
-  DISPLAY_DIR,
-  ORIGINALS_DIR,
-} from "./opfsStorage.ts";
+import { localDB } from "../db/pouchdb/client.ts";
 
 export type StorageUsage = {
   thumbnailBytes: number;
@@ -16,33 +10,46 @@ export type StorageUsage = {
 };
 
 export async function getStorageUsage(): Promise<StorageUsage> {
-  // Sum photo blob sizes from IndexedDB (guard against NaN from corrupted blobs)
   let thumbnailBytes = 0;
-  let idbDisplayBytes = 0;
-  await db.photos.each((photo) => {
-    const thumbSize = photo.thumbnailBlob?.size;
-    if (typeof thumbSize === "number" && !Number.isNaN(thumbSize)) {
-      thumbnailBytes += thumbSize;
-    }
-    if (photo.displayBlob) {
-      const displaySize = photo.displayBlob.size;
-      if (typeof displaySize === "number" && !Number.isNaN(displaySize)) {
-        idbDisplayBytes += displaySize;
-      }
-    }
+  let displayBytes = 0;
+  let originalBytes = 0;
+
+  // Fetch all photo docs with attachment stub metadata (includes length)
+  const result = await localDB.allDocs({
+    startkey: "photo:",
+    endkey: "photo:\uffff",
+    include_docs: true,
   });
 
-  // Sum OPFS file sizes
-  let opfsDisplayBytes = 0;
-  let originalBytes = 0;
-  if (isOpfsAvailable()) {
-    [opfsDisplayBytes, originalBytes] = await Promise.all([
-      getDirectorySize(DISPLAY_DIR),
-      getDirectorySize(ORIGINALS_DIR),
-    ]);
-  }
+  for (const row of result.rows) {
+    const doc = row.doc as
+      | (PouchDB.Core.IdMeta &
+          PouchDB.Core.GetMeta & {
+            _attachments?: Record<
+              string,
+              { length?: number; stub?: boolean }
+            >;
+          })
+      | undefined;
 
-  const displayBytes = idbDisplayBytes + opfsDisplayBytes;
+    const attachments = doc?._attachments;
+    if (!attachments) continue;
+
+    const thumbLen = attachments["thumbnail"]?.length;
+    if (typeof thumbLen === "number" && !Number.isNaN(thumbLen)) {
+      thumbnailBytes += thumbLen;
+    }
+
+    const dispLen = attachments["display"]?.length;
+    if (typeof dispLen === "number" && !Number.isNaN(dispLen)) {
+      displayBytes += dispLen;
+    }
+
+    const origLen = attachments["original"]?.length;
+    if (typeof origLen === "number" && !Number.isNaN(origLen)) {
+      originalBytes += origLen;
+    }
+  }
 
   // Use Storage API estimate when available
   let totalBytes = 0;

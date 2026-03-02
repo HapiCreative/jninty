@@ -4,17 +4,14 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import { formatISO, addDays, subDays } from "date-fns";
-import { db } from "../db/schema.ts";
-import * as taskRepository from "../db/repositories/taskRepository.ts";
-import * as plantRepository from "../db/repositories/plantRepository.ts";
-import * as journalRepository from "../db/repositories/journalRepository.ts";
+import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
+import { taskRepository, plantRepository, journalRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
 import { ToastProvider } from "../components/ui/Toast.tsx";
 import DashboardPage from "./DashboardPage.tsx";
 
 beforeEach(async () => {
-  await db.delete();
-  await db.open();
+  await clearPouchDB();
   vi.clearAllMocks();
 });
 

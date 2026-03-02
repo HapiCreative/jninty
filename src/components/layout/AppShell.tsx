@@ -1,11 +1,8 @@
 import { useMemo } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
 import { isWithinInterval, startOfWeek, endOfWeek } from "date-fns";
-import * as taskRepository from "../../db/repositories/taskRepository";
-import * as plantRepository from "../../db/repositories/plantRepository";
-import * as plantingRepository from "../../db/repositories/plantingRepository";
-import * as seasonRepository from "../../db/repositories/seasonRepository";
+import { usePouchQuery } from "../../hooks/usePouchQuery.ts";
+import { taskRepository, plantRepository, plantingRepository, seasonRepository } from "../../db/index.ts";
 import { useSettings } from "../../hooks/useSettings";
 import { getBySpecies } from "../../services/knowledgeBase";
 import { computePlantingWindows } from "../../services/calendar";
@@ -301,16 +298,16 @@ export default function AppShell() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const overdueTasks = useLiveQuery(() => taskRepository.getOverdue());
+  const overdueTasks = usePouchQuery(() => taskRepository.getOverdue());
   const overdueCount = overdueTasks?.length ?? 0;
 
   // Calendar badge: count plants with active planting windows this week
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
-  const seasonPlantings = useLiveQuery(
-    () => (activeSeason ? plantingRepository.getBySeason(activeSeason.id) : []),
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
+  const seasonPlantings = usePouchQuery(
+    () => (activeSeason ? plantingRepository.getBySeason(activeSeason.id) : Promise.resolve([])),
     [activeSeason],
   );
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
 
   const calendarBadge = useMemo(() => {
     if (!seasonPlantings || !allPlants) return 0;

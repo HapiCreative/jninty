@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Settings } from "../validation/settings.schema.ts";
-import * as settingsRepository from "../db/repositories/settingsRepository.ts";
+import { settingsRepository } from "../db/index.ts";
 
 const DEFAULT_SETTINGS: Settings = {
   growingZone: "7a",

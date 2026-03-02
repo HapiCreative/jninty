@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { format, parseISO } from "date-fns";
-import * as seasonRepository from "../db/repositories/seasonRepository";
+import { seasonRepository } from "../db/index.ts";
 import {
   getAllExpenseRows,
   getSpendingByCategory,
@@ -45,8 +45,8 @@ function formatCurrency(amount: number): string {
 }
 
 export default function ExpensesPage() {
-  const seasons = useLiveQuery(() => seasonRepository.getAll());
-  const activeSeason = useLiveQuery(() => seasonRepository.getActive());
+  const seasons = usePouchQuery(() => seasonRepository.getAll());
+  const activeSeason = usePouchQuery(() => seasonRepository.getActive());
 
   // Filters
   const [seasonId, setSeasonId] = useState("");

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import * as photoRepository from "../db/repositories/photoRepository.ts";
+import { photoRepository } from "../db/index.ts";
 
 interface PhotoThumbnailProps {
   photoId: string;

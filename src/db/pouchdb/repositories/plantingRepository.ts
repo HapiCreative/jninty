@@ -4,6 +4,7 @@ import {
   plantingSchema,
   type Planting,
 } from "../../../validation/planting.schema.ts";
+import { ensureAllIndexes } from "../indexes.ts";
 
 const DOC_TYPE = "planting";
 
@@ -16,22 +17,6 @@ type UpdatePlantingInput = Partial<CreatePlantingInput>;
 
 function now(): string {
   return new Date().toISOString();
-}
-
-async function ensureIndexes(): Promise<void> {
-  await localDB.createIndex({
-    index: { fields: ["docType", "plantInstanceId"] },
-  });
-  await localDB.createIndex({ index: { fields: ["docType", "seasonId"] } });
-  await localDB.createIndex({ index: { fields: ["docType", "bedId"] } });
-}
-
-let indexesReady: Promise<void> | null = null;
-function initIndexes(): Promise<void> {
-  if (!indexesReady) {
-    indexesReady = ensureIndexes();
-  }
-  return indexesReady;
 }
 
 export async function create(input: CreatePlantingInput): Promise<Planting> {
@@ -123,7 +108,7 @@ export async function getById(id: string): Promise<Planting | undefined> {
 }
 
 export async function getBySeason(seasonId: string): Promise<Planting[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -138,7 +123,7 @@ export async function getBySeason(seasonId: string): Promise<Planting[]> {
 export async function getByPlant(
   plantInstanceId: string,
 ): Promise<Planting[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -151,7 +136,7 @@ export async function getByPlant(
 }
 
 export async function getByBed(bedId: string): Promise<Planting[]> {
-  await initIndexes();
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: {
       docType: DOC_TYPE,
@@ -164,6 +149,7 @@ export async function getByBed(bedId: string): Promise<Planting[]> {
 }
 
 export async function getAll(): Promise<Planting[]> {
+  await ensureAllIndexes();
   const result = await localDB.find({
     selector: { docType: DOC_TYPE },
   });

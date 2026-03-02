@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
+import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
@@ -8,10 +8,7 @@ import Badge from "../components/ui/Badge";
 import Skeleton from "../components/ui/Skeleton";
 import { useToast } from "../components/ui/Toast";
 import { useSettings } from "../hooks/useSettings";
-import * as settingsRepository from "../db/repositories/settingsRepository";
-import * as seasonRepository from "../db/repositories/seasonRepository";
-import * as plantingRepository from "../db/repositories/plantingRepository";
-import * as plantRepository from "../db/repositories/plantRepository";
+import { settingsRepository, seasonRepository, plantingRepository, plantRepository } from "../db/index.ts";
 import type { PlantingOutcome } from "../validation/planting.schema";
 import type { Planting } from "../validation/planting.schema";
 import {
@@ -26,12 +23,7 @@ import {
   clearWeatherCache,
   type GeoSearchResult,
 } from "../services/weather";
-import {
-  isOpfsAvailable,
-  clearDirectory,
-  ORIGINALS_DIR,
-} from "../services/opfsStorage";
-import { db } from "../db/schema";
+import { localDB } from "../db/pouchdb/client.ts";
 
 // ─── Growing zones (USDA 1a–13b) ───
 
@@ -200,9 +192,29 @@ export default function SettingsPage() {
   const handleClearOriginals = async () => {
     setClearingOriginals(true);
     try {
-      await clearDirectory(ORIGINALS_DIR);
-      // Update all photos to mark originals as cleared
-      await db.photos.toCollection().modify({ originalStored: false });
+      // Remove "original" attachments from all photo docs in PouchDB
+      const result = await localDB.allDocs({
+        startkey: "photo:",
+        endkey: "photo:\uffff",
+        include_docs: true,
+      });
+      for (const row of result.rows) {
+        const doc = row.doc as Record<string, unknown> | undefined;
+        if (!doc) continue;
+        const attachments = doc["_attachments"] as
+          | Record<string, unknown>
+          | undefined;
+        if (attachments?.["original"]) {
+          await localDB.removeAttachment(
+            row.id,
+            "original",
+            row.value.rev,
+          );
+          // Re-fetch to get updated _rev, then update originalStored
+          const updated = await localDB.get(row.id);
+          await localDB.put({ ...updated, originalStored: false });
+        }
+      }
       // Refresh storage display
       const updated = await getStorageUsage();
       setStorage(updated);
@@ -232,7 +244,7 @@ export default function SettingsPage() {
 
   // ─── Seasons ───
 
-  const seasons = useLiveQuery(() => seasonRepository.getAll(), []);
+  const seasons = usePouchQuery(() => seasonRepository.getAll(), []);
 
   const [showNewSeason, setShowNewSeason] = useState(false);
   const [newSeason, setNewSeason] = useState({
@@ -248,7 +260,7 @@ export default function SettingsPage() {
   const [outcomeEdits, setOutcomeEdits] = useState<Record<string, PlantingOutcome>>({});
   const [savingOutcomes, setSavingOutcomes] = useState(false);
 
-  const allPlants = useLiveQuery(() => plantRepository.getAll());
+  const allPlants = usePouchQuery(() => plantRepository.getAll());
   const plantNameMap = useMemo(() => {
     const map = new Map<string, string>();
     if (!allPlants) return map;
@@ -838,22 +850,20 @@ export default function SettingsPage() {
           </div>
 
           {/* Clear original photos */}
-          {isOpfsAvailable() && (
-            <div>
-              <Button
-                variant="ghost"
-                onClick={() => void handleClearOriginals()}
-                disabled={clearingOriginals}
-              >
-                {clearingOriginals
-                  ? "Clearing…"
-                  : "Clear Original Photos"}
-              </Button>
-              <p className="mt-1 text-xs text-soil-500">
-                Removes stored full-resolution originals to reclaim space
-              </p>
-            </div>
-          )}
+          <div>
+            <Button
+              variant="ghost"
+              onClick={() => void handleClearOriginals()}
+              disabled={clearingOriginals}
+            >
+              {clearingOriginals
+                ? "Clearing…"
+                : "Clear Original Photos"}
+            </Button>
+            <p className="mt-1 text-xs text-soil-500">
+              Removes stored full-resolution originals to reclaim space
+            </p>
+          </div>
 
           {/* Rebuild search index */}
           <div>
