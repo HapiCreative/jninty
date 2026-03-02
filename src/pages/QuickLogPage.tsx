@@ -168,7 +168,7 @@ export default function QuickLogPage() {
       });
 
       // Update search index
-      addToIndex(entry);
+      addToIndex(entry, "journal");
       void serializeIndex();
 
       setSuccess(true);

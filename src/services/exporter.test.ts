@@ -124,7 +124,7 @@ function makeManifest(
 ): ExportManifest {
   return {
     exportVersion: 1,
-    schemaVersion: 4,
+    schemaVersion: 5,
     exportedAt: timestamp,
     appVersion: "0.1.0",
     ...overrides,
@@ -234,7 +234,7 @@ describe("exportAll", () => {
     const manifest: unknown = JSON.parse(manifestRaw);
     expect(manifest).toMatchObject({
       exportVersion: 1,
-      schemaVersion: 4,
+      schemaVersion: 5,
       appVersion: "0.0.0-test",
     });
     expect(
@@ -252,6 +252,7 @@ describe("exportAll", () => {
     expect(zip.file("data/plantings.json")).not.toBeNull();
     expect(zip.file("data/seeds.json")).not.toBeNull();
     expect(zip.file("data/taskRules.json")).not.toBeNull();
+    expect(zip.file("data/userPlantKnowledge.json")).not.toBeNull();
 
     // Verify data content
     const plants: unknown = JSON.parse(
@@ -375,6 +376,7 @@ describe("importFromZip", () => {
       plantings: 0,
       seeds: 0,
       taskRules: 0,
+      userPlantKnowledge: 0,
     });
   });
 
@@ -470,6 +472,7 @@ describe("importFromZip", () => {
       plantings: 0,
       seeds: 0,
       taskRules: 0,
+      userPlantKnowledge: 0,
     });
   });
 

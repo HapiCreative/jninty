@@ -60,7 +60,7 @@ describe("search", () => {
   describe("addToIndex / search", () => {
     it("indexes a plant and finds it by species", () => {
       const plant = makePlant();
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       const results = search("Solanum");
       expect(results).toHaveLength(1);
@@ -70,7 +70,7 @@ describe("search", () => {
 
     it("indexes a plant and finds it by nickname", () => {
       const plant = makePlant({ nickname: "Big Boy" });
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       const results = search("Big Boy");
       expect(results).toHaveLength(1);
@@ -79,7 +79,7 @@ describe("search", () => {
 
     it("indexes a plant and finds it by tag", () => {
       const plant = makePlant({ tags: ["heirloom", "organic"] });
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       const results = search("heirloom");
       expect(results).toHaveLength(1);
@@ -87,7 +87,7 @@ describe("search", () => {
 
     it("indexes a journal entry and finds it by body text", () => {
       const entry = makeJournal({ body: "The basil is wilting badly." });
-      addToIndex(entry);
+      addToIndex(entry, "journal");
 
       const results = search("basil wilting");
       expect(results).toHaveLength(1);
@@ -96,7 +96,7 @@ describe("search", () => {
 
     it("indexes a journal entry and finds it by title", () => {
       const entry = makeJournal({ title: "First harvest report" });
-      addToIndex(entry);
+      addToIndex(entry, "journal");
 
       const results = search("harvest report");
       expect(results).toHaveLength(1);
@@ -104,7 +104,7 @@ describe("search", () => {
 
     it("returns empty array for no matches", () => {
       const plant = makePlant();
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       const results = search("xyznonexistent");
       expect(results).toHaveLength(0);
@@ -112,7 +112,7 @@ describe("search", () => {
 
     it("returns empty array for empty query", () => {
       const plant = makePlant();
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       expect(search("")).toHaveLength(0);
       expect(search("  ")).toHaveLength(0);
@@ -120,10 +120,10 @@ describe("search", () => {
 
     it("updates an existing document when re-added", () => {
       const plant = makePlant({ nickname: "Alpha Original" });
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       const updated = { ...plant, nickname: "Bravo Replacement" };
-      addToIndex(updated);
+      addToIndex(updated, "plant");
 
       expect(search("Alpha")).toHaveLength(0);
       expect(search("Original")).toHaveLength(0);
@@ -135,7 +135,7 @@ describe("search", () => {
   describe("removeFromIndex", () => {
     it("removes a document from the index", () => {
       const plant = makePlant();
-      addToIndex(plant);
+      addToIndex(plant, "plant");
       expect(search("Solanum")).toHaveLength(1);
 
       removeFromIndex(plant.id);
@@ -151,7 +151,7 @@ describe("search", () => {
   describe("serializeIndex / loadIndex", () => {
     it("loadIndex always returns false (PouchDB rebuilds from allDocs)", async () => {
       const plant = makePlant({ nickname: "Persisted Plant" });
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       await serializeIndex();
 
@@ -172,7 +172,7 @@ describe("search", () => {
       const plant = makePlant({ nickname: "Persisted Alpha" });
       // Store the plant in PouchDB
       await localDB.put(toPouchDoc(plant, "plant"));
-      addToIndex(plant);
+      addToIndex(plant, "plant");
 
       // Simulate app restart: reset in-memory state, then rebuild
       _resetIndex();
@@ -180,7 +180,7 @@ describe("search", () => {
 
       // Updating the same document should NOT throw "duplicate ID"
       const updated = { ...plant, nickname: "Persisted Bravo" };
-      addToIndex(updated);
+      addToIndex(updated, "plant");
 
       expect(search("Alpha")).toHaveLength(0);
       expect(search("Bravo")).toHaveLength(1);
@@ -222,8 +222,8 @@ describe("search", () => {
       const entryWithBody = makeJournal({
         body: "I found some basil growing.",
       });
-      addToIndex(plantWithNickname);
-      addToIndex(entryWithBody);
+      addToIndex(plantWithNickname, "plant");
+      addToIndex(entryWithBody, "journal");
 
       const results = search("basil");
       expect(results).toHaveLength(2);

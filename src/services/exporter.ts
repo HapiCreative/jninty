@@ -10,6 +10,7 @@ import {
   plantingRepository,
   seedRepository,
   taskRuleRepository,
+  userPlantKnowledgeRepository,
 } from "../db/index.ts";
 import { localDB } from "../db/pouchdb/client.ts";
 import { stripPouchFields, type PouchDoc } from "../db/pouchdb/utils.ts";
@@ -23,12 +24,13 @@ import { seasonSchema } from "../validation/season.schema.ts";
 import { plantingSchema } from "../validation/planting.schema.ts";
 import { seedSchema } from "../validation/seed.schema.ts";
 import { taskRuleSchema } from "../validation/taskRule.schema.ts";
+import { userPlantKnowledgeSchema } from "../validation/userPlantKnowledge.schema.ts";
 import { z } from "zod";
 
 // ─── Constants ───
 
 const EXPORT_VERSION = 1;
-const SCHEMA_VERSION = 4;
+const SCHEMA_VERSION = 5;
 
 // ─── Manifest schema ───
 
@@ -59,6 +61,7 @@ export type ImportResult = {
     plantings: number;
     seeds: number;
     taskRules: number;
+    userPlantKnowledge: number;
   };
 };
 
@@ -146,6 +149,7 @@ export async function exportAll(): Promise<Blob> {
     plantings,
     seeds,
     allTaskRules,
+    userPlantKnowledge,
   ] = await Promise.all([
     plantRepository.getAll(),
     journalRepository.getAll(),
@@ -155,6 +159,7 @@ export async function exportAll(): Promise<Blob> {
     plantingRepository.getAll(),
     seedRepository.getAll(),
     taskRuleRepository.getAll(),
+    userPlantKnowledgeRepository.getAll(),
   ]);
 
   // Filter out built-in task rules
@@ -187,6 +192,7 @@ export async function exportAll(): Promise<Blob> {
   dataFolder.file("plantings.json", JSON.stringify(plantings));
   dataFolder.file("seeds.json", JSON.stringify(seeds));
   dataFolder.file("taskRules.json", JSON.stringify(taskRules));
+  dataFolder.file("userPlantKnowledge.json", JSON.stringify(userPlantKnowledge));
   dataFolder.file("settings.json", JSON.stringify(settingsArray));
 
   // Photos: store metadata JSON + blob files from PouchDB attachments
@@ -266,6 +272,7 @@ export async function importFromZip(file: File): Promise<ImportResult> {
     plantings: 0,
     seeds: 0,
     taskRules: 0,
+    userPlantKnowledge: 0,
   };
 
   let zip: JSZip;
@@ -358,6 +365,11 @@ export async function importFromZip(file: File): Promise<ImportResult> {
       filename: "data/taskRules.json",
       schema: taskRuleSchema,
       countKey: "taskRules",
+    },
+    {
+      filename: "data/userPlantKnowledge.json",
+      schema: userPlantKnowledgeSchema,
+      countKey: "userPlantKnowledge",
     },
   ];
 

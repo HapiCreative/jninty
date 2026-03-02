@@ -323,7 +323,7 @@ describe("PlantDetailPage", () => {
       status: "active",
       tags: [],
     });
-    addToIndex(plant);
+    addToIndex(plant, "plant");
 
     const user = userEvent.setup();
     renderDetailPage(plant.id);

@@ -85,7 +85,7 @@ async function createEntry(
     seasonId: "00000000-0000-0000-0000-000000000099",
     ...overrides,
   });
-  addToIndex(entry);
+  addToIndex(entry, "journal");
   return entry;
 }
 

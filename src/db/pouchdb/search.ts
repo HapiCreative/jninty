@@ -3,10 +3,11 @@ import { localDB } from "./client.ts";
 import { stripPouchFields, type PouchDoc } from "./utils.ts";
 import type { PlantInstance } from "../../validation/plantInstance.schema.ts";
 import type { JournalEntry } from "../../validation/journalEntry.schema.ts";
+import type { UserPlantKnowledge } from "../../validation/userPlantKnowledge.schema.ts";
 
 // ─── Types ───
 
-type EntityType = "plant" | "journal";
+type EntityType = "plant" | "journal" | "userPlantKnowledge";
 
 type SearchDocument = {
   id: string;
@@ -91,6 +92,24 @@ function journalToDocument(entry: JournalEntry): SearchDocument {
   };
 }
 
+function userKnowledgeToDocument(entry: UserPlantKnowledge): SearchDocument {
+  const companions = [
+    ...(entry.goodCompanions ?? []),
+    ...(entry.badCompanions ?? []),
+  ];
+  return {
+    id: entry.id,
+    entityType: "userPlantKnowledge",
+    title: entry.commonName,
+    body: "",
+    species: entry.species,
+    variety: entry.variety ?? "",
+    nickname: "",
+    tags: companions.join(" "),
+    activityType: "",
+  };
+}
+
 // ─── Internal helpers ───
 
 function addOrUpdateDocument(doc: SearchDocument): void {
@@ -145,15 +164,24 @@ export function handleChange(change: PouchDB.Core.ChangesResponseChange<object>)
     addOrUpdateDocument(plantToDocument(entity as unknown as PlantInstance));
   } else if (docType === "journal") {
     addOrUpdateDocument(journalToDocument(entity as unknown as JournalEntry));
+  } else if (docType === "userPlantKnowledge") {
+    addOrUpdateDocument(userKnowledgeToDocument(entity as unknown as UserPlantKnowledge));
   }
 }
 
 // ─── Public API ───
 
-export function addToIndex(entity: PlantInstance | JournalEntry): void {
-  const doc =
-    "species" in entity ? plantToDocument(entity) : journalToDocument(entity);
-  addOrUpdateDocument(doc);
+export function addToIndex(
+  entity: PlantInstance | JournalEntry | UserPlantKnowledge,
+  type: EntityType,
+): void {
+  if (type === "userPlantKnowledge") {
+    addOrUpdateDocument(userKnowledgeToDocument(entity as UserPlantKnowledge));
+  } else if (type === "plant") {
+    addOrUpdateDocument(plantToDocument(entity as PlantInstance));
+  } else {
+    addOrUpdateDocument(journalToDocument(entity as JournalEntry));
+  }
 }
 
 export function removeFromIndex(id: string): void {
@@ -188,7 +216,7 @@ export async function rebuildIndex(): Promise<number> {
     if (!raw) continue;
 
     const docType = (raw as unknown as Record<string, unknown>)["docType"] as string | undefined;
-    if (docType !== "plant" && docType !== "journal") continue;
+    if (docType !== "plant" && docType !== "journal" && docType !== "userPlantKnowledge") continue;
 
     const entity = stripPouchFields(raw as PouchDoc<Record<string, unknown>>);
     const deletedAt = (entity as Record<string, unknown>)["deletedAt"];
@@ -196,8 +224,10 @@ export async function rebuildIndex(): Promise<number> {
 
     if (docType === "plant") {
       addOrUpdateDocument(plantToDocument(entity as unknown as PlantInstance));
-    } else {
+    } else if (docType === "journal") {
       addOrUpdateDocument(journalToDocument(entity as unknown as JournalEntry));
+    } else if (docType === "userPlantKnowledge") {
+      addOrUpdateDocument(userKnowledgeToDocument(entity as unknown as UserPlantKnowledge));
     }
     count++;
   }

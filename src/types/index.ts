@@ -46,3 +46,4 @@ export type {
   TaskTriggerType,
   TaskRule,
 } from "../validation/taskRule.schema.ts";
+export type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";

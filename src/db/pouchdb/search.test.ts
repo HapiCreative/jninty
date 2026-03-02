@@ -87,7 +87,7 @@ describe("PouchDB search", () => {
   describe("addToIndex / search", () => {
     it("indexes a plant and finds it by species", () => {
       const plant = makePlant();
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
 
       const results = searchModule.search("Solanum");
       expect(results).toHaveLength(1);
@@ -97,7 +97,7 @@ describe("PouchDB search", () => {
 
     it("indexes a plant and finds it by nickname", () => {
       const plant = makePlant({ nickname: "Big Boy" });
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
 
       const results = searchModule.search("Big Boy");
       expect(results).toHaveLength(1);
@@ -106,7 +106,7 @@ describe("PouchDB search", () => {
 
     it("indexes a journal entry and finds it by body text", () => {
       const entry = makeJournal({ body: "The basil is wilting badly." });
-      searchModule.addToIndex(entry);
+      searchModule.addToIndex(entry, "journal");
 
       const results = searchModule.search("basil wilting");
       expect(results).toHaveLength(1);
@@ -115,29 +115,29 @@ describe("PouchDB search", () => {
 
     it("indexes a journal entry and finds it by title", () => {
       const entry = makeJournal({ title: "First harvest report" });
-      searchModule.addToIndex(entry);
+      searchModule.addToIndex(entry, "journal");
 
       const results = searchModule.search("harvest report");
       expect(results).toHaveLength(1);
     });
 
     it("returns empty array for no matches", () => {
-      searchModule.addToIndex(makePlant());
+      searchModule.addToIndex(makePlant(), "plant");
       expect(searchModule.search("xyznonexistent")).toHaveLength(0);
     });
 
     it("returns empty array for empty query", () => {
-      searchModule.addToIndex(makePlant());
+      searchModule.addToIndex(makePlant(), "plant");
       expect(searchModule.search("")).toHaveLength(0);
       expect(searchModule.search("  ")).toHaveLength(0);
     });
 
     it("updates an existing document when re-added", () => {
       const plant = makePlant({ nickname: "Alpha Original" });
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
 
       const updated = { ...plant, nickname: "Bravo Replacement" };
-      searchModule.addToIndex(updated);
+      searchModule.addToIndex(updated, "plant");
 
       expect(searchModule.search("Alpha")).toHaveLength(0);
       expect(searchModule.search("Bravo")).toHaveLength(1);
@@ -147,7 +147,7 @@ describe("PouchDB search", () => {
   describe("removeFromIndex", () => {
     it("removes a document from the index", () => {
       const plant = makePlant();
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
       expect(searchModule.search("Solanum")).toHaveLength(1);
 
       searchModule.removeFromIndex(plant.id);
@@ -202,7 +202,7 @@ describe("PouchDB search", () => {
 
     it("clears previous index state before rebuilding", async () => {
       // Add a plant to the index manually
-      searchModule.addToIndex(makePlant({ nickname: "Old Manual" }));
+      searchModule.addToIndex(makePlant({ nickname: "Old Manual" }), "plant");
       expect(searchModule.search("Manual")).toHaveLength(1);
 
       // Rebuild with an empty DB — the manual entry should be gone
@@ -255,7 +255,7 @@ describe("PouchDB search", () => {
 
     it("updates the index when a document is modified", () => {
       const plant = makePlant({ nickname: "Before Update" });
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
 
       searchModule.handleChange({
         id: `plant:${plant.id}`,
@@ -276,7 +276,7 @@ describe("PouchDB search", () => {
 
     it("removes from index when a document is hard-deleted", () => {
       const plant = makePlant();
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
       expect(searchModule.search("Solanum")).toHaveLength(1);
 
       searchModule.handleChange({
@@ -291,7 +291,7 @@ describe("PouchDB search", () => {
 
     it("removes from index when a document is soft-deleted", () => {
       const plant = makePlant({ nickname: "Soon Deleted" });
-      searchModule.addToIndex(plant);
+      searchModule.addToIndex(plant, "plant");
       expect(searchModule.search("Soon Deleted")).toHaveLength(1);
 
       searchModule.handleChange({
@@ -394,8 +394,8 @@ describe("PouchDB search", () => {
       const entryWithBody = makeJournal({
         body: "I found some basil growing.",
       });
-      searchModule.addToIndex(plantWithNickname);
-      searchModule.addToIndex(entryWithBody);
+      searchModule.addToIndex(plantWithNickname, "plant");
+      searchModule.addToIndex(entryWithBody, "journal");
 
       const results = searchModule.search("basil");
       expect(results).toHaveLength(2);

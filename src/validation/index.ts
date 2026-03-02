@@ -58,6 +58,8 @@ export type {
   WaterNeeds,
   GrowthRate,
 } from "./plantKnowledge.schema.ts";
+export { userPlantKnowledgeSchema } from "./userPlantKnowledge.schema.ts";
+export type { UserPlantKnowledge } from "./userPlantKnowledge.schema.ts";
 export { validateEntity } from "./helpers.ts";
 export type {
   ValidationResult,

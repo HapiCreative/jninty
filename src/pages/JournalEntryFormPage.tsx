@@ -192,7 +192,7 @@ export default function JournalEntryFormPage() {
       });
 
       // Update search index
-      addToIndex(entry);
+      addToIndex(entry, "journal");
       void serializeIndex();
 
       void navigate("/journal", { replace: true });

@@ -5,7 +5,11 @@ import {
   getBySpecies,
   getCompanions,
   clearKnowledgeBaseCache,
+  builtInEntryId,
+  loadAllKnowledgeItems,
+  findKnowledgeItemById,
 } from "./knowledgeBase.ts";
+import type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";
 
 beforeEach(() => {
   clearKnowledgeBaseCache();
@@ -101,5 +105,113 @@ describe("getCompanions", () => {
     const companions = getCompanions("Spinacia oleracea");
     expect(companions.good.length).toBeGreaterThan(0);
     expect(companions.bad).toEqual([]);
+  });
+});
+
+// ─── Unified Knowledge Base API tests ───
+
+const mockUserEntry: UserPlantKnowledge = {
+  id: "00000000-0000-0000-0000-000000000001",
+  version: 1,
+  createdAt: "2025-01-01T00:00:00.000Z",
+  updatedAt: "2025-01-01T00:00:00.000Z",
+  species: "Custom plantus",
+  commonName: "My Custom Plant",
+  plantType: "vegetable",
+  isPerennial: false,
+  sunNeeds: "full_sun",
+  waterNeeds: "moderate",
+};
+
+describe("builtInEntryId", () => {
+  it("generates deterministic id from species", () => {
+    const id = builtInEntryId("Solanum lycopersicum");
+    expect(id).toBe("builtin-solanum-lycopersicum");
+  });
+
+  it("includes variety in id when provided", () => {
+    const id = builtInEntryId("Solanum lycopersicum", "Cherry");
+    expect(id).toBe("builtin-solanum-lycopersicum-cherry");
+  });
+
+  it("normalizes special characters", () => {
+    const id = builtInEntryId("Some & Special  Plant");
+    expect(id).toBe("builtin-some-special-plant");
+  });
+
+  it("returns same id for same input", () => {
+    const a = builtInEntryId("Ocimum basilicum");
+    const b = builtInEntryId("Ocimum basilicum");
+    expect(a).toBe(b);
+  });
+});
+
+describe("loadAllKnowledgeItems", () => {
+  it("returns built-in items when no user entries", () => {
+    const items = loadAllKnowledgeItems([]);
+    expect(items.length).toBeGreaterThanOrEqual(70);
+    expect(items.every((i) => i.source === "builtin")).toBe(true);
+  });
+
+  it("merges user entries with built-in", () => {
+    const items = loadAllKnowledgeItems([mockUserEntry]);
+    expect(items.length).toBeGreaterThanOrEqual(71);
+    const custom = items.filter((i) => i.source === "custom");
+    expect(custom).toHaveLength(1);
+    expect(custom[0]?.data.commonName).toBe("My Custom Plant");
+    expect(custom[0]?.userEntry).toBeDefined();
+  });
+
+  it("sorts by commonName", () => {
+    const items = loadAllKnowledgeItems([]);
+    for (let i = 1; i < items.length; i++) {
+      const prev = items[i - 1]!;
+      const curr = items[i]!;
+      expect(prev.data.commonName.localeCompare(curr.data.commonName)).toBeLessThanOrEqual(0);
+    }
+  });
+
+  it("built-in items have id starting with builtin-", () => {
+    const items = loadAllKnowledgeItems([]);
+    const builtIns = items.filter((i) => i.source === "builtin");
+    expect(builtIns.every((i) => i.id.startsWith("builtin-"))).toBe(true);
+  });
+
+  it("custom items have UUID as id", () => {
+    const items = loadAllKnowledgeItems([mockUserEntry]);
+    const custom = items.find((i) => i.source === "custom");
+    expect(custom?.id).toBe(mockUserEntry.id);
+  });
+});
+
+describe("findKnowledgeItemById", () => {
+  it("finds a built-in item by id", () => {
+    const id = builtInEntryId("Solanum lycopersicum", "Cherry");
+    const item = findKnowledgeItemById(id, []);
+    expect(item).toBeDefined();
+    expect(item?.source).toBe("builtin");
+    expect(item?.data.species).toBe("Solanum lycopersicum");
+    expect(item?.data.variety).toBe("Cherry");
+  });
+
+  it("finds a custom item by UUID", () => {
+    const item = findKnowledgeItemById(mockUserEntry.id, [mockUserEntry]);
+    expect(item).toBeDefined();
+    expect(item?.source).toBe("custom");
+    expect(item?.data.commonName).toBe("My Custom Plant");
+    expect(item?.userEntry).toBeDefined();
+  });
+
+  it("returns undefined for non-existent built-in id", () => {
+    const item = findKnowledgeItemById("builtin-nonexistent", []);
+    expect(item).toBeUndefined();
+  });
+
+  it("returns undefined for non-existent UUID", () => {
+    const item = findKnowledgeItemById(
+      "00000000-0000-0000-0000-999999999999",
+      [],
+    );
+    expect(item).toBeUndefined();
   });
 });

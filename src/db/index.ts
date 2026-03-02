@@ -13,6 +13,7 @@ export * as plantingRepository from "./pouchdb/repositories/plantingRepository.t
 export * as seedRepository from "./pouchdb/repositories/seedRepository.ts";
 export * as taskRuleRepository from "./pouchdb/repositories/taskRuleRepository.ts";
 export * as expenseRepository from "./pouchdb/repositories/expenseRepository.ts";
+export * as userPlantKnowledgeRepository from "./pouchdb/repositories/userPlantKnowledgeRepository.ts";
 
 // ─── Search ───
 export * as search from "./pouchdb/search.ts";

@@ -20,6 +20,9 @@ import PlantingCalendarPage from "./pages/PlantingCalendarPage";
 import SeasonComparisonPage from "./pages/SeasonComparisonPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import ExpenseFormPage from "./pages/ExpenseFormPage";
+import KnowledgeBrowserPage from "./pages/KnowledgeBrowserPage";
+import KnowledgeDetailPage from "./pages/KnowledgeDetailPage";
+import KnowledgeFormPage from "./pages/KnowledgeFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 import { rebuildIndex, startListening } from "./db/search.ts";
@@ -73,6 +76,10 @@ export default function App() {
                   </Suspense>
                 }
               />
+              <Route path="knowledge" element={<KnowledgeBrowserPage />} />
+              <Route path="knowledge/new" element={<KnowledgeFormPage />} />
+              <Route path="knowledge/:id" element={<KnowledgeDetailPage />} />
+              <Route path="knowledge/:id/edit" element={<KnowledgeFormPage />} />
               <Route path="expenses" element={<ExpensesPage />} />
               <Route path="expenses/new" element={<ExpenseFormPage />} />
               <Route path="expenses/:id/edit" element={<ExpenseFormPage />} />
