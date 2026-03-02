@@ -13,6 +13,7 @@ import {
 } from "../db/index.ts";
 import { localDB } from "../db/pouchdb/client.ts";
 import { stripPouchFields, type PouchDoc } from "../db/pouchdb/utils.ts";
+import { getOriginal } from "../db/pouchdb/originalsStore.ts";
 import { plantInstanceSchema } from "../validation/plantInstance.schema.ts";
 import { journalEntrySchema } from "../validation/journalEntry.schema.ts";
 import { taskSchema } from "../validation/task.schema.ts";
@@ -231,18 +232,18 @@ export async function exportAll(): Promise<Blob> {
       // Display attachment doesn't exist
     }
 
-    // Original attachment
+    // Original — stored in local-only originals DB (not synced)
     if (photo.originalStored) {
       try {
-        const originalData = await localDB.getAttachment(docId, "original");
-        if (originalData) {
+        const originalBlob = await getOriginal(photo.id);
+        if (originalBlob) {
           photosFolder.file(
             `${photo.id}-original.jpg`,
-            await blobToArrayBuffer(originalData as Blob | Buffer),
+            await blobToArrayBuffer(originalBlob),
           );
         }
       } catch {
-        // Original attachment doesn't exist
+        // Original doesn't exist in local store
       }
     }
   }

@@ -1,4 +1,5 @@
 import { localDB } from "../db/pouchdb/client.ts";
+import { getOriginalsSizeBytes } from "../db/pouchdb/originalsStore.ts";
 
 export type StorageUsage = {
   thumbnailBytes: number;
@@ -12,7 +13,6 @@ export type StorageUsage = {
 export async function getStorageUsage(): Promise<StorageUsage> {
   let thumbnailBytes = 0;
   let displayBytes = 0;
-  let originalBytes = 0;
 
   // Fetch all photo docs with attachment stub metadata (includes length)
   const result = await localDB.allDocs({
@@ -44,12 +44,10 @@ export async function getStorageUsage(): Promise<StorageUsage> {
     if (typeof dispLen === "number" && !Number.isNaN(dispLen)) {
       displayBytes += dispLen;
     }
-
-    const origLen = attachments["original"]?.length;
-    if (typeof origLen === "number" && !Number.isNaN(origLen)) {
-      originalBytes += origLen;
-    }
   }
+
+  // Originals are in a separate local-only DB (not synced)
+  const originalBytes = await getOriginalsSizeBytes();
 
   // Use Storage API estimate when available
   let totalBytes = 0;

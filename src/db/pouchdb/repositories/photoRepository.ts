@@ -1,6 +1,11 @@
 import { localDB } from "../client.ts";
 import { type PouchDoc, stripPouchFields, toPouchDoc } from "../utils.ts";
 import { photoSchema, type Photo } from "../../../validation/photo.schema.ts";
+import {
+  saveOriginal,
+  getOriginal,
+  removeOriginal,
+} from "../originalsStore.ts";
 
 const DOC_TYPE = "photo";
 
@@ -150,12 +155,8 @@ export async function createWithFiles(
     },
   };
 
-  if (input.originalFile) {
-    attachments["original"] = {
-      content_type: input.originalFile.type || "image/jpeg",
-      data: await toAttachmentData(input.originalFile),
-    };
-  }
+  // Originals are stored in a separate local-only DB (not synced via CouchDB)
+  // to avoid bloating replication with multi-megabyte files.
 
   const pouchDoc = {
     ...docWithoutBlobs,
@@ -163,6 +164,11 @@ export async function createWithFiles(
   };
 
   await localDB.put(pouchDoc);
+
+  if (input.originalFile) {
+    await saveOriginal(id, input.originalFile);
+  }
+
   return parsed;
 }
 
@@ -245,22 +251,15 @@ export async function getDisplayBlob(
 export async function getOriginalBlob(
   photoId: string,
 ): Promise<Blob | undefined> {
-  const docId = `${DOC_TYPE}:${photoId}`;
-  try {
-    const data = await localDB.getAttachment(docId, "original");
-    if (data) {
-      return data instanceof Blob ? data : new Blob([data as Buffer]);
-    }
-    return undefined;
-  } catch {
-    return undefined;
-  }
+  return getOriginal(photoId);
 }
 
 /**
- * Remove a photo and all its attachments.
- * In PouchDB, removing the document removes all attachments.
+ * Remove a photo and all its attachments (including local-only originals).
+ * PouchDB remove deletes the synced doc + attachments; we also clean up
+ * the separate originals store.
  */
 export async function removeWithFiles(id: string): Promise<void> {
-  return remove(id);
+  await remove(id);
+  await removeOriginal(id);
 }

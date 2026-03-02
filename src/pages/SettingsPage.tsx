@@ -29,7 +29,8 @@ import {
   clearWeatherCache,
   type GeoSearchResult,
 } from "../services/weather";
-import { localDB } from "../db/pouchdb/client.ts";
+import { localDB, getRemoteInfo, type RemoteDBInfo } from "../db/pouchdb/client.ts";
+import { clearAllOriginals } from "../db/pouchdb/originalsStore.ts";
 
 // ─── Growing zones (USDA 1a–13b) ───
 
@@ -80,6 +81,7 @@ export default function SettingsPage() {
 
   // Storage dashboard
   const [storage, setStorage] = useState<StorageUsage | null>(null);
+  const [remoteInfo, setRemoteInfo] = useState<RemoteDBInfo | null>(null);
 
   // Action states
   const [exportBusy, setExportBusy] = useState(false);
@@ -202,9 +204,21 @@ export default function SettingsPage() {
     setLocalLon(settings.longitude != null ? String(settings.longitude) : "");
   }, [settings.longitude]);
 
-  // Load storage usage
+  // Load storage usage (local + remote)
   useEffect(() => {
     void getStorageUsage().then(setStorage);
+
+    // Fetch remote DB info when sync is active
+    const cfg = getSyncConfig();
+    if (cfg?.enabled) {
+      const creds =
+        cfg.username && cfg.password
+          ? { username: cfg.username, password: cfg.password }
+          : undefined;
+      void getRemoteInfo(cfg.remoteUrl, creds).then((info) => {
+        if (info) setRemoteInfo(info);
+      });
+    }
   }, []);
 
   // ─── Handlers ───
@@ -289,7 +303,11 @@ export default function SettingsPage() {
   const handleClearOriginals = async () => {
     setClearingOriginals(true);
     try {
-      // Remove "original" attachments from all photo docs in PouchDB
+      // Remove all originals from the local-only store
+      await clearAllOriginals();
+
+      // Update originalStored flag on all photo docs so the app knows
+      // originals are no longer available
       const result = await localDB.allDocs({
         startkey: "photo:",
         endkey: "photo:\uffff",
@@ -298,20 +316,34 @@ export default function SettingsPage() {
       for (const row of result.rows) {
         const doc = row.doc as Record<string, unknown> | undefined;
         if (!doc) continue;
+        if (doc["originalStored"] === true) {
+          const latest = await localDB.get(row.id);
+          await localDB.put({ ...latest, originalStored: false });
+        }
+      }
+
+      // Also remove any legacy "original" attachments that may still exist
+      // in the synced PouchDB (from before the migration to local-only store)
+      for (const row of result.rows) {
+        const doc = row.doc as Record<string, unknown> | undefined;
+        if (!doc) continue;
         const attachments = doc["_attachments"] as
           | Record<string, unknown>
           | undefined;
         if (attachments?.["original"]) {
-          await localDB.removeAttachment(
-            row.id,
-            "original",
-            row.value.rev,
-          );
-          // Re-fetch to get updated _rev, then update originalStored
-          const updated = await localDB.get(row.id);
-          await localDB.put({ ...updated, originalStored: false });
+          try {
+            const latest = await localDB.get(row.id);
+            await localDB.removeAttachment(
+              row.id,
+              "original",
+              (latest as PouchDB.Core.IdMeta & PouchDB.Core.GetMeta)._rev,
+            );
+          } catch {
+            // Attachment already removed
+          }
         }
       }
+
       // Refresh storage display
       const updated = await getStorageUsage();
       setStorage(updated);
@@ -1044,9 +1076,16 @@ export default function SettingsPage() {
                   <span>Originals: {formatBytes(storage.originalBytes)}</span>
                   <span>Data: {formatBytes(storage.dataBytes)}</span>
                 </div>
-                <p className="text-sm font-medium text-soil-800">
-                  Total: {formatBytes(storage.totalBytes)}
-                </p>
+                {remoteInfo && remoteInfo.diskSize > 0 ? (
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm font-medium text-soil-800">
+                    <span>Local: {formatBytes(storage.totalBytes)}</span>
+                    <span>Remote (CouchDB): {formatBytes(remoteInfo.diskSize)}</span>
+                  </div>
+                ) : (
+                  <p className="text-sm font-medium text-soil-800">
+                    Total: {formatBytes(storage.totalBytes)}
+                  </p>
+                )}
                 {storage.quotaBytes > 0 && (
                   <div>
                     <div className="h-2 w-full rounded-full bg-cream-200">

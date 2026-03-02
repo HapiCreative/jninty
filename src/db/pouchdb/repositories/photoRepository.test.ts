@@ -8,12 +8,60 @@ PouchDB.plugin(PouchDBFind);
 PouchDB.plugin(PouchDBAdapterMemory);
 
 let testDB: PouchDB.Database;
+let originalsTestDB: PouchDB.Database;
 
 vi.mock("../client.ts", () => ({
   get localDB() {
     return testDB;
   },
 }));
+
+// Mock originalsStore to use a per-test in-memory PouchDB
+vi.mock("../originalsStore.ts", async () => {
+  const PouchDBModule = await import("pouchdb");
+  const PouchDBMem = await import("pouchdb-adapter-memory");
+  PouchDBModule.default.plugin(PouchDBMem.default);
+  const { Blob: NBlob } = await import("node:buffer");
+
+  // originalsTestDB is reassigned in beforeEach
+  return {
+    saveOriginal: async (photoId: string, blob: Blob) => {
+      let data: Buffer;
+      if (typeof (blob as Blob).arrayBuffer === "function") {
+        data = Buffer.from(await (blob as Blob).arrayBuffer());
+      } else {
+        data = Buffer.alloc(0);
+      }
+      await originalsTestDB.put({
+        _id: `original:${photoId}`,
+        photoId,
+        _attachments: {
+          original: {
+            content_type: blob.type || "image/jpeg",
+            data,
+          },
+        },
+      });
+    },
+    getOriginal: async (photoId: string): Promise<Blob | undefined> => {
+      try {
+        const att = await originalsTestDB.getAttachment(`original:${photoId}`, "original");
+        if (!att) return undefined;
+        return att instanceof NBlob ? (att as unknown as Blob) : new NBlob([att as Buffer]) as unknown as Blob;
+      } catch {
+        return undefined;
+      }
+    },
+    removeOriginal: async (photoId: string) => {
+      try {
+        const doc = await originalsTestDB.get(`original:${photoId}`);
+        await originalsTestDB.remove(doc);
+      } catch {
+        // not found
+      }
+    },
+  };
+});
 
 // Mock the photo schema to accept Node.js Blob (jsdom overrides global Blob
 // with a broken implementation that lacks arrayBuffer/text methods)
@@ -47,6 +95,9 @@ beforeEach(async () => {
   testDB = new PouchDB(`test-photo-${crypto.randomUUID()}`, {
     adapter: "memory",
   });
+  originalsTestDB = new PouchDB(`test-originals-${crypto.randomUUID()}`, {
+    adapter: "memory",
+  });
 });
 
 describe("PouchDB photoRepository", () => {
@@ -67,7 +118,7 @@ describe("PouchDB photoRepository", () => {
   });
 
   describe("createWithFiles", () => {
-    it("creates a photo with thumbnail, display, and original attachments", async () => {
+    it("creates a photo with thumbnail and display as PouchDB attachments", async () => {
       const photo = await photoRepo.createWithFiles({
         thumbnailBlob: makeBlob("thumb"),
         displayBlob: makeBlob("display"),
@@ -80,6 +131,30 @@ describe("PouchDB photoRepository", () => {
       expect(photo.originalStored).toBe(true);
       expect(photo.width).toBe(1600);
       expect(photo.height).toBe(1200);
+    });
+
+    it("stores originals in local-only store, not as PouchDB attachments", async () => {
+      const photo = await photoRepo.createWithFiles({
+        thumbnailBlob: makeBlob("thumb"),
+        displayBlob: makeBlob("display"),
+        originalFile: makeBlob("original-data"),
+        width: 1600,
+        height: 1200,
+      });
+
+      // The synced PouchDB doc should NOT have an "original" attachment
+      const doc = await testDB.get(`photo:${photo.id}`, { attachments: true });
+      const attachments = (doc as Record<string, unknown>)["_attachments"] as
+        | Record<string, unknown>
+        | undefined;
+
+      expect(attachments?.["thumbnail"]).toBeDefined();
+      expect(attachments?.["display"]).toBeDefined();
+      expect(attachments?.["original"]).toBeUndefined();
+
+      // The original should be in the local-only originals store
+      const originalBlob = await photoRepo.getOriginalBlob(photo.id);
+      expect(originalBlob).toBeDefined();
     });
   });
 
@@ -149,7 +224,7 @@ describe("PouchDB photoRepository", () => {
   });
 
   describe("getOriginalBlob", () => {
-    it("returns original blob when stored", async () => {
+    it("returns original blob from local store when stored", async () => {
       const created = await photoRepo.createWithFiles({
         thumbnailBlob: makeBlob("thumb"),
         displayBlob: makeBlob("display"),
@@ -186,7 +261,7 @@ describe("PouchDB photoRepository", () => {
       expect(found).toBeUndefined();
     });
 
-    it("removeWithFiles removes doc and all attachments", async () => {
+    it("removeWithFiles removes doc, attachments, and local originals", async () => {
       const photo = await photoRepo.createWithFiles({
         thumbnailBlob: makeBlob("thumb"),
         displayBlob: makeBlob("display"),
@@ -199,6 +274,10 @@ describe("PouchDB photoRepository", () => {
 
       const found = await photoRepo.getById(photo.id);
       expect(found).toBeUndefined();
+
+      // Original should also be removed from local store
+      const originalBlob = await photoRepo.getOriginalBlob(photo.id);
+      expect(originalBlob).toBeUndefined();
     });
 
     it("throws when removing non-existent photo", async () => {
