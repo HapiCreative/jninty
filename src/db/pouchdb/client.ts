@@ -75,6 +75,42 @@ export async function testConnection(
   }
 }
 
+export type RemoteDBInfo = {
+  dbName: string;
+  docCount: number;
+  diskSize: number;
+};
+
+/**
+ * Query the remote CouchDB for database info (doc count, disk size).
+ * Returns null if sync is not configured or the remote is unreachable.
+ */
+export async function getRemoteInfo(
+  url: string,
+  credentials?: { username: string; password: string },
+): Promise<RemoteDBInfo | null> {
+  const opts: PouchDB.Configuration.RemoteDatabaseConfiguration = {};
+  if (credentials) {
+    opts.auth = { username: credentials.username, password: credentials.password };
+  }
+  const tempDB = new PouchDB(url, opts);
+  try {
+    const info = await tempDB.info();
+    return {
+      dbName: info.db_name,
+      docCount: info.doc_count,
+      diskSize:
+        ((info as unknown as Record<string, unknown>)["disk_size"] as number) ??
+        ((info as unknown as Record<string, unknown>)["data_size"] as number) ??
+        0,
+    };
+  } catch {
+    return null;
+  } finally {
+    await tempDB.close();
+  }
+}
+
 // ─── Sync lifecycle ───
 
 export function setupSync(
