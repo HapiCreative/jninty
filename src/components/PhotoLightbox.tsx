@@ -252,7 +252,7 @@ export default function PhotoLightbox({
               style={{ transform: `scale(${String(scale)})` }}
               draggable={false}
             />
-            {photoId && captions?.[photoId] && (
+            {photoId && captions?.[photoId] && scale === 1 && (
               <div className="absolute right-0 bottom-0 left-0 bg-soil-900/70 px-4 py-3">
                 <p className="text-sm text-white/90 line-clamp-3">
                   {captions[photoId]}

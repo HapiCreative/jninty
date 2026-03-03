@@ -6,6 +6,10 @@ import { MILESTONE_LABELS } from "../../constants/plantLabels";
 import { SeedIcon } from "../icons";
 import type { JournalEntry, MilestoneType } from "../../validation/journalEntry.schema";
 
+function isMilestoneType(s: string): s is MilestoneType {
+  return s in MILESTONE_LABELS;
+}
+
 interface GrowthStoryProps {
   milestoneEntries: JournalEntry[];
   onPhotoClick: (photoId: string) => void;
@@ -23,12 +27,12 @@ export default function GrowthStory({
         Growth Story
       </h2>
       <div className="overflow-x-auto">
-        <div className="flex items-start gap-0" style={{ minWidth: "max-content" }}>
+        <div className="flex items-start" style={{ minWidth: "max-content" }}>
           {milestoneEntries.map((entry, index) => {
             const photoId = entry.photoIds[0];
             const label =
-              entry.milestoneType
-                ? (MILESTONE_LABELS[entry.milestoneType as MilestoneType] ?? "Milestone")
+              entry.milestoneType && isMilestoneType(entry.milestoneType)
+                ? MILESTONE_LABELS[entry.milestoneType]
                 : "Milestone";
 
             return (

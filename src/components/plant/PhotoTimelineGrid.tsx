@@ -6,6 +6,10 @@ import { MILESTONE_LABELS } from "../../constants/plantLabels";
 import { ImageIcon } from "../icons";
 import type { MilestoneType } from "../../validation/journalEntry.schema";
 
+function isMilestoneType(s: string): s is MilestoneType {
+  return s in MILESTONE_LABELS;
+}
+
 export interface PhotoWithContext {
   photoId: string;
   journalEntryId: string;
@@ -67,7 +71,7 @@ export default function PhotoTimelineGrid({
               >
                 <PhotoThumbnail
                   photoId={photo.photoId}
-                  alt={photo.title ?? photo.body}
+                  alt={photo.title ?? (photo.body || "Plant photo")}
                   className="h-full w-full"
                 />
                 {photo.isMilestone && photo.milestoneType && (
@@ -75,7 +79,7 @@ export default function PhotoTimelineGrid({
                     <div className="absolute inset-0 rounded-lg ring-2 ring-terracotta-500" />
                     <div className="absolute right-0 bottom-1 left-0 flex justify-center">
                       <Badge variant="success" className="text-[10px]">
-                        {MILESTONE_LABELS[photo.milestoneType as MilestoneType] ?? "Milestone"}
+                        {isMilestoneType(photo.milestoneType) ? MILESTONE_LABELS[photo.milestoneType] : "Milestone"}
                       </Badge>
                     </div>
                   </>
