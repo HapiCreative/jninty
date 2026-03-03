@@ -58,10 +58,10 @@ function WeatherFetcher({
 
   if (unavailable || !weather) {
     return (
-      <Card className="border-brown-200 bg-brown-50/30">
+      <Card className="border-border-strong bg-brown-50/30">
         <div className="flex items-center gap-3">
           <span className="text-2xl">{"\uD83C\uDF25\uFE0F"}</span>
-          <p className="text-sm text-soil-500">
+          <p className="text-sm text-text-secondary">
             Weather unavailable — check your connection
           </p>
         </div>
@@ -94,14 +94,14 @@ function WeatherFetcher({
           <span className="text-4xl">{emoji}</span>
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline gap-2">
-              <span className="font-display text-2xl font-bold text-soil-900">
+              <span className="font-display text-2xl font-bold text-text-primary">
                 {formatTemp(weather.currentTempC, temperatureUnit)}
               </span>
-              <span className="text-sm text-soil-500">
+              <span className="text-sm text-text-secondary">
                 {weather.conditions}
               </span>
             </div>
-            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-soil-500">
+            <div className="mt-1 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-text-secondary">
               <span>
                 H: {formatTemp(weather.highC, temperatureUnit)} / L:{" "}
                 {formatTemp(weather.lowC, temperatureUnit)}
@@ -126,14 +126,14 @@ export default function WeatherWidget() {
   if (settings.latitude == null || settings.longitude == null) {
     return (
       <Link to="/settings" className="block">
-        <Card className="border-brown-200 bg-brown-50/30 transition-shadow hover:shadow-md">
+        <Card className="border-border-strong bg-brown-50/30 transition-shadow hover:shadow-md">
           <div className="flex items-center gap-3">
             <span className="text-2xl">{"\uD83C\uDF24\uFE0F"}</span>
             <div>
-              <p className="text-sm font-medium text-soil-700">
+              <p className="text-sm font-medium text-text-secondary">
                 Set your location for weather
               </p>
-              <p className="text-xs text-soil-500">
+              <p className="text-xs text-text-secondary">
                 Tap to add your coordinates in Settings
               </p>
             </div>

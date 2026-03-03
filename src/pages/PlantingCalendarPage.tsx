@@ -268,7 +268,7 @@ export default function PlantingCalendarPage() {
   return (
     <div className="mx-auto max-w-2xl p-4">
       {/* Header */}
-      <h1 className="font-display text-2xl font-bold text-green-800">
+      <h1 className="font-display text-2xl font-bold text-text-heading">
         Planting Calendar
       </h1>
 
@@ -294,17 +294,17 @@ export default function PlantingCalendarPage() {
         <button
           onClick={prevMonth}
           aria-label="Previous month"
-          className="rounded-lg p-2 text-green-700 transition-colors hover:bg-cream-200"
+          className="rounded-lg p-2 text-text-heading transition-colors hover:bg-surface-muted"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           {format(currentMonth, "MMMM yyyy")}
         </h2>
         <button
           onClick={nextMonth}
           aria-label="Next month"
-          className="rounded-lg p-2 text-green-700 transition-colors hover:bg-cream-200"
+          className="rounded-lg p-2 text-text-heading transition-colors hover:bg-surface-muted"
         >
           <ChevronRightIcon className="h-5 w-5" />
         </button>
@@ -315,27 +315,27 @@ export default function PlantingCalendarPage() {
         {WINDOW_TYPES.map((wt) => (
           <span key={wt.key} className="flex items-center gap-1">
             <span className={`inline-block h-2.5 w-2.5 rounded-full ${wt.dotClass}`} />
-            <span className="text-soil-600">{wt.label}</span>
+            <span className="text-text-secondary">{wt.label}</span>
           </span>
         ))}
         <span className="flex items-center gap-1">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />
-          <span className="text-soil-600">Frost dates</span>
+          <span className="text-text-secondary">Frost dates</span>
         </span>
         <span className="flex items-center gap-1">
           <span className="inline-block h-2 w-2 rotate-45 bg-brown-600" />
-          <span className="text-soil-600">Tasks</span>
+          <span className="text-text-secondary">Tasks</span>
         </span>
       </div>
 
       {/* Calendar grid */}
-      <div className="mt-3 overflow-hidden rounded-xl border border-cream-200 bg-white shadow-sm">
+      <div className="mt-3 overflow-hidden rounded-xl border border-border-default bg-surface-elevated shadow-sm">
         {/* Weekday headers */}
-        <div className="grid grid-cols-7 border-b border-cream-200 bg-cream-50">
+        <div className="grid grid-cols-7 border-b border-border-default bg-surface">
           {WEEK_DAYS.map((day) => (
             <div
               key={day}
-              className="py-2 text-center text-xs font-medium text-soil-500"
+              className="py-2 text-center text-xs font-medium text-text-secondary"
             >
               {day}
             </div>
@@ -368,9 +368,9 @@ export default function PlantingCalendarPage() {
               <button
                 key={dateKey}
                 onClick={() => setSelectedDay(day)}
-                className={`relative flex min-h-[3.5rem] flex-col items-center border-b border-r border-cream-100 p-1 transition-colors ${
-                  !isCurrentMonth ? "bg-cream-50/50 text-soil-300" : "text-soil-700"
-                } ${isSelected ? "bg-green-50 ring-2 ring-inset ring-green-400" : "hover:bg-cream-50"}`}
+                className={`relative flex min-h-[3.5rem] flex-col items-center border-b border-r border-border-default p-1 transition-colors ${
+                  !isCurrentMonth ? "bg-surface/50 text-text-muted" : "text-text-secondary"
+                } ${isSelected ? "bg-green-50 ring-2 ring-inset ring-green-400" : "hover:bg-surface"}`}
               >
                 {/* Frost date marker — red line at top */}
                 {(isLastFrost || isFirstFrost) && (
@@ -381,7 +381,7 @@ export default function PlantingCalendarPage() {
                 <span
                   className={`text-sm leading-tight ${
                     isToday
-                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-green-700 font-bold text-white"
+                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-primary font-bold text-white"
                       : ""
                   }`}
                 >
@@ -414,12 +414,12 @@ export default function PlantingCalendarPage() {
       {noPlantings && (
         <Card className="mt-4 border-green-200 bg-green-50/50">
           <div className="flex flex-col items-center py-4 text-center">
-            <p className="text-sm text-soil-600">
+            <p className="text-sm text-text-secondary">
               Add plants to a season to see your planting calendar.
             </p>
             <Link
               to="/plants"
-              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-cream-50 transition-colors hover:bg-green-800"
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-text-on-primary transition-colors hover:bg-primary-hover"
             >
               View Plants
             </Link>
@@ -431,11 +431,11 @@ export default function PlantingCalendarPage() {
       <Card className="mt-4">
         <div className="flex items-center gap-3 text-sm">
           <span className="inline-block h-3 w-3 rounded-full bg-red-500" />
-          <div className="text-soil-600">
-            <span className="font-medium text-soil-800">Last frost:</span>{" "}
+          <div className="text-text-secondary">
+            <span className="font-medium text-text-primary">Last frost:</span>{" "}
             {format(lastFrostDate, "MMMM d, yyyy")}
-            <span className="mx-2 text-soil-300">|</span>
-            <span className="font-medium text-soil-800">First frost:</span>{" "}
+            <span className="mx-2 text-text-muted">|</span>
+            <span className="font-medium text-text-primary">First frost:</span>{" "}
             {format(firstFrostDate, "MMMM d, yyyy")}
           </div>
         </div>
@@ -444,7 +444,7 @@ export default function PlantingCalendarPage() {
       {/* Selected day detail panel */}
       {selectedDay && (selectedDayEvents.length > 0 || selectedDayTasks.length > 0) && (
         <Card className="mt-4">
-          <h3 className="font-display text-base font-semibold text-green-800">
+          <h3 className="font-display text-base font-semibold text-text-heading">
             {format(selectedDay, "EEEE, MMMM d, yyyy")}
           </h3>
 
@@ -471,7 +471,7 @@ export default function PlantingCalendarPage() {
           {/* Tasks */}
           {selectedDayTasks.length > 0 && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs font-medium text-soil-500 uppercase tracking-wide">Tasks</p>
+              <p className="text-xs font-medium text-text-secondary uppercase tracking-wide">Tasks</p>
               {selectedDayTasks.map((task) => (
                 <div
                   key={task.id}
@@ -491,7 +491,7 @@ export default function PlantingCalendarPage() {
       {/* Selected day with no events */}
       {selectedDay && selectedDayEvents.length === 0 && selectedDayTasks.length === 0 && (
         <Card className="mt-4">
-          <p className="text-center text-sm text-soil-500">
+          <p className="text-center text-sm text-text-secondary">
             No planting windows or tasks on {format(selectedDay, "MMMM d")}.
           </p>
         </Card>
@@ -500,7 +500,7 @@ export default function PlantingCalendarPage() {
       {/* Plant windows summary */}
       {calendarPlants.length > 0 && (
         <section className="mt-6">
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Plant Windows
           </h2>
           <div className="mt-2 space-y-2">
@@ -508,7 +508,7 @@ export default function PlantingCalendarPage() {
               <Card key={cp.plantId}>
                 <Link
                   to={`/plants/${cp.plantId}`}
-                  className="font-medium text-green-700 hover:underline"
+                  className="font-medium text-text-heading hover:underline"
                 >
                   {cp.plantName}
                 </Link>

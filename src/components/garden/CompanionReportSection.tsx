@@ -20,7 +20,7 @@ export default function CompanionReportSection({
 
   return (
     <div className="mt-5 space-y-3">
-      <h4 className="text-sm font-medium text-soil-600">
+      <h4 className="text-sm font-medium text-text-secondary">
         Companion Planting
       </h4>
 
@@ -76,13 +76,13 @@ export default function CompanionReportSection({
 
       {/* Suggestions */}
       {suggestions.length > 0 && (
-        <div className="rounded-lg border border-cream-200 bg-cream-50 p-3">
-          <h5 className="mb-1.5 text-xs font-semibold text-soil-600">
+        <div className="rounded-lg border border-border-default bg-surface p-3">
+          <h5 className="mb-1.5 text-xs font-semibold text-text-secondary">
             Suggestions
           </h5>
           <ul className="space-y-1">
             {suggestions.map((s) => (
-              <li key={`${s.forPlant.id}-${s.suggestedCompanion}`} className="text-xs text-soil-500">
+              <li key={`${s.forPlant.id}-${s.suggestedCompanion}`} className="text-xs text-text-secondary">
                 Consider adding{" "}
                 <span className="font-medium capitalize">
                   {s.suggestedCompanion}

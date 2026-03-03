@@ -11,13 +11,13 @@ describe("Button", () => {
   it("applies primary variant by default", () => {
     render(<Button>Click</Button>);
     const btn = screen.getByRole("button");
-    expect(btn.className).toContain("bg-green-700");
+    expect(btn.className).toContain("bg-primary");
   });
 
   it("applies secondary variant classes", () => {
     render(<Button variant="secondary">Cancel</Button>);
     const btn = screen.getByRole("button");
-    expect(btn.className).toContain("bg-cream-200");
+    expect(btn.className).toContain("bg-surface-muted");
   });
 
   it("applies ghost variant classes", () => {

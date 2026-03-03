@@ -15,7 +15,8 @@ export async function get(): Promise<Settings | undefined> {
     void _id;
     void _rev;
     void docType;
-    return rest as unknown as Settings;
+    // Parse through Zod so .default() fills in newly-added fields for migrated docs
+    return settingsSchema.parse(rest);
   } catch {
     return undefined;
   }

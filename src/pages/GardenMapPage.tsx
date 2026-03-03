@@ -319,16 +319,16 @@ function BedDetailPanel({
   };
 
   return (
-    <div className="absolute right-0 top-0 z-20 flex h-full w-72 flex-col border-l border-cream-200 bg-white shadow-lg">
-      <div className="flex items-center justify-between border-b border-cream-200 px-4 py-3">
-        <h3 className="font-display text-lg font-bold text-green-800">
+    <div className="absolute right-0 top-0 z-20 flex h-full w-72 flex-col border-l border-border-default bg-surface-elevated shadow-lg">
+      <div className="flex items-center justify-between border-b border-border-default px-4 py-3">
+        <h3 className="font-display text-lg font-bold text-text-heading">
           {bed.name}
         </h3>
         <div className="flex items-center gap-1">
           {!isEditing && (
             <button
               onClick={enterEditMode}
-              className="rounded p-1 text-soil-400 hover:bg-cream-100 hover:text-soil-700"
+              className="rounded p-1 text-text-muted hover:bg-surface hover:text-text-secondary"
               aria-label="Edit bed"
             >
               <svg
@@ -345,7 +345,7 @@ function BedDetailPanel({
           )}
           <button
             onClick={onClose}
-            className="rounded p-1 text-soil-400 hover:bg-cream-100 hover:text-soil-700"
+            className="rounded p-1 text-text-muted hover:bg-surface hover:text-text-secondary"
             aria-label="Close panel"
           >
             <svg
@@ -365,26 +365,26 @@ function BedDetailPanel({
         {isEditing ? (
           <div className="space-y-3">
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-soil-700">
+              <span className="mb-1 block text-sm font-medium text-text-secondary">
                 Name
               </span>
               <input
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+                className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
                 autoFocus
               />
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-soil-700">
+              <span className="mb-1 block text-sm font-medium text-text-secondary">
                 Type
               </span>
               <select
                 value={editType}
                 onChange={(e) => setEditType(e.target.value as BedType)}
-                className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+                className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
               >
                 {Object.entries(BED_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -395,7 +395,7 @@ function BedDetailPanel({
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-soil-700">
+              <span className="mb-1 block text-sm font-medium text-text-secondary">
                 Sun Exposure
               </span>
               <select
@@ -403,7 +403,7 @@ function BedDetailPanel({
                 onChange={(e) =>
                   setEditSunExposure(e.target.value as BedSunExposure | "")
                 }
-                className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+                className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
               >
                 <option value="">Not specified</option>
                 {Object.entries(SUN_LABELS).map(([value, label]) => (
@@ -415,7 +415,7 @@ function BedDetailPanel({
             </label>
 
             <fieldset>
-              <legend className="mb-1.5 text-sm font-medium text-soil-700">
+              <legend className="mb-1.5 text-sm font-medium text-text-secondary">
                 Color
               </legend>
               <div className="flex flex-wrap gap-2">
@@ -437,14 +437,14 @@ function BedDetailPanel({
             </fieldset>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-soil-700">
+              <span className="mb-1 block text-sm font-medium text-text-secondary">
                 Notes
               </span>
               <textarea
                 value={editNotes}
                 onChange={(e) => setEditNotes(e.target.value)}
                 rows={3}
-                className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+                className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
                 placeholder="Optional notes..."
               />
             </label>
@@ -453,42 +453,42 @@ function BedDetailPanel({
           <>
             <dl className="space-y-3 text-sm">
               <div>
-                <dt className="font-medium text-soil-600">Type</dt>
-                <dd className="text-soil-900">
+                <dt className="font-medium text-text-secondary">Type</dt>
+                <dd className="text-text-primary">
                   {BED_TYPE_LABELS[bed.type] ?? bed.type}
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-soil-600">Size</dt>
-                <dd className="text-soil-900">
+                <dt className="font-medium text-text-secondary">Size</dt>
+                <dd className="text-text-primary">
                   {bed.gridWidth} x {bed.gridHeight} {unit}
                 </dd>
               </div>
               {bed.sunExposure && (
                 <div>
-                  <dt className="font-medium text-soil-600">Sun Exposure</dt>
-                  <dd className="text-soil-900">
+                  <dt className="font-medium text-text-secondary">Sun Exposure</dt>
+                  <dd className="text-text-primary">
                     {SUN_LABELS[bed.sunExposure] ?? bed.sunExposure}
                   </dd>
                 </div>
               )}
               {bed.notes && (
                 <div>
-                  <dt className="font-medium text-soil-600">Notes</dt>
-                  <dd className="text-soil-900">{bed.notes}</dd>
+                  <dt className="font-medium text-text-secondary">Notes</dt>
+                  <dd className="text-text-primary">{bed.notes}</dd>
                 </div>
               )}
             </dl>
 
             <div className="mt-5">
               <div className="mb-2 flex items-center justify-between">
-                <h4 className="text-sm font-medium text-soil-600">
+                <h4 className="text-sm font-medium text-text-secondary">
                   Plants ({bedPlantings.length})
                 </h4>
                 {hasActiveSeason && (
                   <button
                     onClick={onAssignPlant}
-                    className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-green-700 hover:bg-green-50 transition-colors"
+                    className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-text-heading hover:bg-green-50 transition-colors"
                   >
                     <svg
                       className="h-3.5 w-3.5"
@@ -509,7 +509,7 @@ function BedDetailPanel({
                 </p>
               )}
               {bedPlantings.length === 0 ? (
-                <p className="text-sm text-soil-400">
+                <p className="text-sm text-text-muted">
                   No plants assigned yet.
                 </p>
               ) : (
@@ -529,7 +529,7 @@ function BedDetailPanel({
                     return (
                       <li
                         key={planting.id}
-                        className="group flex items-center gap-2 rounded-md bg-cream-50 px-2.5 py-1.5 text-sm"
+                        className="group flex items-center gap-2 rounded-md bg-surface px-2.5 py-1.5 text-sm"
                         title={tooltipText}
                       >
                         <span
@@ -541,7 +541,7 @@ function BedDetailPanel({
                               : PLANT_TOKEN_COLORS["other"],
                           }}
                         />
-                        <span className="flex-1 text-soil-900">
+                        <span className="flex-1 text-text-primary">
                           {plant?.nickname ??
                             plant?.species ??
                             "Unknown plant"}
@@ -554,7 +554,7 @@ function BedDetailPanel({
                         )}
                         <button
                           onClick={() => onRemovePlant(planting.id)}
-                          className="rounded p-0.5 text-soil-300 opacity-0 transition-opacity hover:text-terracotta-500 group-hover:opacity-100"
+                          className="rounded p-0.5 text-text-muted opacity-0 transition-opacity hover:text-terracotta-500 group-hover:opacity-100"
                           aria-label={`Remove ${plant?.nickname ?? plant?.species ?? "plant"} from bed`}
                         >
                           <svg
@@ -580,7 +580,7 @@ function BedDetailPanel({
         )}
       </div>
 
-      <div className="flex flex-col gap-2 border-t border-cream-200 p-4">
+      <div className="flex flex-col gap-2 border-t border-border-default p-4">
         {isEditing ? (
           <>
             <Button
@@ -655,34 +655,34 @@ function NewBedModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-xl bg-white p-5 shadow-xl"
+        className="w-full max-w-sm rounded-xl bg-surface-elevated p-5 shadow-xl"
       >
-        <h3 className="mb-4 font-display text-lg font-bold text-green-800">
+        <h3 className="mb-4 font-display text-lg font-bold text-text-heading">
           New Garden Bed
         </h3>
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-sm font-medium text-soil-700">
+          <span className="mb-1 block text-sm font-medium text-text-secondary">
             Name
           </span>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+            className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
             placeholder="e.g. Raised Bed #1"
             autoFocus
           />
         </label>
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-sm font-medium text-soil-700">
+          <span className="mb-1 block text-sm font-medium text-text-secondary">
             Type
           </span>
           <select
             value={type}
             onChange={(e) => setType(e.target.value as BedType)}
-            className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+            className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
           >
             {Object.entries(BED_TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -693,7 +693,7 @@ function NewBedModal({
         </label>
 
         <label className="mb-3 block">
-          <span className="mb-1 block text-sm font-medium text-soil-700">
+          <span className="mb-1 block text-sm font-medium text-text-secondary">
             Sun Exposure
           </span>
           <select
@@ -701,7 +701,7 @@ function NewBedModal({
             onChange={(e) =>
               setSunExposure(e.target.value as BedSunExposure | "")
             }
-            className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+            className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
           >
             <option value="">Not specified</option>
             {Object.entries(SUN_LABELS).map(([value, label]) => (
@@ -713,7 +713,7 @@ function NewBedModal({
         </label>
 
         <fieldset className="mb-4">
-          <legend className="mb-1.5 text-sm font-medium text-soil-700">
+          <legend className="mb-1.5 text-sm font-medium text-text-secondary">
             Color
           </legend>
           <div className="flex flex-wrap gap-2">
@@ -784,23 +784,23 @@ function AssignPlantModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="flex max-h-[70vh] w-full max-w-sm flex-col rounded-xl bg-white shadow-xl">
+      <div className="flex max-h-[70vh] w-full max-w-sm flex-col rounded-xl bg-surface-elevated shadow-xl">
         <div className="p-5 pb-3">
-          <h3 className="mb-3 font-display text-lg font-bold text-green-800">
+          <h3 className="mb-3 font-display text-lg font-bold text-text-heading">
             Assign Plant to {bed.name}
           </h3>
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-cream-200 px-3 py-2 text-sm focus:border-green-600 focus:outline-none focus:ring-1 focus:ring-green-600"
+            className="w-full rounded-lg border border-border-default px-3 py-2 text-sm focus:border-focus-ring focus:outline-none focus:ring-1 focus:ring-focus-ring"
             placeholder="Search plants..."
             autoFocus
           />
         </div>
         <div className="flex-1 overflow-y-auto px-5 pb-2">
           {availablePlants.length === 0 ? (
-            <p className="py-4 text-center text-sm text-soil-400">
+            <p className="py-4 text-center text-sm text-text-muted">
               {totalActive === 0
                 ? "No plants in your inventory yet. Add plants first."
                 : "All active plants are already assigned to this bed."}
@@ -811,7 +811,7 @@ function AssignPlantModal({
                 <li key={plant.id}>
                   <button
                     onClick={() => onAssign(plant.id)}
-                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-cream-100"
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface"
                   >
                     <span
                       className="inline-block h-3 w-3 flex-shrink-0 rounded-full"
@@ -821,11 +821,11 @@ function AssignPlantModal({
                           PLANT_TOKEN_COLORS["other"],
                       }}
                     />
-                    <span className="font-medium text-soil-900">
+                    <span className="font-medium text-text-primary">
                       {plant.nickname ?? plant.species}
                     </span>
                     {plant.variety && (
-                      <span className="text-xs text-soil-400">
+                      <span className="text-xs text-text-muted">
                         ({plant.variety})
                       </span>
                     )}
@@ -835,7 +835,7 @@ function AssignPlantModal({
             </ul>
           )}
         </div>
-        <div className="border-t border-cream-200 p-4">
+        <div className="border-t border-border-default p-4">
           <Button variant="secondary" onClick={onClose} className="w-full">
             Cancel
           </Button>
@@ -1175,8 +1175,8 @@ export default function GardenMapPage() {
   return (
     <div className="flex h-full flex-col">
       {/* ── Toolbar ── */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-cream-200 bg-white px-4 py-2">
-        <div className="flex gap-1 rounded-lg bg-cream-100 p-0.5">
+      <div className="flex flex-wrap items-center gap-2 border-b border-border-default bg-surface-elevated px-4 py-2">
+        <div className="flex gap-1 rounded-lg bg-surface p-0.5">
           <button
             onClick={() => {
               setTool("select");
@@ -1184,8 +1184,8 @@ export default function GardenMapPage() {
             }}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               tool === "select"
-                ? "bg-white text-green-800 shadow-sm"
-                : "text-soil-600 hover:text-soil-800"
+                ? "bg-surface-elevated text-text-heading shadow-sm"
+                : "text-text-secondary hover:text-text-primary"
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -1208,8 +1208,8 @@ export default function GardenMapPage() {
             }}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               tool === "draw"
-                ? "bg-white text-green-800 shadow-sm"
-                : "text-soil-600 hover:text-soil-800"
+                ? "bg-surface-elevated text-text-heading shadow-sm"
+                : "text-text-secondary hover:text-text-primary"
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -1227,22 +1227,22 @@ export default function GardenMapPage() {
           </button>
         </div>
 
-        <div className="h-5 w-px bg-cream-200" />
+        <div className="h-5 w-px bg-surface-muted" />
 
-        <span className="text-xs text-soil-400">
+        <span className="text-xs text-text-muted">
           1 square = 1 {settings.gridUnit === "feet" ? "ft" : "m"}
         </span>
 
         {tool === "draw" && (
-          <span className="text-xs font-medium text-green-700">
+          <span className="text-xs font-medium text-text-heading">
             Click and drag on the grid to draw a bed
           </span>
         )}
 
         {selectedBed && tool === "select" && (
           <>
-            <div className="h-5 w-px bg-cream-200" />
-            <span className="text-sm font-medium text-green-800">
+            <div className="h-5 w-px bg-surface-muted" />
+            <span className="text-sm font-medium text-text-heading">
               {selectedBed.name}
             </span>
           </>
@@ -1250,7 +1250,7 @@ export default function GardenMapPage() {
       </div>
 
       {/* ── Canvas area ── */}
-      <div className="relative flex-1 overflow-hidden bg-cream-50">
+      <div className="relative flex-1 overflow-hidden bg-surface">
         <div
           ref={containerRef}
           className="h-full w-full"

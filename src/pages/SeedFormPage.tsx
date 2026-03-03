@@ -12,7 +12,7 @@ import { ChevronLeftIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const FIELD_LABELS: Record<string, string> = {
   name: "Name",
@@ -199,12 +199,12 @@ export default function SeedFormPage() {
         <button
           type="button"
           onClick={() => void navigate(backPath)}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           {isEditing ? "Edit Seed" : "Add Seed"}
         </h1>
       </div>
@@ -212,7 +212,7 @@ export default function SeedFormPage() {
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-6 space-y-6">
         {/* Seed identification */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Seed Information
           </h2>
 
@@ -221,7 +221,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-name"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Name <span className="text-terracotta-500">*</span>
               </label>
@@ -238,7 +238,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-species"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Species <span className="text-terracotta-500">*</span>
               </label>
@@ -255,7 +255,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-variety"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Variety
               </label>
@@ -272,7 +272,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-brand"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Brand
               </label>
@@ -289,7 +289,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-supplier"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Supplier
               </label>
@@ -306,7 +306,7 @@ export default function SeedFormPage() {
 
         {/* Quantity & unit */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Quantity
           </h2>
 
@@ -314,7 +314,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-quantity"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Amount <span className="text-terracotta-500">*</span>
               </label>
@@ -332,7 +332,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-unit"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Unit
               </label>
@@ -354,7 +354,7 @@ export default function SeedFormPage() {
 
         {/* Dates & details */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Details
           </h2>
 
@@ -363,7 +363,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-purchase-date"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Purchase Date
               </label>
@@ -379,7 +379,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-expiry-date"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Expiry Date
               </label>
@@ -395,7 +395,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-germination"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Germination Rate (%)
               </label>
@@ -408,15 +408,15 @@ export default function SeedFormPage() {
                     max="100"
                     value={germinationRate}
                     onChange={(e) => setGerminationRate(e.target.value)}
-                    className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-cream-200 accent-green-600"
+                    className="h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-surface-muted accent-green-600"
                   />
-                  <span className="w-12 text-right text-sm font-medium text-soil-700">
+                  <span className="w-12 text-right text-sm font-medium text-text-secondary">
                     {germinationRate}%
                   </span>
                   <button
                     type="button"
                     onClick={() => setGerminationRate("")}
-                    className="text-xs text-soil-500 hover:text-soil-700"
+                    className="text-xs text-text-secondary hover:text-text-secondary"
                   >
                     Clear
                   </button>
@@ -426,7 +426,7 @@ export default function SeedFormPage() {
                   type="button"
                   id="seed-germination"
                   onClick={() => setGerminationRate("50")}
-                  className="text-sm text-green-700 hover:underline"
+                  className="text-sm text-text-link hover:underline"
                 >
                   Set germination rate
                 </button>
@@ -437,7 +437,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-cost"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Cost ($)
               </label>
@@ -456,7 +456,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-purchase-store"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Purchased At
               </label>
@@ -471,7 +471,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-storage"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Storage Location
               </label>
@@ -488,7 +488,7 @@ export default function SeedFormPage() {
             <div>
               <label
                 htmlFor="seed-notes"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Notes
               </label>
@@ -498,7 +498,7 @@ export default function SeedFormPage() {
                 placeholder="Any notes about this seed..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+                className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
               />
             </div>
           </div>

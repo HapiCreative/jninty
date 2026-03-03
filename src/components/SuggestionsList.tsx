@@ -29,12 +29,12 @@ export default function SuggestionsList({
           <div className="flex items-start gap-3">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-soil-900">
+                <span className="text-sm font-medium text-text-primary">
                   {s.title}
                 </span>
                 {showBadge && <Badge variant="default">Suggested</Badge>}
               </div>
-              <p className="mt-0.5 text-xs text-soil-500">
+              <p className="mt-0.5 text-xs text-text-secondary">
                 {plantNames.get(s.plantInstanceId) ?? "Unknown plant"}
                 {" \u00b7 "}Due {format(parseISO(s.dueDate), "MMM d")}
               </p>
@@ -50,7 +50,7 @@ export default function SuggestionsList({
                 variant="ghost"
                 size="sm"
                 onClick={() => void onDismiss(s)}
-                className="text-soil-500"
+                className="text-text-secondary"
               >
                 Dismiss
               </Button>

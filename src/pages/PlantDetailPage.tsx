@@ -276,10 +276,10 @@ export default function PlantDetailPage() {
   if (plant === null) {
     return (
       <div className="p-4 text-center">
-        <p className="text-lg font-medium text-soil-700">Plant not found</p>
+        <p className="text-lg font-medium text-text-secondary">Plant not found</p>
         <Link
           to="/plants"
-          className="mt-2 inline-block text-sm text-green-700 hover:underline"
+          className="mt-2 inline-block text-sm text-text-heading hover:underline"
         >
           Back to Plant Inventory
         </Link>
@@ -301,7 +301,7 @@ export default function PlantDetailPage() {
   return (
     <div className="mx-auto max-w-2xl pb-8">
       {/* Hero photo */}
-      <div className="relative aspect-[16/9] bg-cream-200">
+      <div className="relative aspect-[16/9] bg-surface-muted">
         {heroUrl ? (
           <button
             type="button"
@@ -319,7 +319,7 @@ export default function PlantDetailPage() {
           </button>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <PlantPlaceholderIcon className="h-20 w-20 text-brown-300" />
+            <PlantPlaceholderIcon className="h-20 w-20 text-text-muted" />
           </div>
         )}
 
@@ -337,11 +337,11 @@ export default function PlantDetailPage() {
       <div className="space-y-4 p-4">
         {/* Name + badges */}
         <div>
-          <h1 className="font-display text-2xl font-bold text-soil-900">
+          <h1 className="font-display text-2xl font-bold text-text-primary">
             {displayName}
           </h1>
           {plant.nickname && (
-            <p className="mt-0.5 text-soil-600 italic">{plant.species}</p>
+            <p className="mt-0.5 text-text-secondary italic">{plant.species}</p>
           )}
           <div className="mt-2 flex flex-wrap gap-1.5">
             <Badge>{TYPE_LABELS[plant.type]}</Badge>
@@ -357,7 +357,7 @@ export default function PlantDetailPage() {
         </div>
 
         {/* Tab bar */}
-        <div className="flex overflow-hidden rounded-lg border border-brown-200">
+        <div className="flex overflow-hidden rounded-lg border border-border-strong">
           {([
             { key: "overview" as const, label: "Overview" },
             { key: "season-history" as const, label: "Seasons" },
@@ -369,8 +369,8 @@ export default function PlantDetailPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
                 activeTab === tab.key
-                  ? "bg-green-700 text-cream-50"
-                  : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                  ? "bg-primary text-text-on-primary"
+                  : "bg-surface text-text-secondary hover:bg-surface-muted"
               }`}
             >
               {tab.label}
@@ -406,7 +406,7 @@ export default function PlantDetailPage() {
         {/* Quick Log button */}
         <Link
           to={`/quick-log?plantId=${plant.id}`}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-terracotta-500 px-4 py-3 font-semibold text-white transition-colors hover:bg-terracotta-600"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 font-semibold text-white transition-colors hover:bg-accent-hover"
         >
           <PlusIcon className="h-5 w-5" />
           Quick Log
@@ -414,43 +414,43 @@ export default function PlantDetailPage() {
 
         {/* Plant details card */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Details
           </h2>
           <dl className="mt-3 space-y-2">
             {plant.variety && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Variety</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Variety</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {plant.variety}
                 </dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-sm text-soil-600">Perennial</dt>
-              <dd className="text-sm font-medium text-soil-900">
+              <dt className="text-sm text-text-secondary">Perennial</dt>
+              <dd className="text-sm font-medium text-text-primary">
                 {plant.isPerennial ? "Yes" : "No"}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-sm text-soil-600">Source</dt>
-              <dd className="text-sm font-medium text-soil-900">
+              <dt className="text-sm text-text-secondary">Source</dt>
+              <dd className="text-sm font-medium text-text-primary">
                 {SOURCE_LABELS[plant.source]}
               </dd>
             </div>
             {plant.dateAcquired && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Date Acquired</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Date Acquired</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {format(parseISO(plant.dateAcquired), "MMM d, yyyy")}
                 </dd>
               </div>
             )}
           </dl>
           {plant.careNotes && (
-            <div className="mt-4 border-t border-cream-200 pt-3">
-              <h3 className="text-sm font-medium text-soil-600">Care Notes</h3>
-              <p className="mt-1 text-sm whitespace-pre-wrap text-soil-900">
+            <div className="mt-4 border-t border-border-default pt-3">
+              <h3 className="text-sm font-medium text-text-secondary">Care Notes</h3>
+              <p className="mt-1 text-sm whitespace-pre-wrap text-text-primary">
                 {plant.careNotes}
               </p>
             </div>
@@ -461,10 +461,10 @@ export default function PlantDetailPage() {
         {allPhotoIds.length > 0 && (
           <Card>
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-green-800">
+              <h2 className="font-display text-lg font-semibold text-text-heading">
                 Photos
               </h2>
-              <span className="text-sm text-soil-500">
+              <span className="text-sm text-text-secondary">
                 {String(allPhotoIds.length)}
               </span>
             </div>
@@ -493,34 +493,34 @@ export default function PlantDetailPage() {
         {/* Plantings */}
         <Card>
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Plantings
             </h2>
-            <span className="text-sm text-soil-500">
+            <span className="text-sm text-text-secondary">
               {plantings?.length ?? 0}
             </span>
           </div>
           {plantings && plantings.length > 0 ? (
-            <ul className="mt-3 divide-y divide-cream-200">
+            <ul className="mt-3 divide-y divide-border-default">
               {plantings.map((planting) => (
                 <li key={planting.id} className="py-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-soil-900">
+                      <p className="text-sm font-medium text-text-primary">
                         {seasonMap.get(planting.seasonId) ?? "Unknown Season"}
                       </p>
                       {planting.datePlanted && (
-                        <p className="mt-0.5 text-xs text-soil-500">
+                        <p className="mt-0.5 text-xs text-text-secondary">
                           Planted: {format(parseISO(planting.datePlanted), "MMM d, yyyy")}
                         </p>
                       )}
                       {planting.dateRemoved && (
-                        <p className="text-xs text-soil-500">
+                        <p className="text-xs text-text-secondary">
                           Removed: {format(parseISO(planting.dateRemoved), "MMM d, yyyy")}
                         </p>
                       )}
                       {planting.notes && (
-                        <p className="mt-0.5 text-sm text-soil-600 line-clamp-2">
+                        <p className="mt-0.5 text-sm text-text-secondary line-clamp-2">
                           {planting.notes}
                         </p>
                       )}
@@ -538,8 +538,8 @@ export default function PlantDetailPage() {
                                 }
                                 className={`rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
                                   planting.outcome === o
-                                    ? "bg-green-700 text-white"
-                                    : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                                    ? "bg-primary text-white"
+                                    : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
                                 }`}
                               >
                                 {o}
@@ -559,7 +559,7 @@ export default function PlantDetailPage() {
                               {planting.outcome}
                             </Badge>
                           ) : (
-                            <span className="rounded-full border border-dashed border-brown-300 px-2 py-0.5 text-xs text-soil-500 hover:border-green-600 hover:text-green-700">
+                            <span className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-xs text-text-secondary hover:border-focus-ring hover:text-text-heading">
                               Set outcome
                             </span>
                           )}
@@ -571,7 +571,7 @@ export default function PlantDetailPage() {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-soil-500">
+            <p className="mt-3 text-sm text-text-secondary">
               No plantings yet.
             </p>
           )}
@@ -580,23 +580,23 @@ export default function PlantDetailPage() {
         {/* Journal entries */}
         <Card>
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Journal Entries
             </h2>
-            <span className="text-sm text-soil-500">
+            <span className="text-sm text-text-secondary">
               {journalEntries?.length ?? 0}
             </span>
           </div>
           {journalEntries && journalEntries.length > 0 ? (
-            <ul className="mt-3 divide-y divide-cream-200">
+            <ul className="mt-3 divide-y divide-border-default">
               {journalEntries.map((entry) => (
                 <li key={entry.id} className="py-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-soil-900">
+                      <p className="text-sm font-medium text-text-primary">
                         {entry.title ?? ACTIVITY_LABELS[entry.activityType]}
                       </p>
-                      <p className="mt-0.5 text-sm text-soil-600 line-clamp-2">
+                      <p className="mt-0.5 text-sm text-text-secondary line-clamp-2">
                         {entry.body}
                       </p>
                     </div>
@@ -604,14 +604,14 @@ export default function PlantDetailPage() {
                       {ACTIVITY_LABELS[entry.activityType]}
                     </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-soil-400">
+                  <p className="mt-1 text-xs text-text-muted">
                     {new Date(entry.createdAt).toLocaleDateString()}
                   </p>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-soil-500">
+            <p className="mt-3 text-sm text-text-secondary">
               No journal entries yet.
             </p>
           )}
@@ -620,23 +620,23 @@ export default function PlantDetailPage() {
         {/* Tasks */}
         <Card>
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Tasks
             </h2>
-            <span className="text-sm text-soil-500">
+            <span className="text-sm text-text-secondary">
               {pendingTasks.length} pending
             </span>
           </div>
           {pendingTasks.length > 0 ? (
-            <ul className="mt-3 divide-y divide-cream-200">
+            <ul className="mt-3 divide-y divide-border-default">
               {pendingTasks.map((task) => (
                 <li key={task.id} className="flex items-center gap-3 py-2">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-soil-900 truncate">
+                    <p className="text-sm font-medium text-text-primary truncate">
                       {task.title}
                     </p>
                     {task.dueDate && (
-                      <p className="text-xs text-soil-500">
+                      <p className="text-xs text-text-secondary">
                         Due: {format(parseISO(task.dueDate), "MMM d, yyyy")}
                       </p>
                     )}
@@ -656,7 +656,7 @@ export default function PlantDetailPage() {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-soil-500">No pending tasks.</p>
+            <p className="mt-3 text-sm text-text-secondary">No pending tasks.</p>
           )}
         </Card>
         </>
@@ -692,11 +692,11 @@ export default function PlantDetailPage() {
             <Card className="w-full max-w-sm" ref={dialogRef}>
               <h3
                 id="delete-dialog-title"
-                className="font-display text-lg font-semibold text-soil-900"
+                className="font-display text-lg font-semibold text-text-primary"
               >
                 Delete {displayName}?
               </h3>
-              <p className="mt-2 text-sm text-soil-600">
+              <p className="mt-2 text-sm text-text-secondary">
                 This plant will be removed from your inventory. This action
                 cannot be undone.
               </p>
@@ -716,7 +716,7 @@ export default function PlantDetailPage() {
                 </Button>
                 <Button
                   variant="primary"
-                  className="bg-terracotta-500 hover:bg-terracotta-600"
+                  className="bg-accent hover:bg-accent-hover"
                   onClick={() => void handleDelete()}
                   disabled={deleting}
                 >
@@ -764,7 +764,7 @@ function SeasonHistoryTab({
   if (plantings.length === 0) {
     return (
       <Card>
-        <p className="text-center text-sm text-soil-500">
+        <p className="text-center text-sm text-text-secondary">
           No season history yet.
         </p>
       </Card>
@@ -812,7 +812,7 @@ function SeasonHistoryTab({
       {/* Visual timeline */}
       {timeRange > 0 && (
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Timeline
           </h2>
           <div className="mt-3 space-y-2">
@@ -832,7 +832,7 @@ function SeasonHistoryTab({
 
               return (
                 <div key={p.id}>
-                  <div className="flex items-center justify-between text-xs text-soil-600">
+                  <div className="flex items-center justify-between text-xs text-text-secondary">
                     <span>{seasonMap.get(p.seasonId) ?? "Unknown"}</span>
                     <Badge
                       variant={
@@ -848,7 +848,7 @@ function SeasonHistoryTab({
                       {outcome}
                     </Badge>
                   </div>
-                  <div className="relative mt-1 h-3 w-full rounded-full bg-cream-200">
+                  <div className="relative mt-1 h-3 w-full rounded-full bg-surface-muted">
                     <div
                       className={`absolute top-0 h-3 rounded-full ${barColor}`}
                       style={{
@@ -862,7 +862,7 @@ function SeasonHistoryTab({
               );
             })}
             {/* Timeline axis labels */}
-            <div className="flex justify-between text-[10px] text-soil-400">
+            <div className="flex justify-between text-[10px] text-text-muted">
               <span>{format(new Date(minTime), "MMM yyyy")}</span>
               <span>{format(new Date(maxTime), "MMM yyyy")}</span>
             </div>
@@ -872,10 +872,10 @@ function SeasonHistoryTab({
 
       {/* Season details */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Season Details
         </h2>
-        <ul className="mt-3 divide-y divide-cream-200">
+        <ul className="mt-3 divide-y divide-border-default">
           {sorted.map((p) => {
             const outcome = p.outcome ?? "unknown";
             const journalCount = entryCountBySeason.get(p.seasonId) ?? 0;
@@ -884,7 +884,7 @@ function SeasonHistoryTab({
             return (
               <li key={p.id} className="py-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-soil-900">
+                  <span className="text-sm font-semibold text-text-primary">
                     {seasonMap.get(p.seasonId) ?? "Unknown Season"}
                   </span>
                   <Badge
@@ -904,28 +904,28 @@ function SeasonHistoryTab({
                 <dl className="mt-1.5 grid grid-cols-2 gap-x-4 gap-y-1">
                   {p.datePlanted && (
                     <div className="flex justify-between">
-                      <dt className="text-xs text-soil-400">Planted</dt>
-                      <dd className="text-xs text-soil-600">
+                      <dt className="text-xs text-text-muted">Planted</dt>
+                      <dd className="text-xs text-text-secondary">
                         {format(parseISO(p.datePlanted), "MMM d, yyyy")}
                       </dd>
                     </div>
                   )}
                   {p.dateRemoved && (
                     <div className="flex justify-between">
-                      <dt className="text-xs text-soil-400">Removed</dt>
-                      <dd className="text-xs text-soil-600">
+                      <dt className="text-xs text-text-muted">Removed</dt>
+                      <dd className="text-xs text-text-secondary">
                         {format(parseISO(p.dateRemoved), "MMM d, yyyy")}
                       </dd>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <dt className="text-xs text-soil-400">Journal entries</dt>
-                    <dd className="text-xs text-soil-600">{String(journalCount)}</dd>
+                    <dt className="text-xs text-text-muted">Journal entries</dt>
+                    <dd className="text-xs text-text-secondary">{String(journalCount)}</dd>
                   </div>
                   {harvestWeight > 0 && (
                     <div className="flex justify-between">
-                      <dt className="text-xs text-soil-400">Harvest</dt>
-                      <dd className="text-xs text-soil-600">
+                      <dt className="text-xs text-text-muted">Harvest</dt>
+                      <dd className="text-xs text-text-secondary">
                         {harvestWeight >= 1000
                           ? `${(harvestWeight / 1000).toFixed(1)} kg`
                           : `${String(Math.round(harvestWeight))} g`}
@@ -934,7 +934,7 @@ function SeasonHistoryTab({
                   )}
                 </dl>
                 {p.notes && (
-                  <p className="mt-1.5 text-xs text-soil-500 line-clamp-2">
+                  <p className="mt-1.5 text-xs text-text-secondary line-clamp-2">
                     {p.notes}
                   </p>
                 )}

@@ -8,12 +8,13 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>) {
     const el = ref.current;
     if (!el) return;
 
-    const focusable = el.querySelectorAll<HTMLElement>(FOCUSABLE);
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key !== "Tab") return;
+
+      // Recompute on every Tab press so multi-step dialogs work
+      const focusable = el!.querySelectorAll<HTMLElement>(FOCUSABLE);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
 
       if (!first || !last) {
         e.preventDefault();
@@ -30,7 +31,11 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>) {
     }
 
     el.addEventListener("keydown", handleKeyDown);
-    first?.focus();
+
+    // Focus first focusable element on mount
+    const focusable = el.querySelectorAll<HTMLElement>(FOCUSABLE);
+    focusable[0]?.focus();
+
     return () => el.removeEventListener("keydown", handleKeyDown);
   }, [ref]);
 }

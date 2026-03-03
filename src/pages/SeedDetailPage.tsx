@@ -49,10 +49,10 @@ export default function SeedDetailPage() {
   if (seed === null) {
     return (
       <div className="mx-auto max-w-2xl p-4 text-center">
-        <p className="text-lg font-medium text-soil-700">Seed not found</p>
+        <p className="text-lg font-medium text-text-secondary">Seed not found</p>
         <Link
           to="/seeds"
-          className="mt-2 inline-block text-sm text-green-700 hover:underline"
+          className="mt-2 inline-block text-sm text-text-heading hover:underline"
         >
           Back to Seed Bank
         </Link>
@@ -151,12 +151,12 @@ export default function SeedDetailPage() {
         <button
           type="button"
           onClick={() => void navigate("/seeds")}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Back to Seed Bank"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="flex-1 truncate font-display text-2xl font-bold text-green-800">
+        <h1 className="flex-1 truncate font-display text-2xl font-bold text-text-heading">
           {seed.name}
         </h1>
       </div>
@@ -175,18 +175,18 @@ export default function SeedDetailPage() {
       <Card className="mt-4">
         <div className="flex items-start gap-4">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-green-50">
-            <SeedIcon className="h-8 w-8 text-green-600" />
+            <SeedIcon className="h-8 w-8 text-text-link" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm italic text-soil-600">{seed.species}</p>
+            <p className="text-sm italic text-text-secondary">{seed.species}</p>
             {seed.variety && (
-              <p className="text-sm text-soil-500">Variety: {seed.variety}</p>
+              <p className="text-sm text-text-secondary">Variety: {seed.variety}</p>
             )}
             {seed.brand && (
-              <p className="text-sm text-soil-500">Brand: {seed.brand}</p>
+              <p className="text-sm text-text-secondary">Brand: {seed.brand}</p>
             )}
             {seed.supplier && (
-              <p className="text-sm text-soil-500">
+              <p className="text-sm text-text-secondary">
                 Supplier: {seed.supplier}
               </p>
             )}
@@ -196,40 +196,40 @@ export default function SeedDetailPage() {
 
       {/* Quantity & dates */}
       <Card className="mt-3">
-        <h2 className="font-display text-base font-semibold text-green-800">
+        <h2 className="font-display text-base font-semibold text-text-heading">
           Stock & Dates
         </h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
           <div>
-            <span className="text-xs text-soil-500">Quantity Remaining</span>
-            <p className="text-lg font-semibold text-soil-900">
+            <span className="text-xs text-text-secondary">Quantity Remaining</span>
+            <p className="text-lg font-semibold text-text-primary">
               {String(seed.quantityRemaining)}{" "}
-              <span className="text-sm font-normal text-soil-600">
+              <span className="text-sm font-normal text-text-secondary">
                 {QUANTITY_UNIT_LABELS[seed.quantityUnit].toLowerCase()}
               </span>
             </p>
           </div>
           {seed.germinationRate != null && (
             <div>
-              <span className="text-xs text-soil-500">Germination Rate</span>
-              <p className="text-lg font-semibold text-soil-900">
+              <span className="text-xs text-text-secondary">Germination Rate</span>
+              <p className="text-lg font-semibold text-text-primary">
                 {String(seed.germinationRate)}%
               </p>
             </div>
           )}
           {seed.purchaseDate && (
             <div>
-              <span className="text-xs text-soil-500">Purchased</span>
-              <p className="text-sm font-medium text-soil-900">
+              <span className="text-xs text-text-secondary">Purchased</span>
+              <p className="text-sm font-medium text-text-primary">
                 {format(parseISO(seed.purchaseDate), "MMM d, yyyy")}
               </p>
             </div>
           )}
           {seed.expiryDate && (
             <div>
-              <span className="text-xs text-soil-500">Expires</span>
+              <span className="text-xs text-text-secondary">Expires</span>
               <p
-                className={`text-sm font-medium ${isExpired ? "text-terracotta-600" : "text-soil-900"}`}
+                className={`text-sm font-medium ${isExpired ? "text-terracotta-600" : "text-text-primary"}`}
               >
                 {format(parseISO(seed.expiryDate), "MMM d, yyyy")}
               </p>
@@ -237,16 +237,16 @@ export default function SeedDetailPage() {
           )}
           {seed.cost != null && (
             <div>
-              <span className="text-xs text-soil-500">Cost</span>
-              <p className="text-sm font-medium text-soil-900">
+              <span className="text-xs text-text-secondary">Cost</span>
+              <p className="text-sm font-medium text-text-primary">
                 ${seed.cost.toFixed(2)}
               </p>
             </div>
           )}
           {seed.storageLocation && (
             <div>
-              <span className="text-xs text-soil-500">Storage Location</span>
-              <p className="text-sm font-medium text-soil-900">
+              <span className="text-xs text-text-secondary">Storage Location</span>
+              <p className="text-sm font-medium text-text-primary">
                 {seed.storageLocation}
               </p>
             </div>
@@ -257,10 +257,10 @@ export default function SeedDetailPage() {
       {/* Notes */}
       {seed.notes && (
         <Card className="mt-3">
-          <h2 className="font-display text-base font-semibold text-green-800">
+          <h2 className="font-display text-base font-semibold text-text-heading">
             Notes
           </h2>
-          <p className="mt-2 whitespace-pre-wrap text-sm text-soil-700">
+          <p className="mt-2 whitespace-pre-wrap text-sm text-text-secondary">
             {seed.notes}
           </p>
         </Card>
@@ -290,18 +290,18 @@ export default function SeedDetailPage() {
             if (e.target === e.currentTarget) setShowPlantModal(false);
           }}
         >
-          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="font-display text-lg font-bold text-green-800">
+          <div className="w-full max-w-sm rounded-xl bg-surface-elevated p-6 shadow-xl">
+            <h3 className="font-display text-lg font-bold text-text-heading">
               Plant from Seed
             </h3>
-            <p className="mt-1 text-sm text-soil-600">
+            <p className="mt-1 text-sm text-text-secondary">
               How many/much did you plant?
             </p>
 
             <div className="mt-4">
               <label
                 htmlFor="plant-amount"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Amount ({QUANTITY_UNIT_LABELS[seed.quantityUnit].toLowerCase()})
               </label>
@@ -334,14 +334,14 @@ export default function SeedDetailPage() {
                 }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                  className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-surface-elevated shadow-sm transition-transform ${
                     createPlant ? "translate-x-5" : "translate-x-0"
                   }`}
                 />
               </button>
               <label
                 htmlFor="create-plant-toggle"
-                className="text-sm text-soil-700"
+                className="text-sm text-text-secondary"
               >
                 Create a new plant record
               </label>
@@ -373,11 +373,11 @@ export default function SeedDetailPage() {
             if (e.target === e.currentTarget) setShowDeleteConfirm(false);
           }}
         >
-          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="font-display text-lg font-bold text-soil-900">
+          <div className="w-full max-w-sm rounded-xl bg-surface-elevated p-6 shadow-xl">
+            <h3 className="font-display text-lg font-bold text-text-primary">
               Delete Seed?
             </h3>
-            <p className="mt-1 text-sm text-soil-600">
+            <p className="mt-1 text-sm text-text-secondary">
               This will remove &ldquo;{seed.name}&rdquo; from your seed bank.
             </p>
             <div className="mt-6 flex gap-3">

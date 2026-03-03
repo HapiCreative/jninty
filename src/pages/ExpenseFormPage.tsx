@@ -13,7 +13,7 @@ import { ChevronLeftIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const FIELD_LABELS: Record<string, string> = {
   name: "Name",
@@ -158,19 +158,19 @@ export default function ExpenseFormPage() {
         <button
           type="button"
           onClick={() => void navigate("/expenses")}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           {isEditing ? "Edit Expense" : "Add Expense"}
         </h1>
       </div>
 
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-6 space-y-6">
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Expense Details
           </h2>
 
@@ -179,7 +179,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-name"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Name <span className="text-terracotta-500">*</span>
               </label>
@@ -196,7 +196,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-amount"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Amount ($) <span className="text-terracotta-500">*</span>
               </label>
@@ -215,7 +215,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-category"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Category <span className="text-terracotta-500">*</span>
               </label>
@@ -237,7 +237,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-store"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Store
               </label>
@@ -252,7 +252,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-date"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Date <span className="text-terracotta-500">*</span>
               </label>
@@ -268,7 +268,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-season"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Season
               </label>
@@ -291,7 +291,7 @@ export default function ExpenseFormPage() {
             <div>
               <label
                 htmlFor="expense-notes"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Notes
               </label>
@@ -301,7 +301,7 @@ export default function ExpenseFormPage() {
                 placeholder="Any notes about this expense..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+                className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
               />
             </div>
           </div>

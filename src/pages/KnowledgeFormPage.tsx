@@ -19,7 +19,7 @@ import { useToast } from "../components/ui/Toast";
 // ─── Select style ───
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Field label map ───
 
@@ -302,12 +302,12 @@ export default function KnowledgeFormPage() {
         <button
           type="button"
           onClick={() => void navigate(backPath)}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           {isEditing ? "Edit Knowledge Entry" : "Add Knowledge Entry"}
         </h1>
       </div>
@@ -315,14 +315,14 @@ export default function KnowledgeFormPage() {
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-6 space-y-6">
         {/* Basic Info */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Basic Info
           </h2>
           <div className="mt-4 space-y-4">
             <div>
               <label
                 htmlFor="species"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Species <span className="text-terracotta-500">*</span>
               </label>
@@ -337,7 +337,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="commonName"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Common Name <span className="text-terracotta-500">*</span>
               </label>
@@ -352,7 +352,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="variety"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Variety
               </label>
@@ -367,7 +367,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="plantType"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Plant Type <span className="text-terracotta-500">*</span>
               </label>
@@ -387,7 +387,7 @@ export default function KnowledgeFormPage() {
             <div className="flex items-center gap-3">
               <label
                 htmlFor="isPerennial"
-                className="text-sm font-medium text-soil-700"
+                className="text-sm font-medium text-text-secondary"
               >
                 Perennial <span className="text-terracotta-500">*</span>
               </label>
@@ -397,7 +397,7 @@ export default function KnowledgeFormPage() {
                 role="switch"
                 aria-checked={isPerennial}
                 onClick={() => setIsPerennial(!isPerennial)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
                   isPerennial ? "bg-green-600" : "bg-brown-200"
                 }`}
               >
@@ -413,14 +413,14 @@ export default function KnowledgeFormPage() {
 
         {/* Care Requirements */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Care Requirements
           </h2>
           <div className="mt-4 space-y-4">
             <div>
               <label
                 htmlFor="sunNeeds"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Sun Needs <span className="text-terracotta-500">*</span>
               </label>
@@ -440,7 +440,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="waterNeeds"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Water Needs <span className="text-terracotta-500">*</span>
               </label>
@@ -460,7 +460,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="soilPreference"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Soil Preference
               </label>
@@ -475,7 +475,7 @@ export default function KnowledgeFormPage() {
             <div>
               <label
                 htmlFor="growthRate"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Growth Rate
               </label>
@@ -499,7 +499,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="spacingInches"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Spacing (in)
                 </label>
@@ -515,7 +515,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="heightInches"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Height (in)
                 </label>
@@ -531,7 +531,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="spreadInches"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Spread (in)
                 </label>
@@ -550,7 +550,7 @@ export default function KnowledgeFormPage() {
 
         {/* Planting Timing */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Planting Timing
           </h2>
           <div className="mt-4 space-y-4">
@@ -558,7 +558,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="indoorStart"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Indoor Start (wks before frost)
                 </label>
@@ -573,7 +573,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="transplant"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Transplant (wks after frost)
                 </label>
@@ -590,7 +590,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="directSowBefore"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Direct Sow (wks before frost)
                 </label>
@@ -605,7 +605,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="directSowAfter"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Direct Sow (wks after frost)
                 </label>
@@ -622,7 +622,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="germination"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Days to Germination
                 </label>
@@ -638,7 +638,7 @@ export default function KnowledgeFormPage() {
               <div>
                 <label
                   htmlFor="maturity"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Days to Maturity
                 </label>
@@ -657,14 +657,14 @@ export default function KnowledgeFormPage() {
 
         {/* Companions & Issues */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Companions & Issues
           </h2>
           <div className="mt-4 space-y-4">
             <div>
               <label
                 htmlFor="goodCompanions"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Good Companions
               </label>
@@ -675,14 +675,14 @@ export default function KnowledgeFormPage() {
                 value={goodCompanions}
                 onChange={(e) => setGoodCompanions(e.target.value)}
               />
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Separate with commas
               </p>
             </div>
             <div>
               <label
                 htmlFor="badCompanions"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Bad Companions
               </label>
@@ -693,14 +693,14 @@ export default function KnowledgeFormPage() {
                 value={badCompanions}
                 onChange={(e) => setBadCompanions(e.target.value)}
               />
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Separate with commas
               </p>
             </div>
             <div>
               <label
                 htmlFor="commonPests"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Common Pests
               </label>
@@ -711,14 +711,14 @@ export default function KnowledgeFormPage() {
                 value={commonPests}
                 onChange={(e) => setCommonPests(e.target.value)}
               />
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Separate with commas
               </p>
             </div>
             <div>
               <label
                 htmlFor="commonDiseases"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Common Diseases
               </label>
@@ -729,7 +729,7 @@ export default function KnowledgeFormPage() {
                 value={commonDiseases}
                 onChange={(e) => setCommonDiseases(e.target.value)}
               />
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Separate with commas
               </p>
             </div>

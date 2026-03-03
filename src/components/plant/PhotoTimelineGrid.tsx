@@ -34,7 +34,7 @@ export default function PhotoTimelineGrid({
   if (photosWithContext.length === 0) {
     return (
       <Card>
-        <div className="flex flex-col items-center justify-center py-8 text-soil-400">
+        <div className="flex flex-col items-center justify-center py-8 text-text-muted">
           <ImageIcon className="h-10 w-10" />
           <p className="mt-2 text-sm">No photos yet</p>
         </div>
@@ -58,7 +58,7 @@ export default function PhotoTimelineGrid({
     <div className="space-y-4">
       {Array.from(grouped.entries()).map(([monthKey, photos]) => (
         <div key={monthKey}>
-          <h3 className="mb-2 text-sm font-semibold text-soil-700">
+          <h3 className="mb-2 text-sm font-semibold text-text-secondary">
             {format(parseISO(`${monthKey}-01`), "MMMM yyyy")}
           </h3>
           <div className="grid grid-cols-3 gap-2">

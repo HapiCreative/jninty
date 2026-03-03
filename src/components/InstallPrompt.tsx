@@ -76,18 +76,18 @@ export default function InstallPrompt() {
   if (!showIOS && !deferredPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md rounded-xl border border-green-200 bg-cream-50 p-4 shadow-lg">
+    <div className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-md rounded-xl border border-green-200 bg-surface p-4 shadow-lg">
       <button
         onClick={dismiss}
         aria-label="Dismiss install prompt"
-        className="absolute right-2 top-2 p-1 text-brown-400 hover:text-brown-700"
+        className="absolute right-2 top-2 p-1 text-text-muted hover:text-brown-700"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
 
       {showIOS ? (
         <div className="pr-6">
-          <p className="text-sm font-semibold text-green-800">
+          <p className="text-sm font-semibold text-text-heading">
             Install Jninty
           </p>
           <p className="mt-1 text-xs text-brown-700">
@@ -100,7 +100,7 @@ export default function InstallPrompt() {
       ) : (
         <div className="flex items-center gap-3 pr-6">
           <div className="flex-1">
-            <p className="text-sm font-semibold text-green-800">
+            <p className="text-sm font-semibold text-text-heading">
               Install Jninty
             </p>
             <p className="mt-0.5 text-xs text-brown-700">
@@ -109,7 +109,7 @@ export default function InstallPrompt() {
           </div>
           <button
             onClick={installNative}
-            className="shrink-0 rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-800"
+            className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary-hover"
           >
             Install
           </button>

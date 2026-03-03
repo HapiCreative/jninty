@@ -1,9 +1,11 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppShell from "./components/layout/AppShell";
-import { SettingsProvider } from "./hooks/useSettings";
+import { SettingsProvider, useSettings } from "./hooks/useSettings";
 import { SyncProvider } from "./hooks/useSync";
 import { ToastProvider } from "./components/ui/Toast";
+import { useTheme } from "./hooks/useTheme";
+import { useFontSize } from "./hooks/useFontSize";
 import DashboardPage from "./pages/DashboardPage";
 import PlantsListPage from "./pages/PlantsListPage";
 import PlantDetailPage from "./pages/PlantDetailPage";
@@ -36,6 +38,13 @@ import {
 // Lazy-load the map page to code-split the Konva.js bundle
 const GardenMapPage = lazy(() => import("./pages/GardenMapPage"));
 
+function ThemeApplicator() {
+  const { settings } = useSettings();
+  useTheme(settings.theme, settings.highContrast);
+  useFontSize(settings.fontSize);
+  return null;
+}
+
 export default function App() {
   useEffect(() => {
     loadBuiltInRules().catch(console.error);
@@ -64,6 +73,7 @@ export default function App() {
 
   return (
     <SettingsProvider>
+      <ThemeApplicator />
       <SyncProvider>
         <ToastProvider>
           <BrowserRouter>
@@ -87,7 +97,7 @@ export default function App() {
                 element={
                   <Suspense
                     fallback={
-                      <div className="flex h-64 items-center justify-center text-soil-400">
+                      <div className="flex h-64 items-center justify-center text-text-muted">
                         Loading map...
                       </div>
                     }

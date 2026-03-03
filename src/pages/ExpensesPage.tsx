@@ -26,7 +26,7 @@ import { PlusIcon, ChevronRightIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const ALL_CATEGORY_LABELS: Record<string, string> = {
   ...EXPENSE_CATEGORY_LABELS,
@@ -128,7 +128,7 @@ export default function ExpensesPage() {
     <div className="mx-auto max-w-2xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           Expenses
         </h1>
         <Link to="/expenses/new">
@@ -142,8 +142,8 @@ export default function ExpensesPage() {
       {/* Summary */}
       <Card className="mt-4">
         <div className="text-center">
-          <p className="text-sm text-soil-500">Total Spent</p>
-          <p className="font-display text-3xl font-bold text-green-800">
+          <p className="text-sm text-text-secondary">Total Spent</p>
+          <p className="font-display text-3xl font-bold text-text-heading">
             {formatCurrency(totalSpent)}
           </p>
         </div>
@@ -151,10 +151,10 @@ export default function ExpensesPage() {
         {/* Category bar chart */}
         {categoryTotals.length > 0 && (
           <div className="mt-4 space-y-2">
-            <h3 className="text-sm font-medium text-soil-700">By Category</h3>
+            <h3 className="text-sm font-medium text-text-secondary">By Category</h3>
             {categoryTotals.map((ct) => (
               <div key={ct.category} className="flex items-center gap-2">
-                <span className="w-28 truncate text-xs text-soil-600">
+                <span className="w-28 truncate text-xs text-text-secondary">
                   {ct.label}
                 </span>
                 <div className="flex-1">
@@ -168,7 +168,7 @@ export default function ExpensesPage() {
                     }}
                   />
                 </div>
-                <span className="w-16 text-right text-xs font-medium text-soil-900">
+                <span className="w-16 text-right text-xs font-medium text-text-primary">
                   {formatCurrency(ct.total)}
                 </span>
               </div>
@@ -179,17 +179,17 @@ export default function ExpensesPage() {
         {/* Top stores */}
         {storeTotals.length > 0 && (
           <div className="mt-4">
-            <h3 className="text-sm font-medium text-soil-700">Top Stores</h3>
+            <h3 className="text-sm font-medium text-text-secondary">Top Stores</h3>
             <div className="mt-2 space-y-1">
               {storeTotals.slice(0, 5).map((st) => (
                 <div
                   key={st.store}
                   className="flex items-center justify-between text-sm"
                 >
-                  <span className="truncate text-soil-700">{st.store}</span>
-                  <span className="shrink-0 text-soil-900">
+                  <span className="truncate text-text-secondary">{st.store}</span>
+                  <span className="shrink-0 text-text-primary">
                     {formatCurrency(st.total)}{" "}
-                    <span className="text-xs text-soil-400">
+                    <span className="text-xs text-text-muted">
                       ({st.percentage}%)
                     </span>
                   </span>
@@ -204,7 +204,7 @@ export default function ExpensesPage() {
       <button
         type="button"
         onClick={() => setShowFilters(!showFilters)}
-        className="mt-4 text-sm font-medium text-green-700 hover:underline"
+        className="mt-4 text-sm font-medium text-text-link hover:underline"
       >
         {showFilters ? "Hide filters" : "Show filters"}
       </button>
@@ -217,7 +217,7 @@ export default function ExpensesPage() {
             <div>
               <label
                 htmlFor="filter-season"
-                className="mb-1 block text-xs font-medium text-soil-600"
+                className="mb-1 block text-xs font-medium text-text-secondary"
               >
                 Season
               </label>
@@ -241,7 +241,7 @@ export default function ExpensesPage() {
               <div>
                 <label
                   htmlFor="filter-start"
-                  className="mb-1 block text-xs font-medium text-soil-600"
+                  className="mb-1 block text-xs font-medium text-text-secondary"
                 >
                   From
                 </label>
@@ -255,7 +255,7 @@ export default function ExpensesPage() {
               <div>
                 <label
                   htmlFor="filter-end"
-                  className="mb-1 block text-xs font-medium text-soil-600"
+                  className="mb-1 block text-xs font-medium text-text-secondary"
                 >
                   To
                 </label>
@@ -272,7 +272,7 @@ export default function ExpensesPage() {
             <div>
               <label
                 htmlFor="filter-store"
-                className="mb-1 block text-xs font-medium text-soil-600"
+                className="mb-1 block text-xs font-medium text-text-secondary"
               >
                 Store
               </label>
@@ -286,7 +286,7 @@ export default function ExpensesPage() {
 
             {/* Categories */}
             <div>
-              <span className="mb-1 block text-xs font-medium text-soil-600">
+              <span className="mb-1 block text-xs font-medium text-text-secondary">
                 Categories
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -297,8 +297,8 @@ export default function ExpensesPage() {
                     onClick={() => toggleCategory(cat)}
                     className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
                       selectedCategories.includes(cat)
-                        ? "bg-green-700 text-white"
-                        : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                        ? "bg-primary text-white"
+                        : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
                     }`}
                   >
                     {EXPENSE_CATEGORY_LABELS[cat]}
@@ -312,8 +312,8 @@ export default function ExpensesPage() {
                     onClick={() => toggleCategory(cat)}
                     className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
                       selectedCategories.includes(cat)
-                        ? "bg-green-700 text-white"
-                        : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                        ? "bg-primary text-white"
+                        : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
                     }`}
                   >
                     {ALL_CATEGORY_LABELS[cat]}
@@ -344,13 +344,13 @@ export default function ExpensesPage() {
 
       {/* Expense list */}
       <section className="mt-4">
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           All Expenses
         </h2>
 
         {rows.length === 0 ? (
           <Card className="mt-2">
-            <p className="text-center text-sm text-soil-500">
+            <p className="text-center text-sm text-text-secondary">
               No expenses found. Start tracking your garden spending!
             </p>
           </Card>
@@ -365,14 +365,14 @@ export default function ExpensesPage() {
                   <div className="flex items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="truncate text-sm font-medium text-soil-900">
+                        <span className="truncate text-sm font-medium text-text-primary">
                           {row.name}
                         </span>
                         <Badge>
                           {ALL_CATEGORY_LABELS[row.category] ?? row.category}
                         </Badge>
                       </div>
-                      <div className="mt-0.5 flex items-center gap-2 text-xs text-soil-500">
+                      <div className="mt-0.5 flex items-center gap-2 text-xs text-text-secondary">
                         <span>{format(parseISO(row.date), "MMM d, yyyy")}</span>
                         {row.store && (
                           <span className="truncate">
@@ -381,11 +381,11 @@ export default function ExpensesPage() {
                         )}
                       </div>
                     </div>
-                    <span className="shrink-0 text-sm font-semibold text-green-800">
+                    <span className="shrink-0 text-sm font-semibold text-text-heading">
                       {formatCurrency(row.amount)}
                     </span>
                     {row.sourceLink && (
-                      <ChevronRightIcon className="h-4 w-4 shrink-0 text-soil-400" />
+                      <ChevronRightIcon className="h-4 w-4 shrink-0 text-text-muted" />
                     )}
                   </div>
                 </Card>

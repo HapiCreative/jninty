@@ -23,7 +23,7 @@ export default function GrowthStory({
 
   return (
     <Card>
-      <h2 className="mb-3 font-display text-lg font-semibold text-green-800">
+      <h2 className="mb-3 font-display text-lg font-semibold text-text-heading">
         Growth Story
       </h2>
       <div className="overflow-x-auto">
@@ -40,7 +40,7 @@ export default function GrowthStory({
                 {/* Node */}
                 <div className="flex w-[120px] flex-col items-center">
                   {/* Date */}
-                  <p className="mb-1 text-[10px] text-soil-500">
+                  <p className="mb-1 text-[10px] text-text-secondary">
                     {format(parseISO(entry.createdAt), "MMM d, yyyy")}
                   </p>
 
@@ -58,7 +58,7 @@ export default function GrowthStory({
                       />
                     </button>
                   ) : (
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-green-600 bg-cream-100">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-green-600 bg-surface">
                       <SeedIcon className="h-6 w-6 text-green-600" />
                     </div>
                   )}

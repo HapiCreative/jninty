@@ -98,10 +98,10 @@ export default function KnowledgeDetailPage() {
   if (item === null) {
     return (
       <div className="p-4 text-center">
-        <p className="text-lg font-medium text-soil-700">Entry not found</p>
+        <p className="text-lg font-medium text-text-secondary">Entry not found</p>
         <Link
           to="/knowledge"
-          className="mt-2 inline-block text-sm text-green-700 hover:underline"
+          className="mt-2 inline-block text-sm text-text-heading hover:underline"
         >
           Back to Knowledge Base
         </Link>
@@ -119,16 +119,16 @@ export default function KnowledgeDetailPage() {
           <button
             type="button"
             onClick={() => navigate("/knowledge")}
-            className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+            className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             aria-label="Back to knowledge base"
           >
             <ChevronLeftIcon className="h-5 w-5" />
           </button>
           <div className="min-w-0 flex-1">
-            <h1 className="font-display text-2xl font-bold text-soil-900">
+            <h1 className="font-display text-2xl font-bold text-text-primary">
               {data.commonName}
             </h1>
-            <p className="mt-0.5 text-soil-600 italic">
+            <p className="mt-0.5 text-text-secondary italic">
               {data.species}
               {data.variety ? ` '${data.variety}'` : ""}
             </p>
@@ -146,58 +146,58 @@ export default function KnowledgeDetailPage() {
       <div className="space-y-4 px-4">
         {/* Growing Info */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Growing Info
           </h2>
           <dl className="mt-3 space-y-2">
             <div className="flex justify-between">
-              <dt className="text-sm text-soil-600">Sun</dt>
-              <dd className="text-sm font-medium text-soil-900">
+              <dt className="text-sm text-text-secondary">Sun</dt>
+              <dd className="text-sm font-medium text-text-primary">
                 {SUN_LABELS[data.sunNeeds]}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-sm text-soil-600">Water</dt>
-              <dd className="text-sm font-medium text-soil-900">
+              <dt className="text-sm text-text-secondary">Water</dt>
+              <dd className="text-sm font-medium text-text-primary">
                 {WATER_LABELS[data.waterNeeds]}
               </dd>
             </div>
             {data.soilPreference && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Soil</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Soil</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {data.soilPreference}
                 </dd>
               </div>
             )}
             {data.growthRate && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Growth Rate</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Growth Rate</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {GROWTH_RATE_LABELS[data.growthRate]}
                 </dd>
               </div>
             )}
             {data.matureHeightInches != null && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Height</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Height</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {data.matureHeightInches}"
                 </dd>
               </div>
             )}
             {data.matureSpreadInches != null && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Spread</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Spread</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {data.matureSpreadInches}"
                 </dd>
               </div>
             )}
             {data.spacingInches != null && (
               <div className="flex justify-between">
-                <dt className="text-sm text-soil-600">Spacing</dt>
-                <dd className="text-sm font-medium text-soil-900">
+                <dt className="text-sm text-text-secondary">Spacing</dt>
+                <dd className="text-sm font-medium text-text-primary">
                   {data.spacingInches}"
                 </dd>
               </div>
@@ -213,14 +213,14 @@ export default function KnowledgeDetailPage() {
           data.daysToGermination != null ||
           data.daysToMaturity != null) && (
           <Card>
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Planting Timing
             </h2>
             <dl className="mt-3 space-y-2">
               {data.indoorStartWeeksBeforeLastFrost != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Indoor Start</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Indoor Start</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.indoorStartWeeksBeforeLastFrost} weeks before last
                     frost
                   </dd>
@@ -228,40 +228,40 @@ export default function KnowledgeDetailPage() {
               )}
               {data.transplantWeeksAfterLastFrost != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Transplant</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Transplant</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.transplantWeeksAfterLastFrost} weeks after last frost
                   </dd>
                 </div>
               )}
               {data.directSowWeeksBeforeLastFrost != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Direct Sow (before)</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Direct Sow (before)</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.directSowWeeksBeforeLastFrost} weeks before last frost
                   </dd>
                 </div>
               )}
               {data.directSowWeeksAfterLastFrost != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Direct Sow (after)</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Direct Sow (after)</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.directSowWeeksAfterLastFrost} weeks after last frost
                   </dd>
                 </div>
               )}
               {data.daysToGermination != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Germination</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Germination</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.daysToGermination} days
                   </dd>
                 </div>
               )}
               {data.daysToMaturity != null && (
                 <div className="flex justify-between">
-                  <dt className="text-sm text-soil-600">Maturity</dt>
-                  <dd className="text-sm font-medium text-soil-900">
+                  <dt className="text-sm text-text-secondary">Maturity</dt>
+                  <dd className="text-sm font-medium text-text-primary">
                     {data.daysToMaturity} days
                   </dd>
                 </div>
@@ -274,12 +274,12 @@ export default function KnowledgeDetailPage() {
         {((data.goodCompanions && data.goodCompanions.length > 0) ||
           (data.badCompanions && data.badCompanions.length > 0)) && (
           <Card>
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Companion Planting
             </h2>
             {data.goodCompanions && data.goodCompanions.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm font-medium text-soil-600">
+                <p className="text-sm font-medium text-text-secondary">
                   Good Companions
                 </p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -293,7 +293,7 @@ export default function KnowledgeDetailPage() {
             )}
             {data.badCompanions && data.badCompanions.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm font-medium text-soil-600">
+                <p className="text-sm font-medium text-text-secondary">
                   Bad Companions
                 </p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -312,12 +312,12 @@ export default function KnowledgeDetailPage() {
         {((data.commonPests && data.commonPests.length > 0) ||
           (data.commonDiseases && data.commonDiseases.length > 0)) && (
           <Card>
-            <h2 className="font-display text-lg font-semibold text-green-800">
+            <h2 className="font-display text-lg font-semibold text-text-heading">
               Common Issues
             </h2>
             {data.commonPests && data.commonPests.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm font-medium text-soil-600">Pests</p>
+                <p className="text-sm font-medium text-text-secondary">Pests</p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   {data.commonPests.map((p) => (
                     <Badge key={p} variant="warning">
@@ -329,7 +329,7 @@ export default function KnowledgeDetailPage() {
             )}
             {data.commonDiseases && data.commonDiseases.length > 0 && (
               <div className="mt-3">
-                <p className="text-sm font-medium text-soil-600">Diseases</p>
+                <p className="text-sm font-medium text-text-secondary">Diseases</p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   {data.commonDiseases.map((d) => (
                     <Badge key={d} variant="danger">
@@ -374,11 +374,11 @@ export default function KnowledgeDetailPage() {
             <Card className="w-full max-w-sm" ref={dialogRef}>
               <h3
                 id="delete-dialog-title"
-                className="font-display text-lg font-semibold text-soil-900"
+                className="font-display text-lg font-semibold text-text-primary"
               >
                 Delete {data.commonName}?
               </h3>
-              <p className="mt-2 text-sm text-soil-600">
+              <p className="mt-2 text-sm text-text-secondary">
                 This knowledge entry will be permanently removed. This action
                 cannot be undone.
               </p>

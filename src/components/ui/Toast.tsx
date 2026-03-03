@@ -68,9 +68,9 @@ function ToastCard({
   }, [item.id, onDismiss]);
 
   const variantClasses: Record<ToastVariant, string> = {
-    success: "bg-green-800 text-cream-50",
-    error: "bg-terracotta-500 text-white",
-    info: "bg-soil-800 text-cream-50",
+    success: "bg-primary text-text-on-primary",
+    error: "bg-accent text-white",
+    info: "bg-surface-nav text-text-on-nav",
   };
 
   return (

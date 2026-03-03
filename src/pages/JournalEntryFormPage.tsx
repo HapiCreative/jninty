@@ -28,10 +28,10 @@ import {
 // ─── Styles ───
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const textareaClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Field labels for Zod error messages ───
 
@@ -225,12 +225,12 @@ export default function JournalEntryFormPage() {
         <button
           type="button"
           onClick={() => void navigate(-1)}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           New Journal Entry
         </h1>
       </div>
@@ -238,7 +238,7 @@ export default function JournalEntryFormPage() {
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-6 space-y-6">
         {/* Activity Type (required) */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Activity Type <span className="text-terracotta-500">*</span>
           </h2>
           <div
@@ -253,8 +253,8 @@ export default function JournalEntryFormPage() {
                 onClick={() => setActivityType(type)}
                 className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
                   activityType === type
-                    ? "bg-green-700 text-cream-50"
-                    : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                    ? "bg-primary text-text-on-primary"
+                    : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
                 }`}
               >
                 {ACTIVITY_LABELS[type]}
@@ -265,7 +265,7 @@ export default function JournalEntryFormPage() {
 
         {/* Details */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Details
           </h2>
 
@@ -274,7 +274,7 @@ export default function JournalEntryFormPage() {
             <div>
               <label
                 htmlFor="plant"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Plant
               </label>
@@ -297,7 +297,7 @@ export default function JournalEntryFormPage() {
             <div>
               <label
                 htmlFor="bed"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Garden Bed
               </label>
@@ -320,7 +320,7 @@ export default function JournalEntryFormPage() {
             <div>
               <label
                 htmlFor="title"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Title
               </label>
@@ -337,7 +337,7 @@ export default function JournalEntryFormPage() {
             <div>
               <label
                 htmlFor="body"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Body <span className="text-terracotta-500">*</span>
               </label>
@@ -355,7 +355,7 @@ export default function JournalEntryFormPage() {
             <div className="flex items-center gap-3">
               <label
                 htmlFor="is-milestone"
-                className="text-sm font-medium text-soil-700"
+                className="text-sm font-medium text-text-secondary"
               >
                 Milestone
               </label>
@@ -368,8 +368,8 @@ export default function JournalEntryFormPage() {
                   setIsMilestone(!isMilestone);
                   if (isMilestone) setMilestoneType("");
                 }}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
-                  isMilestone ? "bg-green-600" : "bg-brown-200"
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
+                  isMilestone ? "bg-green-600" : "bg-border-strong"
                 }`}
               >
                 <span
@@ -385,7 +385,7 @@ export default function JournalEntryFormPage() {
               <div>
                 <label
                   htmlFor="milestone-type"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Milestone Type <span className="text-terracotta-500">*</span>
                 </label>
@@ -412,7 +412,7 @@ export default function JournalEntryFormPage() {
               <div>
                 <label
                   htmlFor="harvest-weight"
-                  className="mb-1 block text-sm font-medium text-soil-700"
+                  className="mb-1 block text-sm font-medium text-text-secondary"
                 >
                   Harvest Weight (g)
                 </label>
@@ -432,7 +432,7 @@ export default function JournalEntryFormPage() {
 
         {/* Photos */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Photos
           </h2>
 

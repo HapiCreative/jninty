@@ -31,7 +31,7 @@ const ITEM_HEIGHT = 100;
 type DateRange = "all" | "week" | "month";
 
 const selectClass =
-  "rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Entry row component (defined outside for react-window perf) ───
 
@@ -59,11 +59,11 @@ function EntryRow({ index, style, data }: ListChildComponentProps<RowData>) {
       <button
         type="button"
         onClick={() => data.onSelect(entry)}
-        className="flex w-full gap-3 rounded-xl border border-cream-200 bg-white p-3 text-left shadow-sm transition-shadow hover:shadow-md"
+        className="flex w-full gap-3 rounded-xl border border-border-default bg-surface-elevated p-3 text-left shadow-sm transition-shadow hover:shadow-md"
         aria-label={`Journal entry: ${entry.body.slice(0, 50)}`}
       >
         {/* Photo or activity placeholder */}
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-cream-200">
+        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-muted">
           {firstPhotoId ? (
             <PhotoThumbnail
               photoId={firstPhotoId}
@@ -82,25 +82,25 @@ function EntryRow({ index, style, data }: ListChildComponentProps<RowData>) {
           <div className="flex items-center gap-2">
             <Badge>{ACTIVITY_LABELS[entry.activityType]}</Badge>
             {entry.weatherSnapshot?.tempC != null && (
-              <span className="text-xs text-soil-400">
+              <span className="text-xs text-text-muted">
                 {formatTemp(entry.weatherSnapshot.tempC, data.temperatureUnit)}
               </span>
             )}
             {plantName && (
-              <span className="truncate text-xs text-soil-500">
+              <span className="truncate text-xs text-text-secondary">
                 {plantName}
               </span>
             )}
-            <span className="ml-auto shrink-0 text-xs text-soil-400">
+            <span className="ml-auto shrink-0 text-xs text-text-muted">
               {timeAgo}
             </span>
           </div>
           {entry.title && (
-            <p className="mt-0.5 truncate text-sm font-medium text-soil-800">
+            <p className="mt-0.5 truncate text-sm font-medium text-text-primary">
               {entry.title}
             </p>
           )}
-          <p className="mt-0.5 line-clamp-2 text-sm text-soil-600">
+          <p className="mt-0.5 line-clamp-2 text-sm text-text-secondary">
             {entry.body}
           </p>
         </div>
@@ -178,7 +178,7 @@ function EntryDetail({
     >
       <div
         ref={modalRef}
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white md:rounded-2xl"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-surface-elevated md:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -187,7 +187,7 @@ function EntryDetail({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-soil-500 transition-colors hover:bg-cream-200 hover:text-soil-800"
+            className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             aria-label="Close"
           >
             <CloseIcon className="h-5 w-5" />
@@ -206,24 +206,24 @@ function EntryDetail({
         {/* Content */}
         <div className="p-4">
           {entry.title && (
-            <h2 className="font-display text-lg font-semibold text-soil-900">
+            <h2 className="font-display text-lg font-semibold text-text-primary">
               {entry.title}
             </h2>
           )}
 
-          <p className="mt-2 text-sm leading-relaxed text-soil-700 whitespace-pre-wrap">
+          <p className="mt-2 text-sm leading-relaxed text-text-secondary whitespace-pre-wrap">
             {entry.body}
           </p>
 
           {/* Metadata */}
-          <div className="mt-4 space-y-1 text-xs text-soil-500">
+          <div className="mt-4 space-y-1 text-xs text-text-secondary">
             <p>{timeAgo}</p>
             {plantName && (
               <p>
                 Plant:{" "}
                 <Link
                   to={`/plants/${entry.plantInstanceId}`}
-                  className="font-medium text-green-700 hover:underline"
+                  className="font-medium text-text-heading hover:underline"
                 >
                   {plantName}
                 </Link>
@@ -232,7 +232,7 @@ function EntryDetail({
             {entry.weatherSnapshot?.tempC != null && (
               <p>
                 Weather:{" "}
-                <span className="font-medium text-soil-700">
+                <span className="font-medium text-text-secondary">
                   {formatTemp(entry.weatherSnapshot.tempC, temperatureUnit)}
                   {entry.weatherSnapshot.conditions
                     ? `, ${entry.weatherSnapshot.conditions}`
@@ -246,7 +246,7 @@ function EntryDetail({
             {entry.isMilestone && entry.milestoneType && (
               <p>
                 Milestone:{" "}
-                <span className="font-medium text-soil-700">
+                <span className="font-medium text-text-secondary">
                   {entry.milestoneType.replace(/_/g, " ")}
                 </span>
               </p>
@@ -255,7 +255,7 @@ function EntryDetail({
               entry.harvestWeight != null && (
                 <p>
                   Harvest:{" "}
-                  <span className="font-medium text-soil-700">
+                  <span className="font-medium text-text-secondary">
                     {entry.harvestWeight}g
                   </span>
                 </p>
@@ -285,14 +285,14 @@ function AddEntryFab() {
           <div className="absolute bottom-16 right-0 z-40 flex flex-col gap-2">
             <Link
               to="/quick-log"
-              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-terracotta-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-transform hover:bg-terracotta-600 active:scale-95"
+              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-transform hover:bg-accent-hover active:scale-95"
               onClick={() => setOpen(false)}
             >
               Quick Log
             </Link>
             <Link
               to="/journal/new"
-              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-green-700 px-4 py-2.5 text-sm font-semibold text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95"
+              className="flex items-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-text-on-primary shadow-lg transition-transform hover:bg-primary-hover active:scale-95"
               onClick={() => setOpen(false)}
             >
               New Entry
@@ -306,7 +306,7 @@ function AddEntryFab() {
         type="button"
         onClick={() => setOpen(!open)}
         aria-label="Add journal entry"
-        className={`flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95 ${
+        className={`flex h-14 w-14 items-center justify-center rounded-full bg-primary text-text-on-primary shadow-lg transition-transform hover:bg-primary-hover active:scale-95 ${
           open ? "rotate-45" : ""
         }`}
       >
@@ -474,10 +474,10 @@ export default function JournalPage() {
       <div className="mx-auto w-full max-w-3xl px-4 pt-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl font-bold text-green-800">
+          <h1 className="font-display text-2xl font-bold text-text-heading">
             Journal
           </h1>
-          <span className="text-sm text-soil-500">
+          <span className="text-sm text-text-secondary">
             {allEntries.length}{" "}
             {allEntries.length === 1 ? "entry" : "entries"}
           </span>
@@ -544,7 +544,7 @@ export default function JournalPage() {
           </select>
 
           {/* Date range filter */}
-          <div className="flex overflow-hidden rounded-lg border border-brown-200">
+          <div className="flex overflow-hidden rounded-lg border border-border-strong">
             {(["all", "week", "month"] as const).map((range) => (
               <button
                 key={range}
@@ -552,8 +552,8 @@ export default function JournalPage() {
                 onClick={() => setDateRange(range)}
                 className={`px-3 py-1.5 text-xs font-medium transition-colors ${
                   dateRange === range
-                    ? "bg-green-700 text-cream-50"
-                    : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                    ? "bg-primary text-text-on-primary"
+                    : "bg-surface text-text-secondary hover:bg-surface-muted"
                 }`}
               >
                 {range === "all"
@@ -572,20 +572,20 @@ export default function JournalPage() {
         <div className="mt-12 text-center">
           {allEntries.length === 0 ? (
             <>
-              <ClipboardCheckIcon className="mx-auto h-16 w-16 text-brown-300" />
-              <p className="mt-4 text-lg font-medium text-soil-700">
+              <ClipboardCheckIcon className="mx-auto h-16 w-16 text-text-muted" />
+              <p className="mt-4 text-lg font-medium text-text-secondary">
                 No journal entries yet
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Start logging with the + button below.
               </p>
             </>
           ) : (
             <>
-              <p className="text-lg font-medium text-soil-700">
+              <p className="text-lg font-medium text-text-secondary">
                 No entries match your filters
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Try adjusting your search or filters.
               </p>
             </>

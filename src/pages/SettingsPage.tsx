@@ -54,7 +54,7 @@ function ToggleGroup<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div className="inline-flex overflow-hidden rounded-lg border border-brown-200">
+    <div className="inline-flex overflow-hidden rounded-lg border border-border-strong">
       {options.map((opt) => (
         <button
           key={opt.value}
@@ -62,8 +62,8 @@ function ToggleGroup<T extends string>({
           onClick={() => onChange(opt.value)}
           className={`px-3 py-1.5 text-sm font-medium transition-colors ${
             value === opt.value
-              ? "bg-green-700 text-cream-50"
-              : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+              ? "bg-primary text-text-on-primary"
+              : "bg-surface-elevated text-text-secondary hover:bg-surface-muted"
           }`}
         >
           {opt.label}
@@ -487,13 +487,13 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-4">
-      <h1 className="font-display text-2xl font-bold text-green-800">
+      <h1 className="font-display text-2xl font-bold text-text-heading">
         Settings
       </h1>
 
       {/* ── Garden Information ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Garden Information
         </h2>
 
@@ -502,7 +502,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="growing-zone"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               Growing Zone
             </label>
@@ -512,7 +512,7 @@ export default function SettingsPage() {
               onChange={(e) =>
                 void updateSettings({ growingZone: e.target.value })
               }
-              className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+              className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
             >
               {GROWING_ZONES.map((zone) => (
                 <option key={zone} value={zone}>
@@ -526,7 +526,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="last-frost"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               Last Spring Frost Date
             </label>
@@ -546,7 +546,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="first-frost"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               First Fall Frost Date
             </label>
@@ -566,7 +566,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="garden-name"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               Garden Name
             </label>
@@ -584,23 +584,23 @@ export default function SettingsPage() {
 
       {/* ── Location (Weather) ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Location
         </h2>
-        <p className="mt-1 text-xs text-soil-500">
+        <p className="mt-1 text-xs text-text-muted">
           Used for weather on the dashboard and journal entries
         </p>
 
         <div className="mt-4 space-y-4">
           {/* Current location display */}
           {settings.latitude != null && settings.longitude != null && (
-            <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-3">
+            <div className="flex items-center justify-between rounded-lg border border-border-default bg-status-success-bg p-3">
               <div>
-                <p className="text-sm font-medium text-soil-800">
+                <p className="text-sm font-medium text-text-primary">
                   {String(settings.latitude.toFixed(4))},{" "}
                   {String(settings.longitude.toFixed(4))}
                 </p>
-                <p className="text-xs text-soil-500">Current coordinates</p>
+                <p className="text-xs text-text-muted">Current coordinates</p>
               </div>
               <Button
                 variant="ghost"
@@ -615,7 +615,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="location-search"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               Search by city
             </label>
@@ -648,17 +648,17 @@ export default function SettingsPage() {
                   key={i}
                   type="button"
                   onClick={() => void handleSelectLocation(r)}
-                  className="flex w-full items-center justify-between rounded-lg border border-cream-200 bg-cream-50 p-3 text-left transition-colors hover:bg-cream-200"
+                  className="flex w-full items-center justify-between rounded-lg border border-border-default bg-surface p-3 text-left transition-colors hover:bg-surface-muted"
                 >
                   <div>
-                    <span className="text-sm font-medium text-soil-800">
+                    <span className="text-sm font-medium text-text-primary">
                       {r.name}
                     </span>
-                    <span className="ml-1 text-xs text-soil-500">
+                    <span className="ml-1 text-xs text-text-muted">
                       {[r.admin1, r.country].filter(Boolean).join(", ")}
                     </span>
                   </div>
-                  <span className="text-xs text-soil-400">
+                  <span className="text-xs text-text-muted">
                     {String(r.latitude.toFixed(2))},{" "}
                     {String(r.longitude.toFixed(2))}
                   </span>
@@ -672,7 +672,7 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="latitude"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Latitude
               </label>
@@ -691,7 +691,7 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="longitude"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Longitude
               </label>
@@ -713,14 +713,14 @@ export default function SettingsPage() {
 
       {/* ── Preferences ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Preferences
         </h2>
 
         <div className="mt-4 space-y-4">
           {/* Grid unit */}
           <div>
-            <span className="mb-1 block text-sm font-medium text-soil-700">
+            <span className="mb-1 block text-sm font-medium text-text-secondary">
               Grid Unit
             </span>
             <ToggleGroup
@@ -735,7 +735,7 @@ export default function SettingsPage() {
 
           {/* Temperature unit */}
           <div>
-            <span className="mb-1 block text-sm font-medium text-soil-700">
+            <span className="mb-1 block text-sm font-medium text-text-secondary">
               Temperature
             </span>
             <ToggleGroup
@@ -752,7 +752,7 @@ export default function SettingsPage() {
 
           {/* Theme */}
           <div>
-            <span className="mb-1 block text-sm font-medium text-soil-700">
+            <span className="mb-1 block text-sm font-medium text-text-secondary">
               Theme
             </span>
             <ToggleGroup
@@ -766,13 +766,66 @@ export default function SettingsPage() {
             />
           </div>
 
+          {/* High Contrast */}
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-sm font-medium text-text-secondary">
+                High Contrast
+              </span>
+              <p className="text-xs text-text-muted">
+                Increases contrast for better readability
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={settings.highContrast}
+              onClick={() =>
+                void updateSettings({
+                  highContrast: !settings.highContrast,
+                })
+              }
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
+                settings.highContrast ? "bg-primary" : "bg-border-strong"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-surface-elevated shadow-sm transition-transform ${
+                  settings.highContrast
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          {/* Font Size */}
+          <div>
+            <span className="mb-1 block text-sm font-medium text-text-secondary">
+              Font Size
+            </span>
+            <ToggleGroup
+              options={[
+                { label: "Normal", value: "normal" as const },
+                { label: "Large", value: "large" as const },
+                { label: "Extra Large", value: "extra-large" as const },
+              ]}
+              value={settings.fontSize}
+              onChange={(fontSize) => void updateSettings({ fontSize })}
+            />
+          </div>
+
+          <p className="text-xs text-text-muted">
+            Press <kbd className="rounded border border-border-strong bg-surface-muted px-1 py-0.5 font-mono text-[10px]">?</kbd> anywhere to view keyboard shortcuts
+          </p>
+
           {/* Keep original photos */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm font-medium text-soil-700">
+              <span className="text-sm font-medium text-text-secondary">
                 Keep Original Photos
               </span>
-              <p className="text-xs text-soil-500">
+              <p className="text-xs text-text-muted">
                 Stores full-resolution originals (requires more space)
               </p>
             </div>
@@ -785,12 +838,12 @@ export default function SettingsPage() {
                   keepOriginalPhotos: !settings.keepOriginalPhotos,
                 })
               }
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
-                settings.keepOriginalPhotos ? "bg-green-600" : "bg-brown-200"
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
+                settings.keepOriginalPhotos ? "bg-primary" : "bg-border-strong"
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-surface-elevated shadow-sm transition-transform ${
                   settings.keepOriginalPhotos
                     ? "translate-x-5"
                     : "translate-x-0"
@@ -803,17 +856,17 @@ export default function SettingsPage() {
 
       {/* ── Notifications ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Notifications
         </h2>
         <div className="mt-3 space-y-4">
           {/* Enable/disable toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-sm font-medium text-soil-700">
+              <span className="text-sm font-medium text-text-secondary">
                 Enable Notifications
               </span>
-              <p className="text-xs text-soil-500">
+              <p className="text-xs text-text-muted">
                 Get reminders for tasks and frost warnings
               </p>
             </div>
@@ -831,12 +884,12 @@ export default function SettingsPage() {
                 }
               }}
               disabled={!notifications.supported}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:cursor-not-allowed disabled:opacity-50 ${
-                notifications.enabled ? "bg-green-600" : "bg-brown-200"
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50 ${
+                notifications.enabled ? "bg-primary" : "bg-border-strong"
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-surface-elevated shadow-sm transition-transform ${
                   notifications.enabled ? "translate-x-5" : "translate-x-0"
                 }`}
               />
@@ -845,7 +898,7 @@ export default function SettingsPage() {
 
           {/* Permission status */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-soil-500">Status:</span>
+            <span className="text-xs text-text-muted">Status:</span>
             {!notifications.supported ? (
               <Badge>Not Supported</Badge>
             ) : notifications.permitted ? (
@@ -857,8 +910,8 @@ export default function SettingsPage() {
 
           {/* iOS info */}
           {notifications.isIOS && (
-            <div className="rounded-lg border border-brown-200 bg-brown-50/30 p-3">
-              <p className="text-xs text-soil-600">
+            <div className="rounded-lg border border-border-strong bg-surface-muted p-3">
+              <p className="text-xs text-text-secondary">
                 iOS does not support web notifications. You&apos;ll see
                 in-app reminders on your dashboard instead.
               </p>
@@ -884,14 +937,14 @@ export default function SettingsPage() {
       {/* ── Seasons ── */}
       <Card>
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Seasons
           </h2>
           <div className="flex items-center gap-2">
             {seasons && seasons.length >= 2 && (
               <Link
                 to="/seasons/compare"
-                className="rounded-lg px-3 py-1.5 text-sm font-medium text-green-700 transition-colors hover:bg-cream-200"
+                className="rounded-lg px-3 py-1.5 text-sm font-medium text-text-heading transition-colors hover:bg-surface-muted"
               >
                 Compare
               </Link>
@@ -906,9 +959,9 @@ export default function SettingsPage() {
         </div>
 
         {showNewSeason && (
-          <div className="mt-4 space-y-3 rounded-lg border border-cream-200 bg-cream-50 p-3">
+          <div className="mt-4 space-y-3 rounded-lg border border-border-default bg-surface p-3">
             <div>
-              <label htmlFor="season-name" className="mb-1 block text-sm font-medium text-soil-700">
+              <label htmlFor="season-name" className="mb-1 block text-sm font-medium text-text-secondary">
                 Name
               </label>
               <Input
@@ -920,7 +973,7 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label htmlFor="season-year" className="mb-1 block text-sm font-medium text-soil-700">
+              <label htmlFor="season-year" className="mb-1 block text-sm font-medium text-text-secondary">
                 Year
               </label>
               <Input
@@ -932,7 +985,7 @@ export default function SettingsPage() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="season-start" className="mb-1 block text-sm font-medium text-soil-700">
+                <label htmlFor="season-start" className="mb-1 block text-sm font-medium text-text-secondary">
                   Start Date
                 </label>
                 <Input
@@ -943,7 +996,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label htmlFor="season-end" className="mb-1 block text-sm font-medium text-soil-700">
+                <label htmlFor="season-end" className="mb-1 block text-sm font-medium text-text-secondary">
                   End Date
                 </label>
                 <Input
@@ -964,24 +1017,24 @@ export default function SettingsPage() {
           {seasons === undefined ? (
             <Skeleton className="h-12 w-full" />
           ) : seasons.length === 0 ? (
-            <p className="text-sm text-soil-500">No seasons yet. Create one to get started.</p>
+            <p className="text-sm text-text-muted">No seasons yet. Create one to get started.</p>
           ) : (
             seasons.map((season) => (
               <div
                 key={season.id}
                 className={`flex items-center justify-between rounded-lg border p-3 ${
                   season.isActive
-                    ? "border-green-600 bg-green-50"
-                    : "border-cream-200 bg-cream-50"
+                    ? "border-focus-ring bg-status-success-bg"
+                    : "border-border-default bg-surface"
                 }`}
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-soil-900">{season.name}</span>
-                    <span className="text-sm text-soil-600">{String(season.year)}</span>
+                    <span className="text-sm font-semibold text-text-primary">{season.name}</span>
+                    <span className="text-sm text-text-secondary">{String(season.year)}</span>
                     {season.isActive && <Badge variant="success">Active</Badge>}
                   </div>
-                  <p className="text-xs text-soil-500">
+                  <p className="text-xs text-text-muted">
                     {season.startDate} &ndash; {season.endDate}
                   </p>
                 </div>
@@ -1001,16 +1054,16 @@ export default function SettingsPage() {
 
       {/* ── Multi-Device Sync ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Multi-Device Sync
         </h2>
-        <p className="mt-1 text-xs text-soil-500">
+        <p className="mt-1 text-xs text-text-muted">
           Sync your garden data across devices via CouchDB
         </p>
 
         <div className="mt-4 space-y-4">
           {/* Status row */}
-          <div className="flex items-center justify-between rounded-lg border border-cream-200 bg-cream-50 p-3">
+          <div className="flex items-center justify-between rounded-lg border border-border-default bg-surface p-3">
             <div className="flex items-center gap-2">
               <span
                 className={`inline-block h-2.5 w-2.5 rounded-full ${
@@ -1025,7 +1078,7 @@ export default function SettingsPage() {
                           : "bg-soil-400"
                 }`}
               />
-              <span className="text-sm font-medium text-soil-800">
+              <span className="text-sm font-medium text-text-primary">
                 {syncStatus === "syncing"
                   ? "Syncing..."
                   : syncStatus === "paused"
@@ -1038,7 +1091,7 @@ export default function SettingsPage() {
               </span>
             </div>
             {lastSynced && (
-              <span className="text-xs text-soil-500">
+              <span className="text-xs text-text-muted">
                 Last synced: {new Date(lastSynced).toLocaleString()}
               </span>
             )}
@@ -1048,7 +1101,7 @@ export default function SettingsPage() {
           <div>
             <label
               htmlFor="sync-url"
-              className="mb-1 block text-sm font-medium text-soil-700"
+              className="mb-1 block text-sm font-medium text-text-secondary"
             >
               CouchDB Server URL
             </label>
@@ -1066,7 +1119,7 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="sync-username"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Username
               </label>
@@ -1081,7 +1134,7 @@ export default function SettingsPage() {
             <div>
               <label
                 htmlFor="sync-password"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Password
               </label>
@@ -1105,7 +1158,7 @@ export default function SettingsPage() {
               {testBusy ? "Testing..." : "Test Connection"}
             </Button>
             {testResult && (
-              <p className="mt-1 text-sm text-green-700">
+              <p className="mt-1 text-sm text-text-heading">
                 Connected to <strong>{testResult.dbName}</strong> ({String(testResult.docCount)} docs)
               </p>
             )}
@@ -1144,45 +1197,45 @@ export default function SettingsPage() {
 
       {/* ── Data Management ── */}
       <Card>
-        <h2 className="font-display text-lg font-semibold text-green-800">
+        <h2 className="font-display text-lg font-semibold text-text-heading">
           Data Management
         </h2>
 
         <div className="mt-4 space-y-4">
           {/* Storage dashboard */}
           <div>
-            <span className="mb-2 block text-sm font-medium text-soil-700">
+            <span className="mb-2 block text-sm font-medium text-text-secondary">
               Storage
             </span>
             {storage ? (
               <div className="space-y-2">
-                <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-soil-600">
+                <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-text-secondary">
                   <span>Thumbnails: {formatBytes(storage.thumbnailBytes)}</span>
                   <span>Display: {formatBytes(storage.displayBytes)}</span>
                   <span>Originals: {formatBytes(storage.originalBytes)}</span>
                   <span>Data: {formatBytes(storage.dataBytes)}</span>
                 </div>
                 {remoteInfo && remoteInfo.diskSize > 0 ? (
-                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm font-medium text-soil-800">
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm font-medium text-text-primary">
                     <span>Local: {formatBytes(storage.totalBytes)}</span>
                     <span>Remote (CouchDB): {formatBytes(remoteInfo.diskSize)}</span>
                   </div>
                 ) : (
-                  <p className="text-sm font-medium text-soil-800">
+                  <p className="text-sm font-medium text-text-primary">
                     Total: {formatBytes(storage.totalBytes)}
                   </p>
                 )}
                 {storage.quotaBytes > 0 && (
                   <div>
-                    <div className="h-2 w-full rounded-full bg-cream-200">
+                    <div className="h-2 w-full rounded-full bg-surface-muted">
                       <div
-                        className="h-2 rounded-full bg-green-600 transition-all"
+                        className="h-2 rounded-full bg-primary transition-all"
                         style={{
                           width: `${String(Math.min(100, (storage.totalBytes / storage.quotaBytes) * 100))}%`,
                         }}
                       />
                     </div>
-                    <p className="mt-1 text-xs text-soil-500">
+                    <p className="mt-1 text-xs text-text-muted">
                       {formatBytes(storage.totalBytes)} of{" "}
                       {formatBytes(storage.quotaBytes)} used
                     </p>
@@ -1190,7 +1243,7 @@ export default function SettingsPage() {
                 )}
               </div>
             ) : (
-              <p className="text-sm text-soil-500">Calculating…</p>
+              <p className="text-sm text-text-muted">Calculating…</p>
             )}
           </div>
 
@@ -1207,7 +1260,7 @@ export default function SettingsPage() {
               <p className="mt-1 text-sm text-red-600">{exportError}</p>
             )}
             {settings.lastExportDate && (
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-muted">
                 Last export:{" "}
                 {new Date(settings.lastExportDate).toLocaleDateString()}
               </p>
@@ -1230,7 +1283,7 @@ export default function SettingsPage() {
                 Import Plants from CSV
               </Button>
             </div>
-            <p className="mt-1 text-xs text-soil-500">
+            <p className="mt-1 text-xs text-text-muted">
               Restore from a backup ZIP or import plants from a CSV file
             </p>
           </div>
@@ -1246,7 +1299,7 @@ export default function SettingsPage() {
                 ? "Clearing…"
                 : "Clear Original Photos"}
             </Button>
-            <p className="mt-1 text-xs text-soil-500">
+            <p className="mt-1 text-xs text-text-muted">
               Removes stored full-resolution originals to reclaim space
             </p>
           </div>
@@ -1264,7 +1317,7 @@ export default function SettingsPage() {
               <p className="mt-1 text-sm text-red-600">{rebuildError}</p>
             )}
             {rebuildCount != null && (
-              <p className="mt-1 text-sm text-soil-600">
+              <p className="mt-1 text-sm text-text-secondary">
                 Indexed {String(rebuildCount)} items.
               </p>
             )}
@@ -1273,7 +1326,7 @@ export default function SettingsPage() {
       </Card>
 
       {/* ── App version ── */}
-      <p className="text-center text-xs text-soil-500">
+      <p className="text-center text-xs text-text-muted">
         Jninty v{__APP_VERSION__}
       </p>
 
@@ -1290,16 +1343,16 @@ export default function SettingsPage() {
       {/* End-of-season review modal */}
       {showEndOfSeason && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-soil-900/50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-text-primary/50 p-4"
           onClick={(e) => {
             if (e.target === e.currentTarget) setShowEndOfSeason(false);
           }}
         >
-          <div className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="font-display text-lg font-bold text-green-800">
+          <div className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-xl bg-surface-elevated p-6 shadow-xl">
+            <h3 className="font-display text-lg font-bold text-text-heading">
               End of Season Review
             </h3>
-            <p className="mt-1 text-sm text-soil-600">
+            <p className="mt-1 text-sm text-text-secondary">
               How did each planting do this season? Set outcomes before starting
               a new season.
             </p>
@@ -1308,9 +1361,9 @@ export default function SettingsPage() {
               {endOfSeasonPlantings.map((planting) => (
                 <div
                   key={planting.id}
-                  className="flex items-center justify-between rounded-lg border border-cream-200 bg-cream-50 p-3"
+                  className="flex items-center justify-between rounded-lg border border-border-default bg-surface p-3"
                 >
-                  <span className="text-sm font-medium text-soil-900">
+                  <span className="text-sm font-medium text-text-primary">
                     {plantNameMap.get(planting.plantInstanceId) ?? "Unknown Plant"}
                   </span>
                   <div className="flex gap-1">
@@ -1330,7 +1383,7 @@ export default function SettingsPage() {
                                 : o === "failed"
                                   ? "bg-terracotta-500 text-white"
                                   : "bg-soil-500 text-white"
-                            : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                            : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
                         }`}
                       >
                         {o}

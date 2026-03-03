@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS: Settings = {
   gridUnit: "feet",
   temperatureUnit: "fahrenheit",
   theme: "light",
+  highContrast: false,
+  fontSize: "normal",
   keepOriginalPhotos: false,
   dbSchemaVersion: 1,
   exportVersion: 1,

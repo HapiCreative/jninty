@@ -58,6 +58,8 @@ const settings: Settings = {
   gridUnit: "feet",
   temperatureUnit: "fahrenheit",
   theme: "light",
+  highContrast: false,
+  fontSize: "normal",
   keepOriginalPhotos: false,
   dbSchemaVersion: 6,
   exportVersion: 1,

@@ -46,7 +46,7 @@ export default function PhotoThumbnail({
       <div
         role="status"
         aria-label="Loading photo"
-        className={`animate-pulse rounded-lg bg-cream-200 ${className}`}
+        className={`animate-pulse rounded-lg bg-surface-muted ${className}`}
       />
     );
   }
@@ -55,7 +55,7 @@ export default function PhotoThumbnail({
     return (
       <div
         aria-label="Photo not found"
-        className={`flex items-center justify-center rounded-lg bg-cream-200 text-brown-400 ${className}`}
+        className={`flex items-center justify-center rounded-lg bg-surface-muted text-text-muted ${className}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

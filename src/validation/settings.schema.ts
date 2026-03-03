@@ -11,6 +11,8 @@ export const settingsSchema = z
     latitude: z.number().min(-90).max(90).optional(),
     longitude: z.number().min(-180).max(180).optional(),
     theme: z.enum(["light", "dark", "auto"]),
+    highContrast: z.boolean().default(false),
+    fontSize: z.enum(["normal", "large", "extra-large"]).default("normal"),
     keepOriginalPhotos: z.boolean(),
     lastExportDate: z.string().datetime().optional(),
     dbSchemaVersion: z.number().int().positive(),

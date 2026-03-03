@@ -29,7 +29,7 @@ import NotificationPrompt from "../components/NotificationPrompt.tsx";
 // ─── Constants ───
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const PRIORITY_ORDER: Record<TaskPriority, number> = {
   urgent: 0,
@@ -86,8 +86,8 @@ function TaskItem({
           <span
             className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${
               task.isCompleted
-                ? "border-green-600 bg-green-600"
-                : "border-brown-300 hover:border-green-600"
+                ? "border-focus-ring bg-focus-ring"
+                : "border-border-strong hover:border-focus-ring"
             }`}
           >
             {task.isCompleted && <CheckIcon className="h-3 w-3 text-white" />}
@@ -104,8 +104,8 @@ function TaskItem({
             <span
               className={`text-sm font-medium ${
                 task.isCompleted
-                  ? "text-soil-400 line-through"
-                  : "text-soil-900"
+                  ? "text-text-muted line-through"
+                  : "text-text-primary"
               }`}
             >
               {task.title}
@@ -120,14 +120,14 @@ function TaskItem({
               className={`text-xs ${
                 isOverdue && !task.isCompleted
                   ? "font-medium text-terracotta-600"
-                  : "text-soil-500"
+                  : "text-text-secondary"
               }`}
             >
               {isOverdue && !task.isCompleted ? "Overdue \u2014 " : ""}
               {dueDateFormatted}
             </span>
             {plantName && (
-              <span className="truncate text-xs text-soil-400">
+              <span className="truncate text-xs text-text-muted">
                 \u00b7 {plantName}
               </span>
             )}
@@ -137,9 +137,9 @@ function TaskItem({
 
       {/* Expanded detail */}
       {isExpanded && (
-        <div className="mt-3 border-t border-cream-200 pt-3">
+        <div className="mt-3 border-t border-border-default pt-3">
           {task.description && (
-            <p className="whitespace-pre-wrap text-sm text-soil-700">
+            <p className="whitespace-pre-wrap text-sm text-text-secondary">
               {task.description}
             </p>
           )}
@@ -260,18 +260,18 @@ function TaskFormModal({
     >
       <div
         ref={modalRef}
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white md:rounded-2xl"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-surface-elevated md:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4">
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             {task ? "Edit Task" : "New Task"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-soil-500 transition-colors hover:bg-cream-200 hover:text-soil-800"
+            className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             aria-label="Close"
           >
             <CloseIcon className="h-5 w-5" />
@@ -290,7 +290,7 @@ function TaskFormModal({
           <div>
             <label
               htmlFor="task-title"
-              className="block text-sm font-medium text-soil-700"
+              className="block text-sm font-medium text-text-secondary"
             >
               Title <span className="text-terracotta-500">*</span>
             </label>
@@ -308,7 +308,7 @@ function TaskFormModal({
           <div>
             <label
               htmlFor="task-description"
-              className="block text-sm font-medium text-soil-700"
+              className="block text-sm font-medium text-text-secondary"
             >
               Description
             </label>
@@ -318,7 +318,7 @@ function TaskFormModal({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Optional details..."
-              className="mt-1 w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
             />
           </div>
 
@@ -326,7 +326,7 @@ function TaskFormModal({
           <div>
             <label
               htmlFor="task-due-date"
-              className="block text-sm font-medium text-soil-700"
+              className="block text-sm font-medium text-text-secondary"
             >
               Due Date <span className="text-terracotta-500">*</span>
             </label>
@@ -343,7 +343,7 @@ function TaskFormModal({
           <div>
             <label
               htmlFor="task-priority"
-              className="block text-sm font-medium text-soil-700"
+              className="block text-sm font-medium text-text-secondary"
             >
               Priority
             </label>
@@ -363,7 +363,7 @@ function TaskFormModal({
           <div>
             <label
               htmlFor="task-plant"
-              className="block text-sm font-medium text-soil-700"
+              className="block text-sm font-medium text-text-secondary"
             >
               Link to Plant
             </label>
@@ -533,10 +533,10 @@ export default function TasksPage() {
     <div className="mx-auto max-w-2xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           Tasks
         </h1>
-        <span className="text-sm text-soil-500">
+        <span className="text-sm text-text-secondary">
           {pendingTasks.length} pending
           {overdueCount > 0 && (
             <span className="ml-1 text-terracotta-600">
@@ -571,8 +571,8 @@ export default function TasksPage() {
       {/* Sort control */}
       {pendingTasks.length > 0 && (
         <div className="mt-3 flex items-center gap-2">
-          <span className="text-xs text-soil-500">Sort by:</span>
-          <div className="flex overflow-hidden rounded-lg border border-brown-200">
+          <span className="text-xs text-text-secondary">Sort by:</span>
+          <div className="flex overflow-hidden rounded-lg border border-border-strong">
             {(
               [
                 { value: "dueDate" as const, label: "Due Date" },
@@ -585,8 +585,8 @@ export default function TasksPage() {
                 onClick={() => setSortBy(opt.value)}
                 className={`px-3 py-1.5 text-xs font-medium transition-colors ${
                   sortBy === opt.value
-                    ? "bg-green-700 text-cream-50"
-                    : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                    ? "bg-primary text-text-on-primary"
+                    : "bg-surface text-text-secondary hover:bg-surface-muted"
                 }`}
               >
                 {opt.label}
@@ -599,7 +599,7 @@ export default function TasksPage() {
       {/* Suggested Tasks */}
       {suggestions && suggestions.length > 0 && (
         <section className="mt-4">
-          <h2 className="font-display text-base font-semibold text-green-700">
+          <h2 className="font-display text-base font-semibold text-text-heading">
             Suggested ({suggestions.length})
           </h2>
           <div className="mt-2">
@@ -617,15 +617,15 @@ export default function TasksPage() {
       {/* Pending tasks */}
       {pendingTasks.length === 0 && completedTasks.length === 0 ? (
         <div className="mt-12 text-center">
-          <ClipboardCheckIcon className="mx-auto h-16 w-16 text-brown-300" />
-          <p className="mt-4 text-lg font-medium text-soil-700">No tasks yet</p>
-          <p className="mt-1 text-sm text-soil-500">
+          <ClipboardCheckIcon className="mx-auto h-16 w-16 text-text-muted" />
+          <p className="mt-4 text-lg font-medium text-text-secondary">No tasks yet</p>
+          <p className="mt-1 text-sm text-text-secondary">
             Add your first task with the + button below.
           </p>
         </div>
       ) : pendingTasks.length === 0 ? (
         <Card className="mt-4">
-          <p className="text-center text-sm text-soil-600">
+          <p className="text-center text-sm text-text-secondary">
             All tasks completed!
           </p>
         </Card>
@@ -664,14 +664,14 @@ export default function TasksPage() {
             className="flex w-full items-center gap-2 text-left"
           >
             <ChevronDownIcon
-              className={`h-4 w-4 text-soil-500 transition-transform ${
+              className={`h-4 w-4 text-text-secondary transition-transform ${
                 showCompleted ? "" : "-rotate-90"
               }`}
             />
-            <span className="font-display text-lg font-semibold text-green-800">
+            <span className="font-display text-lg font-semibold text-text-heading">
               Completed
             </span>
-            <span className="text-sm text-soil-500">
+            <span className="text-sm text-text-secondary">
               ({completedTasks.length})
             </span>
           </button>
@@ -709,7 +709,7 @@ export default function TasksPage() {
         type="button"
         onClick={() => setShowForm(true)}
         aria-label="Add task"
-        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95 md:bottom-6"
+        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-text-on-primary shadow-lg transition-transform hover:bg-primary-hover active:scale-95 md:bottom-6"
       >
         <PlusIcon className="h-7 w-7" />
       </button>

@@ -227,11 +227,11 @@ describe("QuickLogPage", () => {
 
     // Select
     await user.click(wateringBtn);
-    expect(wateringBtn).toHaveClass("bg-green-700");
+    expect(wateringBtn).toHaveClass("bg-primary");
 
     // Deselect
     await user.click(wateringBtn);
-    expect(wateringBtn).not.toHaveClass("bg-green-700");
+    expect(wateringBtn).not.toHaveClass("bg-primary");
   });
 
   it("can remove a captured photo", async () => {

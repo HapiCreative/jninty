@@ -68,7 +68,7 @@ function ListIcon({ className }: { className?: string }) {
 // ─── Select style (matching Input component) ───
 
 const selectClass =
-  "rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Component ───
 
@@ -126,7 +126,7 @@ export default function PlantsListPage() {
         <Skeleton className="mt-4 h-10 w-full" />
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="overflow-hidden rounded-xl border border-cream-200 bg-white">
+            <div key={i} className="overflow-hidden rounded-xl border border-border-default bg-surface-elevated">
               <Skeleton className="aspect-[3/2] w-full rounded-none" />
               <div className="p-3">
                 <Skeleton className="h-5 w-3/4" />
@@ -143,10 +143,10 @@ export default function PlantsListPage() {
     <div className="mx-auto max-w-5xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           Plant Inventory
         </h1>
-        <span className="text-sm text-soil-500">
+        <span className="text-sm text-text-secondary">
           {allPlants.length} {allPlants.length === 1 ? "plant" : "plants"}
         </span>
       </div>
@@ -194,15 +194,15 @@ export default function PlantsListPage() {
           ))}
         </select>
 
-        <div className="ml-auto flex overflow-hidden rounded-lg border border-brown-200">
+        <div className="ml-auto flex overflow-hidden rounded-lg border border-border-strong">
           <button
             type="button"
             onClick={() => setViewMode("grid")}
             aria-label="Grid view"
             className={`p-2 transition-colors ${
               viewMode === "grid"
-                ? "bg-green-700 text-cream-50"
-                : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                ? "bg-primary text-text-on-primary"
+                : "bg-surface text-text-secondary hover:bg-surface-muted"
             }`}
           >
             <GridIcon className="h-4 w-4" />
@@ -213,8 +213,8 @@ export default function PlantsListPage() {
             aria-label="List view"
             className={`p-2 transition-colors ${
               viewMode === "list"
-                ? "bg-green-700 text-cream-50"
-                : "bg-cream-50 text-soil-700 hover:bg-cream-200"
+                ? "bg-primary text-text-on-primary"
+                : "bg-surface text-text-secondary hover:bg-surface-muted"
             }`}
           >
             <ListIcon className="h-4 w-4" />
@@ -227,26 +227,26 @@ export default function PlantsListPage() {
         <div className="mt-12 text-center">
           {allPlants.length === 0 ? (
             <>
-              <PlantPlaceholderIcon className="mx-auto h-16 w-16 text-brown-300" />
-              <p className="mt-4 text-lg font-medium text-soil-700">
+              <PlantPlaceholderIcon className="mx-auto h-16 w-16 text-text-muted" />
+              <p className="mt-4 text-lg font-medium text-text-secondary">
                 No plants yet
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Add your first plant to get started.
               </p>
               <Link
                 to="/plants/new"
-                className="mt-4 inline-flex items-center rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-cream-50 transition-colors hover:bg-green-800"
+                className="mt-4 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-text-on-primary transition-colors hover:bg-primary-hover"
               >
                 Add Plant
               </Link>
             </>
           ) : (
             <>
-              <p className="text-lg font-medium text-soil-700">
+              <p className="text-lg font-medium text-text-secondary">
                 No plants match your filters
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Try adjusting your search or filters.
               </p>
             </>
@@ -262,7 +262,7 @@ export default function PlantsListPage() {
               <Link key={plant.id} to={`/plants/${plant.id}`}>
                 <Card className="overflow-hidden p-0 transition-shadow hover:shadow-md">
                   {/* Photo area */}
-                  <div className="relative aspect-[3/2] bg-cream-200">
+                  <div className="relative aspect-[3/2] bg-surface-muted">
                     {photoId ? (
                       <PhotoThumbnail
                         photoId={photoId}
@@ -271,18 +271,18 @@ export default function PlantsListPage() {
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">
-                        <PlantPlaceholderIcon className="h-12 w-12 text-brown-300" />
+                        <PlantPlaceholderIcon className="h-12 w-12 text-text-muted" />
                       </div>
                     )}
                   </div>
 
                   {/* Info area */}
                   <div className="p-3">
-                    <p className="font-display font-semibold text-soil-900 truncate">
+                    <p className="font-display font-semibold text-text-primary truncate">
                       {displayName}
                     </p>
                     {plant.nickname && (
-                      <p className="mt-0.5 text-sm text-soil-600 truncate italic">
+                      <p className="mt-0.5 text-sm text-text-secondary truncate italic">
                         {plant.species}
                       </p>
                     )}
@@ -308,7 +308,7 @@ export default function PlantsListPage() {
               <Link key={plant.id} to={`/plants/${plant.id}`}>
                 <Card className="flex items-center gap-3 p-3 transition-shadow hover:shadow-md">
                   {/* Thumbnail */}
-                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-cream-200">
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-surface-muted">
                     {photoId ? (
                       <PhotoThumbnail
                         photoId={photoId}
@@ -317,18 +317,18 @@ export default function PlantsListPage() {
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">
-                        <PlantPlaceholderIcon className="h-6 w-6 text-brown-300" />
+                        <PlantPlaceholderIcon className="h-6 w-6 text-text-muted" />
                       </div>
                     )}
                   </div>
 
                   {/* Info */}
                   <div className="min-w-0 flex-1">
-                    <p className="font-display font-semibold text-soil-900 truncate">
+                    <p className="font-display font-semibold text-text-primary truncate">
                       {displayName}
                     </p>
                     {plant.nickname && (
-                      <p className="text-sm text-soil-600 truncate italic">
+                      <p className="text-sm text-text-secondary truncate italic">
                         {plant.species}
                       </p>
                     )}
@@ -352,7 +352,7 @@ export default function PlantsListPage() {
       <Link
         to="/plants/new"
         aria-label="Add plant"
-        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95 md:bottom-6"
+        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-text-on-primary shadow-lg transition-transform hover:bg-primary-hover active:scale-95 md:bottom-6"
       >
         <PlusIcon className="h-7 w-7" />
       </Link>

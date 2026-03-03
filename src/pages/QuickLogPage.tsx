@@ -31,7 +31,7 @@ const QUICK_ACTIVITIES: ActivityType[] = [
 // ─── Select style (matching other forms) ───
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Component ───
 
@@ -185,9 +185,9 @@ export default function QuickLogPage() {
     return (
       <div className="flex flex-col items-center justify-center p-12">
         <div className="rounded-full bg-green-100 p-4">
-          <CheckIcon className="h-8 w-8 text-green-700" />
+          <CheckIcon className="h-8 w-8 text-text-heading" />
         </div>
-        <p className="mt-3 font-display text-lg font-semibold text-green-800">
+        <p className="mt-3 font-display text-lg font-semibold text-text-heading">
           Saved!
         </p>
       </div>
@@ -203,12 +203,12 @@ export default function QuickLogPage() {
         <button
           type="button"
           onClick={() => void navigate(-1)}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-xl font-bold text-green-800">
+        <h1 className="font-display text-xl font-bold text-text-heading">
           Quick Log
         </h1>
       </div>
@@ -237,7 +237,7 @@ export default function QuickLogPage() {
               type="button"
               disabled={isProcessing}
               onClick={() => void handlePhoto(capturePhoto)}
-              className="flex flex-1 flex-col items-center gap-2 rounded-xl border-2 border-dashed border-green-600 bg-green-50 p-6 text-green-800 transition-colors hover:bg-green-100 disabled:opacity-50"
+              className="flex flex-1 flex-col items-center gap-2 rounded-xl border-2 border-dashed border-focus-ring bg-green-50 p-6 text-text-heading transition-colors hover:bg-green-100 disabled:opacity-50"
             >
               <CameraIcon className="h-10 w-10" />
               <span className="text-sm font-semibold">
@@ -248,7 +248,7 @@ export default function QuickLogPage() {
               type="button"
               disabled={isProcessing}
               onClick={() => void handlePhoto(selectPhoto)}
-              className="flex flex-1 flex-col items-center gap-2 rounded-xl border-2 border-dashed border-brown-300 bg-cream-50 p-6 text-soil-700 transition-colors hover:bg-cream-200 disabled:opacity-50"
+              className="flex flex-1 flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border-strong bg-surface p-6 text-text-secondary transition-colors hover:bg-surface-muted disabled:opacity-50"
             >
               <ImageIcon className="h-10 w-10" />
               <span className="text-sm font-semibold">
@@ -288,7 +288,7 @@ export default function QuickLogPage() {
           onChange={(e) => setNote(e.target.value)}
           placeholder="What's happening in your garden?"
           rows={3}
-          className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+          className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
           aria-label="Note"
         />
       </div>
@@ -304,8 +304,8 @@ export default function QuickLogPage() {
             }
             className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
               activityType === type
-                ? "bg-green-700 text-cream-50"
-                : "bg-cream-200 text-soil-700 hover:bg-cream-300"
+                ? "bg-primary text-text-on-primary"
+                : "bg-surface-muted text-text-secondary hover:bg-surface-muted"
             }`}
           >
             {ACTIVITY_LABELS[type]}

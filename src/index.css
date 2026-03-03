@@ -43,6 +43,179 @@
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Semantic tokens (resolve via CSS custom properties) ── */
+  /* Surfaces */
+  --color-surface: var(--sem-surface);
+  --color-surface-elevated: var(--sem-surface-elevated);
+  --color-surface-inset: var(--sem-surface-inset);
+  --color-surface-nav: var(--sem-surface-nav);
+  --color-surface-muted: var(--sem-surface-muted);
+
+  /* Text */
+  --color-text-primary: var(--sem-text-primary);
+  --color-text-secondary: var(--sem-text-secondary);
+  --color-text-muted: var(--sem-text-muted);
+  --color-text-heading: var(--sem-text-heading);
+  --color-text-link: var(--sem-text-link);
+  --color-text-on-primary: var(--sem-text-on-primary);
+  --color-text-on-nav: var(--sem-text-on-nav);
+
+  /* Interactive */
+  --color-primary: var(--sem-primary);
+  --color-primary-hover: var(--sem-primary-hover);
+  --color-primary-active: var(--sem-primary-active);
+  --color-accent: var(--sem-accent);
+  --color-accent-hover: var(--sem-accent-hover);
+  --color-focus-ring: var(--sem-focus-ring);
+
+  /* Borders */
+  --color-border-default: var(--sem-border-default);
+  --color-border-strong: var(--sem-border-strong);
+
+  /* Status */
+  --color-status-success-bg: var(--sem-status-success-bg);
+  --color-status-success-text: var(--sem-status-success-text);
+  --color-status-warning-bg: var(--sem-status-warning-bg);
+  --color-status-warning-text: var(--sem-status-warning-text);
+  --color-status-danger-bg: var(--sem-status-danger-bg);
+  --color-status-danger-text: var(--sem-status-danger-text);
+}
+
+/* ── Light mode (default) ── */
+:root {
+  --sem-surface: #FDF6EC;
+  --sem-surface-elevated: #ffffff;
+  --sem-surface-inset: #F5EBDA;
+  --sem-surface-nav: #2D5016;
+  --sem-surface-muted: #F5EBDA;
+
+  --sem-text-primary: #1c1108;
+  --sem-text-secondary: #51351a;
+  --sem-text-muted: #7a5630;
+  --sem-text-heading: #2D5016;
+  --sem-text-link: #3d6b1e;
+  --sem-text-on-primary: #FFFDF7;
+  --sem-text-on-nav: #c5e8a8;
+
+  --sem-primary: #3d6b1e;
+  --sem-primary-hover: #2D5016;
+  --sem-primary-active: #1a3a0a;
+  --sem-accent: #d4623a;
+  --sem-accent-hover: #b84c2a;
+  --sem-focus-ring: #4d8626;
+
+  --sem-border-default: #F5EBDA;
+  --sem-border-strong: #e4bb7e;
+
+  --sem-status-success-bg: #e3f5d0;
+  --sem-status-success-text: #2D5016;
+  --sem-status-warning-bg: #f8ebd0;
+  --sem-status-warning-text: #5c3a0e;
+  --sem-status-danger-bg: rgba(232, 130, 90, 0.2);
+  --sem-status-danger-text: #b84c2a;
+}
+
+/* ── Dark mode ── */
+.dark {
+  --sem-surface: #1a1a14;
+  --sem-surface-elevated: #262620;
+  --sem-surface-inset: #12120e;
+  --sem-surface-nav: #1a2e0e;
+  --sem-surface-muted: #2a2a22;
+
+  --sem-text-primary: #e8e0d4;
+  --sem-text-secondary: #b8a88e;
+  --sem-text-muted: #8a7a64;
+  --sem-text-heading: #a3d67a;
+  --sem-text-link: #7dbf4e;
+  --sem-text-on-primary: #FFFDF7;
+  --sem-text-on-nav: #a3d67a;
+
+  --sem-primary: #5da02e;
+  --sem-primary-hover: #4d8626;
+  --sem-primary-active: #3d6b1e;
+  --sem-accent: #e8825a;
+  --sem-accent-hover: #d4623a;
+  --sem-focus-ring: #7dbf4e;
+
+  --sem-border-default: #3a3a30;
+  --sem-border-strong: #5a5a48;
+
+  --sem-status-success-bg: rgba(61, 107, 30, 0.3);
+  --sem-status-success-text: #a3d67a;
+  --sem-status-warning-bg: rgba(184, 122, 42, 0.25);
+  --sem-status-warning-text: #d49a4e;
+  --sem-status-danger-bg: rgba(232, 130, 90, 0.2);
+  --sem-status-danger-text: #e8825a;
+}
+
+/* ── High contrast (light) ── */
+.high-contrast {
+  --sem-surface: #ffffff;
+  --sem-surface-elevated: #ffffff;
+  --sem-surface-inset: #f0f0e8;
+  --sem-surface-nav: #1a3a0a;
+  --sem-surface-muted: #f0f0e8;
+
+  --sem-text-primary: #000000;
+  --sem-text-secondary: #1c1108;
+  --sem-text-muted: #3f2914;
+  --sem-text-heading: #1a3a0a;
+  --sem-text-link: #2D5016;
+  --sem-text-on-primary: #ffffff;
+  --sem-text-on-nav: #ffffff;
+
+  --sem-primary: #2D5016;
+  --sem-primary-hover: #1a3a0a;
+  --sem-primary-active: #0f2205;
+  --sem-accent: #b84c2a;
+  --sem-accent-hover: #8f3a20;
+  --sem-focus-ring: #2D5016;
+
+  --sem-border-default: #888878;
+  --sem-border-strong: #333328;
+
+  --sem-status-success-bg: #d4f0b8;
+  --sem-status-success-text: #0f2205;
+  --sem-status-warning-bg: #f5e0b0;
+  --sem-status-warning-text: #3b2506;
+  --sem-status-danger-bg: #fdd;
+  --sem-status-danger-text: #8f3a20;
+}
+
+/* ── High contrast (dark) ── */
+.dark.high-contrast {
+  --sem-surface: #0a0a08;
+  --sem-surface-elevated: #1a1a14;
+  --sem-surface-inset: #000000;
+  --sem-surface-nav: #0f2205;
+  --sem-surface-muted: #1a1a14;
+
+  --sem-text-primary: #ffffff;
+  --sem-text-secondary: #e8e0d4;
+  --sem-text-muted: #b8a88e;
+  --sem-text-heading: #c5e8a8;
+  --sem-text-link: #a3d67a;
+  --sem-text-on-primary: #ffffff;
+  --sem-text-on-nav: #ffffff;
+
+  --sem-primary: #7dbf4e;
+  --sem-primary-hover: #5da02e;
+  --sem-primary-active: #4d8626;
+  --sem-accent: #e8825a;
+  --sem-accent-hover: #d4623a;
+  --sem-focus-ring: #a3d67a;
+
+  --sem-border-default: #666658;
+  --sem-border-strong: #999988;
+
+  --sem-status-success-bg: rgba(61, 107, 30, 0.5);
+  --sem-status-success-text: #c5e8a8;
+  --sem-status-warning-bg: rgba(184, 122, 42, 0.4);
+  --sem-status-warning-text: #f0d6aa;
+  --sem-status-danger-bg: rgba(232, 130, 90, 0.35);
+  --sem-status-danger-text: #ffa080;
 }
 
 @keyframes slideUp {
@@ -57,8 +230,8 @@
 }
 
 body {
-  background-color: var(--color-cream-100);
-  color: var(--color-soil-900);
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

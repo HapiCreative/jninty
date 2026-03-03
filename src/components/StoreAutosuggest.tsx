@@ -59,18 +59,18 @@ export default function StoreAutosuggest({
           setShowSuggestions(true);
         }}
         onFocus={() => setShowSuggestions(true)}
-        className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+        className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
         autoComplete="off"
       />
       {showSuggestions && filtered.length > 0 && (
-        <ul className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-brown-200 bg-white shadow-lg">
+        <ul className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-border-strong bg-surface-elevated shadow-lg">
           {filtered.map((store) => (
             <li key={store}>
               <button
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(store)}
-                className="w-full px-3 py-2 text-left text-sm text-soil-900 hover:bg-cream-100"
+                className="w-full px-3 py-2 text-left text-sm text-text-primary hover:bg-surface"
               >
                 {store}
               </button>

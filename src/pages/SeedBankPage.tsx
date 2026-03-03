@@ -20,7 +20,7 @@ import Skeleton from "../components/ui/Skeleton";
 type SortKey = "name" | "species" | "expiryDate" | "quantity";
 
 const selectClass =
-  "rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 function todayDate(): string {
   return formatISO(startOfDay(new Date()), { representation: "date" });
@@ -148,10 +148,10 @@ export default function SeedBankPage() {
     <div className="mx-auto max-w-5xl p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           Seed Bank
         </h1>
-        <span className="text-sm text-soil-500">
+        <span className="text-sm text-text-secondary">
           {allSeeds.length} {allSeeds.length === 1 ? "seed" : "seeds"}
         </span>
       </div>
@@ -203,26 +203,26 @@ export default function SeedBankPage() {
         <div className="mt-12 text-center">
           {allSeeds.length === 0 ? (
             <>
-              <SeedIcon className="mx-auto h-16 w-16 text-brown-300" />
-              <p className="mt-4 text-lg font-medium text-soil-700">
+              <SeedIcon className="mx-auto h-16 w-16 text-text-muted" />
+              <p className="mt-4 text-lg font-medium text-text-secondary">
                 No seeds yet
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Add your first seed packet to start tracking.
               </p>
               <Link
                 to="/seeds/new"
-                className="mt-4 inline-flex items-center rounded-lg bg-green-700 px-4 py-2 text-sm font-semibold text-cream-50 transition-colors hover:bg-green-800"
+                className="mt-4 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-text-on-primary transition-colors hover:bg-primary-hover"
               >
                 Add Seed
               </Link>
             </>
           ) : (
             <>
-              <p className="text-lg font-medium text-soil-700">
+              <p className="text-lg font-medium text-text-secondary">
                 No seeds match your filters
               </p>
-              <p className="mt-1 text-sm text-soil-500">
+              <p className="mt-1 text-sm text-text-secondary">
                 Try adjusting your search or filters.
               </p>
             </>
@@ -238,20 +238,20 @@ export default function SeedBankPage() {
                 <Card className="flex items-center gap-3 p-3 transition-shadow hover:shadow-md">
                   {/* Icon */}
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-50">
-                    <SeedIcon className="h-6 w-6 text-green-600" />
+                    <SeedIcon className="h-6 w-6 text-text-link" />
                   </div>
 
                   {/* Info */}
                   <div className="min-w-0 flex-1">
-                    <p className="font-display font-semibold text-soil-900 truncate">
+                    <p className="font-display font-semibold text-text-primary truncate">
                       {seed.name}
                     </p>
                     <div className="mt-0.5 flex items-center gap-2">
-                      <span className="text-sm text-soil-600 truncate italic">
+                      <span className="text-sm text-text-secondary truncate italic">
                         {seed.species}
                       </span>
                       {seed.brand && (
-                        <span className="text-xs text-soil-400">
+                        <span className="text-xs text-text-muted">
                           &middot; {seed.brand}
                         </span>
                       )}
@@ -260,7 +260,7 @@ export default function SeedBankPage() {
 
                   {/* Quantity + badges */}
                   <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-sm font-medium text-soil-700">
+                    <span className="text-sm font-medium text-text-secondary">
                       {String(seed.quantityRemaining)}{" "}
                       {QUANTITY_UNIT_LABELS[seed.quantityUnit].toLowerCase()}
                     </span>
@@ -279,7 +279,7 @@ export default function SeedBankPage() {
       <Link
         to="/seeds/new"
         aria-label="Add seed"
-        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-green-700 text-cream-50 shadow-lg transition-transform hover:bg-green-800 active:scale-95 md:bottom-6"
+        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-text-on-primary shadow-lg transition-transform hover:bg-primary-hover active:scale-95 md:bottom-6"
       >
         <PlusIcon className="h-7 w-7" />
       </Link>

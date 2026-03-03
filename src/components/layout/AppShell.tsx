@@ -8,6 +8,8 @@ import { getBySpecies } from "../../services/knowledgeBase";
 import { computePlantingWindows } from "../../services/calendar";
 import useOnlineStatus from "../../hooks/useOnlineStatus";
 import { useSync } from "../../hooks/useSync";
+import { useKeyboardShortcuts, useShortcutsHelpState } from "../../hooks/useKeyboardShortcuts";
+import KeyboardShortcutsHelp from "../KeyboardShortcutsHelp";
 
 // SVG icon components — inline to avoid extra dependencies
 
@@ -240,7 +242,7 @@ function getSecondaryNav(overdueCount: number): NavItem[] {
 
 function OfflineBanner() {
   return (
-    <div className="flex items-center justify-center gap-2 bg-brown-100 px-3 py-1.5 text-sm text-brown-800">
+    <div className="flex items-center justify-center gap-2 bg-status-warning-bg px-3 py-1.5 text-sm text-status-warning-text">
       <span className="inline-block h-2 w-2 rounded-full bg-terracotta-500" />
       You're offline — changes are saved locally
     </div>
@@ -250,7 +252,7 @@ function OfflineBanner() {
 function TabBarLink({ item }: { item: NavItem }) {
   if (item.disabled) {
     return (
-      <span className="flex min-w-[3rem] flex-col items-center gap-0.5 px-2 py-1 text-cream-300">
+      <span className="flex min-w-[3rem] flex-col items-center gap-0.5 px-2 py-1 text-text-muted">
         <item.icon className="h-6 w-6" />
         <span className="text-[10px] leading-tight">{item.label}</span>
         <span className="text-[8px] leading-tight">Soon</span>
@@ -264,7 +266,7 @@ function TabBarLink({ item }: { item: NavItem }) {
       end={item.to === "/"}
       className={({ isActive }) =>
         `relative flex min-w-[3rem] flex-col items-center gap-0.5 px-2 py-1 transition-colors ${
-          isActive ? "text-green-400" : "text-cream-200 hover:text-cream-50"
+          isActive ? "text-green-400" : "text-text-on-nav hover:text-text-on-primary"
         }`
       }
     >
@@ -282,10 +284,10 @@ function TabBarLink({ item }: { item: NavItem }) {
 function SidebarLink({ item }: { item: NavItem }) {
   if (item.disabled) {
     return (
-      <span className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-cream-300">
+      <span className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-muted">
         <item.icon className="h-5 w-5" />
         <span className="text-sm">{item.label}</span>
-        <span className="ml-auto rounded-full bg-cream-300/20 px-2 py-0.5 text-[10px]">
+        <span className="ml-auto rounded-full bg-text-muted/20 px-2 py-0.5 text-[10px]">
           Soon
         </span>
       </span>
@@ -299,8 +301,8 @@ function SidebarLink({ item }: { item: NavItem }) {
       className={({ isActive }) =>
         `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
           isActive
-            ? "bg-green-700 text-white font-medium"
-            : "text-cream-200 hover:bg-green-700/50 hover:text-cream-50"
+            ? "bg-primary text-text-on-primary font-medium"
+            : "text-text-on-nav hover:bg-primary/50 hover:text-text-on-primary"
         }`
       }
     >
@@ -341,10 +343,10 @@ function SyncStatusDot() {
     <button
       type="button"
       onClick={() => navigate("/settings")}
-      className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 transition-colors hover:bg-green-700/50"
+      className="flex items-center gap-1.5 rounded-md px-1.5 py-0.5 transition-colors hover:bg-primary/50"
       title={labelMap[status] ?? "Sync"}
     >
-      <span className={`inline-block h-2 w-2 rounded-full ${colorMap[status] ?? "bg-soil-400"}`} />
+      <span className={`inline-block h-2 w-2 rounded-full ${colorMap[status] ?? "bg-text-muted"}`} />
       <span className="text-xs">{labelMap[status] ?? "Sync"}</span>
     </button>
   );
@@ -354,6 +356,8 @@ export default function AppShell() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const shortcutsHelp = useShortcutsHelpState();
+  useKeyboardShortcuts(shortcutsHelp.show);
   const overdueTasks = usePouchQuery(() => taskRepository.getOverdue());
   const overdueCount = overdueTasks?.length ?? 0;
 
@@ -397,19 +401,19 @@ export default function AppShell() {
       {/* Skip to main content — visible only on keyboard focus */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:rounded focus:bg-green-700 focus:px-4 focus:py-2 focus:text-cream-50"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-text-on-primary"
       >
         Skip to main content
       </a>
 
       {/* ── Desktop sidebar ── */}
-      <aside className="hidden md:flex md:w-60 md:shrink-0 md:flex-col md:bg-green-800">
+      <aside className="hidden md:flex md:w-60 md:shrink-0 md:flex-col md:bg-surface-nav">
         {/* Brand */}
         <div className="flex items-center gap-2 px-4 py-5">
-          <span className="font-display text-xl font-bold text-cream-50">
+          <span className="font-display text-xl font-bold text-text-on-primary">
             Jninty
           </span>
-          <span className="text-cream-200">
+          <span className="text-text-on-nav">
             <SyncStatusDot />
           </span>
         </div>
@@ -423,14 +427,14 @@ export default function AppShell() {
           {/* Quick Log — sidebar variant */}
           <button
             onClick={() => navigate("/quick-log")}
-            className="mt-2 flex items-center gap-3 rounded-lg bg-terracotta-500 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-terracotta-600"
+            className="mt-2 flex items-center gap-3 rounded-lg bg-accent px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
             <PlusIcon className="h-5 w-5" />
             <span>Quick Log</span>
           </button>
 
           {/* Divider */}
-          <div className="my-3 border-t border-green-700" />
+          <div className="my-3 border-t border-primary" />
 
           {/* Secondary nav */}
           {getSecondaryNav(overdueCount).map((item) => (
@@ -440,7 +444,7 @@ export default function AppShell() {
 
         {/* Offline indicator at bottom of sidebar */}
         {!isOnline && (
-          <div className="flex items-center gap-2 px-4 py-3 text-sm text-cream-300">
+          <div className="flex items-center gap-2 px-4 py-3 text-sm text-text-on-nav">
             <span className="inline-block h-2 w-2 rounded-full bg-terracotta-500" />
             Offline
           </div>
@@ -450,12 +454,12 @@ export default function AppShell() {
       {/* ── Main content area ── */}
       <div className="flex flex-1 flex-col">
         {/* Mobile header */}
-        <header className="flex items-center justify-between border-b border-cream-200 bg-white px-4 py-3 md:hidden">
+        <header className="flex items-center justify-between border-b border-border-default bg-surface-elevated px-4 py-3 md:hidden">
           <div className="flex items-center gap-2">
-            <span className="font-display text-lg font-bold text-green-800">
+            <span className="font-display text-lg font-bold text-text-heading">
               Jninty
             </span>
-            <span className="text-soil-600">
+            <span className="text-text-secondary">
               <SyncStatusDot />
             </span>
           </div>
@@ -465,7 +469,7 @@ export default function AppShell() {
               to="/journal"
               aria-label="Journal"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <JournalIcon className="h-5 w-5" />
@@ -474,7 +478,7 @@ export default function AppShell() {
               to="/seeds"
               aria-label="Seed Bank"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <SeedNavIcon className="h-5 w-5" />
@@ -483,7 +487,7 @@ export default function AppShell() {
               to="/knowledge"
               aria-label="Knowledge"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <BookIcon className="h-5 w-5" />
@@ -492,7 +496,7 @@ export default function AppShell() {
               to="/expenses"
               aria-label="Expenses"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <ExpenseIcon className="h-5 w-5" />
@@ -501,7 +505,7 @@ export default function AppShell() {
               to="/tasks"
               aria-label="Tasks"
               className={({ isActive }) =>
-                `relative p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `relative p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <TaskIcon className="h-5 w-5" />
@@ -515,7 +519,7 @@ export default function AppShell() {
               to="/settings"
               aria-label="Settings"
               className={({ isActive }) =>
-                `p-1 ${isActive ? "text-green-800" : "text-soil-600 hover:text-green-700"}`
+                `p-1 ${isActive ? "text-text-heading" : "text-text-secondary hover:text-text-heading"}`
               }
             >
               <SettingsIcon className="h-5 w-5" />
@@ -544,7 +548,7 @@ export default function AppShell() {
       </div>
 
       {/* ── Mobile bottom tab bar ── */}
-      <nav className="fixed inset-x-0 bottom-0 z-50 flex items-end justify-around border-t border-green-900 bg-green-800 pb-[env(safe-area-inset-bottom)] md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-50 flex items-end justify-around border-t border-surface-nav bg-surface-nav pb-[env(safe-area-inset-bottom)] md:hidden">
         {/* Home & Plants */}
         <TabBarLink item={getPrimaryNav(calendarBadge)[0]!} />
         <TabBarLink item={getPrimaryNav(calendarBadge)[1]!} />
@@ -558,7 +562,7 @@ export default function AppShell() {
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-terracotta-500 shadow-lg transition-transform active:scale-95">
             <PlusIcon className="h-7 w-7 text-white" />
           </span>
-          <span className="mt-0.5 text-[10px] leading-tight text-cream-200">
+          <span className="mt-0.5 text-[10px] leading-tight text-text-on-nav">
             Log
           </span>
         </button>
@@ -567,6 +571,8 @@ export default function AppShell() {
         <TabBarLink item={getPrimaryNav(calendarBadge)[2]!} />
         <TabBarLink item={getPrimaryNav(calendarBadge)[3]!} />
       </nav>
+
+      <KeyboardShortcutsHelp isOpen={shortcutsHelp.isOpen} onClose={shortcutsHelp.hide} />
     </div>
   );
 }

@@ -22,7 +22,7 @@ import Skeleton from "../components/ui/Skeleton";
 // ─── Select style ───
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 // ─── Field label map for user-friendly Zod error messages ───
 
@@ -292,12 +292,12 @@ export default function PlantFormPage() {
         <button
           type="button"
           onClick={() => void navigate(backPath)}
-          className="rounded-lg p-1.5 text-soil-600 transition-colors hover:bg-cream-200 hover:text-soil-900"
+          className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Go back"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           {isEditing ? "Edit Plant" : "Add Plant"}
         </h1>
       </div>
@@ -305,7 +305,7 @@ export default function PlantFormPage() {
       <form onSubmit={(e) => void handleSubmit(e)} className="mt-6 space-y-6">
         {/* Photo section */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Photo
           </h2>
           <div className="mt-3">
@@ -326,8 +326,8 @@ export default function PlantFormPage() {
                 </button>
               </div>
             ) : (
-              <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-brown-200 bg-cream-50">
-                <p className="text-sm text-soil-500">No photo added</p>
+              <div className="flex h-32 items-center justify-center rounded-lg border-2 border-dashed border-border-strong bg-surface">
+                <p className="text-sm text-text-secondary">No photo added</p>
               </div>
             )}
 
@@ -359,7 +359,7 @@ export default function PlantFormPage() {
 
         {/* Plant information */}
         <Card>
-          <h2 className="font-display text-lg font-semibold text-green-800">
+          <h2 className="font-display text-lg font-semibold text-text-heading">
             Plant Information
           </h2>
 
@@ -368,7 +368,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="species"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Species <span className="text-terracotta-500">*</span>
               </label>
@@ -385,7 +385,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="nickname"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Nickname
               </label>
@@ -402,7 +402,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="variety"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Variety
               </label>
@@ -419,7 +419,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="plant-type"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Type
               </label>
@@ -439,7 +439,7 @@ export default function PlantFormPage() {
 
             {/* Perennial toggle */}
             <div className="flex items-center gap-3">
-              <label htmlFor="is-perennial" className="text-sm font-medium text-soil-700">
+              <label htmlFor="is-perennial" className="text-sm font-medium text-text-secondary">
                 Perennial
               </label>
               <button
@@ -448,8 +448,8 @@ export default function PlantFormPage() {
                 role="switch"
                 aria-checked={isPerennial}
                 onClick={() => setIsPerennial(!isPerennial)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 ${
-                  isPerennial ? "bg-green-600" : "bg-brown-200"
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring ${
+                  isPerennial ? "bg-green-600" : "bg-border-strong"
                 }`}
               >
                 <span
@@ -464,7 +464,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="source"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Source
               </label>
@@ -486,7 +486,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="status"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Status
               </label>
@@ -508,7 +508,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="date-acquired"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Date Acquired
               </label>
@@ -524,7 +524,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="purchase-price"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Purchase Price ($)
               </label>
@@ -543,7 +543,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="purchase-store"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Purchased At
               </label>
@@ -558,7 +558,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="tags"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Tags
               </label>
@@ -569,7 +569,7 @@ export default function PlantFormPage() {
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
               />
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Separate with commas
               </p>
             </div>
@@ -578,7 +578,7 @@ export default function PlantFormPage() {
             <div>
               <label
                 htmlFor="care-notes"
-                className="mb-1 block text-sm font-medium text-soil-700"
+                className="mb-1 block text-sm font-medium text-text-secondary"
               >
                 Care Notes
               </label>
@@ -588,7 +588,7 @@ export default function PlantFormPage() {
                 placeholder="Any notes about caring for this plant…"
                 value={careNotes}
                 onChange={(e) => setCareNotes(e.target.value)}
-                className="w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 placeholder:text-brown-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
+                className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
               />
             </div>
           </div>

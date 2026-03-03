@@ -10,22 +10,22 @@ describe("Badge", () => {
 
   it("applies default variant by default", () => {
     render(<Badge>Status</Badge>);
-    expect(screen.getByText("Status").className).toContain("bg-cream-200");
+    expect(screen.getByText("Status").className).toContain("bg-surface-muted");
   });
 
   it("applies success variant classes", () => {
     render(<Badge variant="success">Healthy</Badge>);
-    expect(screen.getByText("Healthy").className).toContain("bg-green-100");
+    expect(screen.getByText("Healthy").className).toContain("bg-status-success-bg");
   });
 
   it("applies warning variant classes", () => {
     render(<Badge variant="warning">Needs water</Badge>);
-    expect(screen.getByText("Needs water").className).toContain("bg-brown-100");
+    expect(screen.getByText("Needs water").className).toContain("bg-status-warning-bg");
   });
 
   it("applies danger variant classes", () => {
     render(<Badge variant="danger">Pest</Badge>);
-    expect(screen.getByText("Pest").className).toContain("terracotta");
+    expect(screen.getByText("Pest").className).toContain("status-danger");
   });
 
   it("merges custom className", () => {

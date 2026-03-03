@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Button from "./ui/Button";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import type { ImportResult } from "../services/exporter";
 import {
   parseZip,
@@ -44,6 +45,8 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
   const [result, setResult] = useState<ImportWriteResult | null>(null);
   const [parsing, setParsing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef);
 
   const handleProgress: ProgressCallback = useCallback(
     (stepName, done, total) => {
@@ -135,15 +138,21 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
         if (e.target === e.currentTarget && step !== "importing") handleClose();
       }}
     >
-      <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="font-display text-lg font-bold text-green-800">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="import-dialog-title"
+        className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl bg-surface-elevated p-6 shadow-xl"
+      >
+        <h2 id="import-dialog-title" className="font-display text-lg font-bold text-text-heading">
           Import Jninty Backup
         </h2>
 
         {/* Step 1: File select */}
         {step === "select" && (
           <div className="mt-4 space-y-4">
-            <p className="text-sm text-soil-600">
+            <p className="text-sm text-text-secondary">
               Select a Jninty backup ZIP file to import. This should be a file
               previously exported from Jninty.
             </p>
@@ -152,10 +161,10 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
               type="file"
               accept=".zip"
               onChange={(e) => void handleFileSelect(e)}
-              className="block w-full text-sm text-soil-600 file:mr-3 file:rounded-lg file:border-0 file:bg-cream-200 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-soil-900 hover:file:bg-cream-300"
+              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-lg file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-text-primary hover:file:bg-surface-muted"
             />
             {parsing && (
-              <p className="text-sm text-soil-500">Reading ZIP file...</p>
+              <p className="text-sm text-text-secondary">Reading ZIP file...</p>
             )}
             {parseError && (
               <p className="text-sm text-red-600">{parseError}</p>
@@ -171,8 +180,8 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
         {/* Step 2: Preview */}
         {step === "preview" && parsed && (
           <div className="mt-4 space-y-4">
-            <div className="rounded-lg border border-cream-200 bg-cream-50 p-3">
-              <h3 className="text-sm font-semibold text-soil-900">
+            <div className="rounded-lg border border-border-default bg-surface p-3">
+              <h3 className="text-sm font-semibold text-text-primary">
                 Backup Contents
               </h3>
               <table className="mt-2 w-full text-sm">
@@ -182,16 +191,16 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                     if (count === 0) return null;
                     return (
                       <tr key={key}>
-                        <td className="py-0.5 text-soil-600">{label}</td>
-                        <td className="py-0.5 text-right font-medium text-soil-900">
+                        <td className="py-0.5 text-text-secondary">{label}</td>
+                        <td className="py-0.5 text-right font-medium text-text-primary">
                           {String(count)}
                         </td>
                       </tr>
                     );
                   })}
-                  <tr className="border-t border-cream-200">
-                    <td className="pt-1 font-semibold text-soil-900">Total</td>
-                    <td className="pt-1 text-right font-bold text-soil-900">
+                  <tr className="border-t border-border-default">
+                    <td className="pt-1 font-semibold text-text-primary">Total</td>
+                    <td className="pt-1 text-right font-bold text-text-primary">
                       {String(totalEntities)}
                     </td>
                   </tr>
@@ -216,11 +225,11 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
 
             {/* Import mode selector */}
             <div>
-              <h3 className="text-sm font-semibold text-soil-900">
+              <h3 className="text-sm font-semibold text-text-primary">
                 Import Mode
               </h3>
               <div className="mt-2 space-y-2">
-                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-cream-200 p-3 has-[:checked]:border-green-600 has-[:checked]:bg-green-50">
+                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border-default p-3 has-[:checked]:border-focus-ring has-[:checked]:bg-green-50">
                   <input
                     type="radio"
                     name="importMode"
@@ -230,16 +239,16 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                     className="mt-0.5 accent-green-700"
                   />
                   <div>
-                    <span className="text-sm font-medium text-soil-900">
+                    <span className="text-sm font-medium text-text-primary">
                       Merge
                     </span>
-                    <p className="text-xs text-soil-500">
+                    <p className="text-xs text-text-secondary">
                       Keep existing data and add new items from the backup.
                       Duplicates are skipped.
                     </p>
                   </div>
                 </label>
-                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-cream-200 p-3 has-[:checked]:border-red-600 has-[:checked]:bg-red-50">
+                <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border-default p-3 has-[:checked]:border-red-600 has-[:checked]:bg-red-50">
                   <input
                     type="radio"
                     name="importMode"
@@ -249,10 +258,10 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                     className="mt-0.5 accent-red-600"
                   />
                   <div>
-                    <span className="text-sm font-medium text-soil-900">
+                    <span className="text-sm font-medium text-text-primary">
                       Replace
                     </span>
-                    <p className="text-xs text-soil-500">
+                    <p className="text-xs text-text-secondary">
                       Delete all existing data and replace with the backup. This
                       cannot be undone.
                     </p>
@@ -323,10 +332,10 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
         {/* Step 4: Importing */}
         {step === "importing" && (
           <div className="mt-6 space-y-4">
-            <p className="text-sm font-medium text-soil-900">{progressStep}</p>
+            <p className="text-sm font-medium text-text-primary">{progressStep}</p>
             {progressTotal > 0 && (
               <>
-                <div className="h-2 overflow-hidden rounded-full bg-cream-200">
+                <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
                   <div
                     className="h-full rounded-full bg-green-600 transition-all"
                     style={{
@@ -334,7 +343,7 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
                     }}
                   />
                 </div>
-                <p className="text-xs text-soil-500">
+                <p className="text-xs text-text-secondary">
                   {String(progressDone)} of {String(progressTotal)}
                 </p>
               </>
@@ -345,8 +354,8 @@ export default function ImportDialog({ open, onClose }: ImportDialogProps) {
         {/* Step 5: Complete */}
         {step === "complete" && result && (
           <div className="mt-4 space-y-4">
-            <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-              <h3 className="text-sm font-bold text-green-800">
+            <div className="rounded-lg border border-green-200 bg-status-success-bg p-4">
+              <h3 className="text-sm font-bold text-status-success-text">
                 Import Complete
               </h3>
               <div className="mt-2 space-y-1 text-sm text-green-700">

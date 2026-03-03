@@ -7,10 +7,10 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: "bg-cream-200 text-soil-800",
-  success: "bg-green-100 text-green-800",
-  warning: "bg-brown-100 text-brown-800",
-  danger: "bg-terracotta-400/20 text-terracotta-600",
+  default: "bg-surface-muted text-text-secondary",
+  success: "bg-status-success-bg text-status-success-text",
+  warning: "bg-status-warning-bg text-status-warning-text",
+  danger: "bg-status-danger-bg text-status-danger-text",
 };
 
 export default function Badge({

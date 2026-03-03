@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import Button from "./ui/Button";
+import { useFocusTrap } from "../hooks/useFocusTrap";
 import {
   parseCsvFile,
   autoMapColumns,
@@ -45,6 +46,8 @@ export default function CsvImportDialog({
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<CsvImportResult | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef);
 
   // Build a validated plant candidate from a CSV row
   const validateRow = useCallback(
@@ -171,15 +174,21 @@ export default function CsvImportDialog({
         if (e.target === e.currentTarget && !importing) handleClose();
       }}
     >
-      <div className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="font-display text-lg font-bold text-green-800">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="csv-import-dialog-title"
+        className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-surface-elevated p-6 shadow-xl"
+      >
+        <h2 id="csv-import-dialog-title" className="font-display text-lg font-bold text-text-heading">
           Import Plants from CSV
         </h2>
 
         {/* Step 1: File select */}
         {step === "select" && (
           <div className="mt-4 space-y-4">
-            <p className="text-sm text-soil-600">
+            <p className="text-sm text-text-secondary">
               Select a CSV or TSV file with plant data. The first row should
               contain column headers.
             </p>
@@ -188,10 +197,10 @@ export default function CsvImportDialog({
               type="file"
               accept=".csv,.tsv"
               onChange={(e) => void handleFileSelect(e)}
-              className="block w-full text-sm text-soil-600 file:mr-3 file:rounded-lg file:border-0 file:bg-cream-200 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-soil-900 hover:file:bg-cream-300"
+              className="block w-full text-sm text-text-secondary file:mr-3 file:rounded-lg file:border-0 file:bg-surface-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-text-primary hover:file:bg-surface-muted"
             />
             {parsing && (
-              <p className="text-sm text-soil-500">Reading file...</p>
+              <p className="text-sm text-text-secondary">Reading file...</p>
             )}
             {parseError && (
               <p className="text-sm text-red-600">{parseError}</p>
@@ -207,29 +216,29 @@ export default function CsvImportDialog({
         {/* Step 2: Column mapping */}
         {step === "mapping" && (
           <div className="mt-4 space-y-4">
-            <p className="text-sm text-soil-600">
+            <p className="text-sm text-text-secondary">
               Map CSV columns to plant fields. Species, type, source, and status
               are required.
             </p>
-            <div className="rounded-lg border border-cream-200">
+            <div className="rounded-lg border border-border-default">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-cream-200 bg-cream-50">
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                  <tr className="border-b border-border-default bg-surface">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       CSV Column
                     </th>
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Map to Field
                     </th>
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Sample
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {headers.map((header) => (
-                    <tr key={header} className="border-b border-cream-100">
-                      <td className="px-3 py-2 font-medium text-soil-900">
+                    <tr key={header} className="border-b border-border-default">
+                      <td className="px-3 py-2 font-medium text-text-primary">
                         {header}
                       </td>
                       <td className="px-3 py-2">
@@ -241,7 +250,7 @@ export default function CsvImportDialog({
                               [header]: e.target.value,
                             }))
                           }
-                          className="w-full rounded border border-cream-200 bg-white px-2 py-1 text-sm text-soil-900"
+                          className="w-full rounded border border-border-default bg-surface-elevated px-2 py-1 text-sm text-text-primary"
                         >
                           <option value="-- Skip --">-- Skip --</option>
                           {CSV_FIELD_OPTIONS.map((field) => (
@@ -251,7 +260,7 @@ export default function CsvImportDialog({
                           ))}
                         </select>
                       </td>
-                      <td className="max-w-[140px] truncate px-3 py-2 text-xs text-soil-500">
+                      <td className="max-w-[140px] truncate px-3 py-2 text-xs text-text-secondary">
                         {rows[0]?.[header] ?? ""}
                       </td>
                     </tr>
@@ -272,10 +281,10 @@ export default function CsvImportDialog({
         {/* Step 3: Preview */}
         {step === "preview" && (
           <div className="mt-4 space-y-4">
-            <div className="rounded-lg border border-cream-200 bg-cream-50 p-3">
-              <p className="text-sm text-soil-900">
+            <div className="rounded-lg border border-border-default bg-surface p-3">
+              <p className="text-sm text-text-primary">
                 <span className="font-semibold">{String(rows.length)}</span>{" "}
-                rows found, <span className="font-semibold text-green-700">{String(totalValid)}</span>{" "}
+                rows found, <span className="font-semibold text-text-heading">{String(totalValid)}</span>{" "}
                 valid,{" "}
                 <span className="font-semibold text-red-600">
                   {String(rows.length - totalValid)}
@@ -284,20 +293,20 @@ export default function CsvImportDialog({
               </p>
             </div>
 
-            <div className="rounded-lg border border-cream-200">
+            <div className="rounded-lg border border-border-default">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-cream-200 bg-cream-50">
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                  <tr className="border-b border-border-default bg-surface">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Row
                     </th>
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Species
                     </th>
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Type
                     </th>
-                    <th className="px-3 py-2 text-left font-medium text-soil-700">
+                    <th className="px-3 py-2 text-left font-medium text-text-secondary">
                       Status
                     </th>
                   </tr>
@@ -306,20 +315,20 @@ export default function CsvImportDialog({
                   {previewRows.map((row) => (
                     <tr
                       key={row.rowNum}
-                      className={`border-b border-cream-100 ${row.valid ? "" : "bg-red-50"}`}
+                      className={`border-b border-border-default ${row.valid ? "" : "bg-red-50"}`}
                     >
-                      <td className="px-3 py-2 text-soil-600">
+                      <td className="px-3 py-2 text-text-secondary">
                         {String(row.rowNum)}
                       </td>
-                      <td className="px-3 py-2 text-soil-900">
+                      <td className="px-3 py-2 text-text-primary">
                         {row.species || "-"}
                       </td>
-                      <td className="px-3 py-2 text-soil-900">
+                      <td className="px-3 py-2 text-text-primary">
                         {row.type || "-"}
                       </td>
                       <td className="px-3 py-2">
                         {row.valid ? (
-                          <span className="text-green-700">Valid</span>
+                          <span className="text-text-heading">Valid</span>
                         ) : (
                           <span
                             className="text-red-600"
@@ -336,7 +345,7 @@ export default function CsvImportDialog({
             </div>
 
             {rows.length > 10 && (
-              <p className="text-xs text-soil-500">
+              <p className="text-xs text-text-secondary">
                 Showing first 10 of {String(rows.length)} rows
               </p>
             )}
@@ -358,10 +367,10 @@ export default function CsvImportDialog({
         {/* Step 4: Importing */}
         {step === "importing" && (
           <div className="mt-6 space-y-4">
-            <p className="text-sm font-medium text-soil-900">
+            <p className="text-sm font-medium text-text-primary">
               Importing plants...
             </p>
-            <div className="h-2 overflow-hidden rounded-full bg-cream-200">
+            <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
               <div className="h-full animate-pulse rounded-full bg-green-600" style={{ width: "60%" }} />
             </div>
           </div>
@@ -370,8 +379,8 @@ export default function CsvImportDialog({
         {/* Step 5: Complete */}
         {step === "complete" && result && (
           <div className="mt-4 space-y-4">
-            <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-              <h3 className="text-sm font-bold text-green-800">
+            <div className="rounded-lg border border-green-200 bg-status-success-bg p-4">
+              <h3 className="text-sm font-bold text-status-success-text">
                 Import Complete
               </h3>
               <p className="mt-1 text-sm text-green-700">

@@ -12,7 +12,7 @@ import Skeleton from "../components/ui/Skeleton";
 import { ChevronLeftIcon } from "../components/icons";
 
 const selectClass =
-  "w-full rounded-lg border border-brown-200 bg-cream-50 px-3 py-2 text-sm text-soil-900 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25";
+  "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
 
 const outcomeVariant: Record<
   string,
@@ -267,12 +267,12 @@ export default function SeasonComparisonPage() {
       <div className="flex items-center gap-3">
         <Link
           to="/settings"
-          className="rounded-full p-1.5 text-soil-600 transition-colors hover:bg-cream-200"
+          className="rounded-full p-1.5 text-text-secondary transition-colors hover:bg-surface-muted"
           aria-label="Back to settings"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </Link>
-        <h1 className="font-display text-2xl font-bold text-green-800">
+        <h1 className="font-display text-2xl font-bold text-text-heading">
           Compare Seasons
         </h1>
       </div>
@@ -281,7 +281,7 @@ export default function SeasonComparisonPage() {
       <Card>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label htmlFor="season-a" className="mb-1 block text-sm font-medium text-soil-700">
+            <label htmlFor="season-a" className="mb-1 block text-sm font-medium text-text-secondary">
               Season A
             </label>
             <select
@@ -299,7 +299,7 @@ export default function SeasonComparisonPage() {
             </select>
           </div>
           <div>
-            <label htmlFor="season-b" className="mb-1 block text-sm font-medium text-soil-700">
+            <label htmlFor="season-b" className="mb-1 block text-sm font-medium text-text-secondary">
               Season B
             </label>
             <select
@@ -321,9 +321,9 @@ export default function SeasonComparisonPage() {
 
       {seasons.length < 2 && (
         <Card>
-          <p className="text-center text-sm text-soil-500">
+          <p className="text-center text-sm text-text-secondary">
             You need at least two seasons to compare. Create seasons in{" "}
-            <Link to="/settings" className="text-green-700 hover:underline">
+            <Link to="/settings" className="text-text-heading hover:underline">
               Settings
             </Link>.
           </p>
@@ -347,14 +347,14 @@ export default function SeasonComparisonPage() {
           {/* Plant-by-plant comparison */}
           {comparisons.length > 0 ? (
             <Card>
-              <h2 className="font-display text-lg font-semibold text-green-800">
+              <h2 className="font-display text-lg font-semibold text-text-heading">
                 Side-by-Side
               </h2>
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 {String(comparisons.length)} plant{comparisons.length !== 1 ? "s" : ""} grown in both seasons
               </p>
 
-              <div className="mt-3 divide-y divide-cream-200">
+              <div className="mt-3 divide-y divide-border-default">
                 {comparisons.map((c) => (
                   <ComparisonRow
                     key={c.plantId}
@@ -367,7 +367,7 @@ export default function SeasonComparisonPage() {
             </Card>
           ) : (
             <Card>
-              <p className="text-center text-sm text-soil-500">
+              <p className="text-center text-sm text-text-secondary">
                 No plants were grown in both seasons.
               </p>
             </Card>
@@ -376,10 +376,10 @@ export default function SeasonComparisonPage() {
           {/* What worked */}
           {whatWorked.length > 0 && (
             <Card>
-              <h2 className="font-display text-lg font-semibold text-green-800">
+              <h2 className="font-display text-lg font-semibold text-text-heading">
                 What Worked
               </h2>
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Plants that thrived in at least one season
               </p>
               <ul className="mt-3 space-y-2">
@@ -392,11 +392,11 @@ export default function SeasonComparisonPage() {
                     <li key={c.plantId} className="flex items-center justify-between">
                       <Link
                         to={`/plants/${c.plantId}`}
-                        className="text-sm font-medium text-soil-900 hover:text-green-700"
+                        className="text-sm font-medium text-text-primary hover:text-text-heading"
                       >
                         {name}
                       </Link>
-                      <span className="text-xs text-soil-500">
+                      <span className="text-xs text-text-secondary">
                         Thrived in {thrivedIn.join(" & ")}
                       </span>
                     </li>
@@ -412,7 +412,7 @@ export default function SeasonComparisonPage() {
               <h2 className="font-display text-lg font-semibold text-terracotta-500">
                 What to Change
               </h2>
-              <p className="mt-1 text-xs text-soil-500">
+              <p className="mt-1 text-xs text-text-secondary">
                 Plants that failed in at least one season
               </p>
               <ul className="mt-3 space-y-2">
@@ -425,7 +425,7 @@ export default function SeasonComparisonPage() {
                     <li key={c.plantId} className="flex items-center justify-between">
                       <Link
                         to={`/plants/${c.plantId}`}
-                        className="text-sm font-medium text-soil-900 hover:text-green-700"
+                        className="text-sm font-medium text-text-primary hover:text-text-heading"
                       >
                         {name}
                       </Link>
@@ -449,25 +449,25 @@ export default function SeasonComparisonPage() {
 function StatsCard({ label, stats }: { label: string; stats: SeasonStats }) {
   return (
     <Card>
-      <h3 className="font-display text-sm font-semibold text-green-800 truncate">
+      <h3 className="font-display text-sm font-semibold text-text-heading truncate">
         {label}
       </h3>
       <dl className="mt-2 space-y-1.5">
         <div className="flex justify-between">
-          <dt className="text-xs text-soil-500">Plants</dt>
-          <dd className="text-sm font-semibold text-soil-900">
+          <dt className="text-xs text-text-secondary">Plants</dt>
+          <dd className="text-sm font-semibold text-text-primary">
             {String(stats.totalPlants)}
           </dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-xs text-soil-500">Success rate</dt>
-          <dd className="text-sm font-semibold text-soil-900">
+          <dt className="text-xs text-text-secondary">Success rate</dt>
+          <dd className="text-sm font-semibold text-text-primary">
             {String(Math.round(stats.successRate * 100))}%
           </dd>
         </div>
         <div className="flex justify-between">
-          <dt className="text-xs text-soil-500">Harvest</dt>
-          <dd className="text-sm font-semibold text-soil-900">
+          <dt className="text-xs text-text-secondary">Harvest</dt>
+          <dd className="text-sm font-semibold text-text-primary">
             {stats.totalHarvestWeight > 0 ? formatWeight(stats.totalHarvestWeight) : "—"}
           </dd>
         </div>
@@ -499,12 +499,12 @@ function ComparisonRow({
     <div className="py-3">
       <Link
         to={`/plants/${c.plantId}`}
-        className="text-sm font-semibold text-soil-900 hover:text-green-700"
+        className="text-sm font-semibold text-text-primary hover:text-text-heading"
       >
         {name}
       </Link>
       {c.plant.nickname && (
-        <span className="ml-1.5 text-xs text-soil-500 italic">
+        <span className="ml-1.5 text-xs text-text-secondary italic">
           {c.plant.species}
         </span>
       )}
@@ -541,8 +541,8 @@ function PlantingColumn({
   const outcome = planting.outcome ?? "unknown";
 
   return (
-    <div className="rounded-lg bg-cream-50 p-2">
-      <p className="text-xs font-medium text-soil-600 truncate">{seasonName}</p>
+    <div className="rounded-lg bg-surface p-2">
+      <p className="text-xs font-medium text-text-secondary truncate">{seasonName}</p>
       <div className="mt-1">
         <Badge variant={outcomeVariant[outcome] ?? "default"}>
           {outcomeLabel[outcome] ?? outcome}
@@ -551,28 +551,28 @@ function PlantingColumn({
       <dl className="mt-1.5 space-y-0.5">
         {planting.datePlanted && (
           <div className="flex justify-between">
-            <dt className="text-[11px] text-soil-400">Planted</dt>
-            <dd className="text-[11px] text-soil-600">
+            <dt className="text-[11px] text-text-muted">Planted</dt>
+            <dd className="text-[11px] text-text-secondary">
               {format(parseISO(planting.datePlanted), "MMM d")}
             </dd>
           </div>
         )}
         {planting.dateRemoved && (
           <div className="flex justify-between">
-            <dt className="text-[11px] text-soil-400">Removed</dt>
-            <dd className="text-[11px] text-soil-600">
+            <dt className="text-[11px] text-text-muted">Removed</dt>
+            <dd className="text-[11px] text-text-secondary">
               {format(parseISO(planting.dateRemoved), "MMM d")}
             </dd>
           </div>
         )}
         <div className="flex justify-between">
-          <dt className="text-[11px] text-soil-400">Entries</dt>
-          <dd className="text-[11px] text-soil-600">{String(journalCount)}</dd>
+          <dt className="text-[11px] text-text-muted">Entries</dt>
+          <dd className="text-[11px] text-text-secondary">{String(journalCount)}</dd>
         </div>
         {harvestWeight > 0 && (
           <div className="flex justify-between">
-            <dt className="text-[11px] text-soil-400">Harvest</dt>
-            <dd className="text-[11px] text-soil-600">
+            <dt className="text-[11px] text-text-muted">Harvest</dt>
+            <dd className="text-[11px] text-text-secondary">
               {formatWeight(harvestWeight)}
             </dd>
           </div>
