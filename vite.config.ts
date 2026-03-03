@@ -75,9 +75,23 @@ export default defineConfig({
   server: {
     https: httpsConfig,
     host: true,
+    proxy: {
+      "/couchdb": {
+        target: "http://localhost:5984",
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/couchdb/, ""),
+      },
+    },
   },
   preview: {
     https: httpsConfig,
     host: true,
+    proxy: {
+      "/couchdb": {
+        target: "http://localhost:5984",
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/couchdb/, ""),
+      },
+    },
   },
 });
