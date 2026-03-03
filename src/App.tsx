@@ -24,6 +24,7 @@ import KnowledgeBrowserPage from "./pages/KnowledgeBrowserPage";
 import KnowledgeDetailPage from "./pages/KnowledgeDetailPage";
 import KnowledgeFormPage from "./pages/KnowledgeFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import InstallPrompt from "./components/InstallPrompt";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 import { rebuildIndex, startListening } from "./db/search.ts";
 
@@ -89,6 +90,7 @@ export default function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
+          <InstallPrompt />
           </BrowserRouter>
         </ToastProvider>
       </SyncProvider>

@@ -1,8 +1,17 @@
+import fs from "fs";
+import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import pkg from "./package.json" with { type: "json" };
+
+const httpsConfig = fs.existsSync(path.resolve(__dirname, ".certs/cert.pem"))
+  ? {
+      key: fs.readFileSync(path.resolve(__dirname, ".certs/key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, ".certs/cert.pem")),
+    }
+  : undefined;
 
 export default defineConfig({
   define: {
@@ -63,4 +72,12 @@ export default defineConfig({
       manifest: false, // We provide our own manifest.json in public/
     }),
   ],
+  server: {
+    https: httpsConfig,
+    host: true,
+  },
+  preview: {
+    https: httpsConfig,
+    host: true,
+  },
 });
