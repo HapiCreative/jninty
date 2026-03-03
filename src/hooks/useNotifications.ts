@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import {
   getNotificationConfig,
   saveNotificationConfig,
@@ -31,10 +31,6 @@ export function useNotifications(): NotificationState {
   const permitted = hasNotificationPermission();
   const isIOS = isIOSDevice();
 
-  // Re-read config when it could change externally
-  useEffect(() => {
-    setConfig(getNotificationConfig());
-  }, []);
 
   const enable = useCallback(async (): Promise<boolean> => {
     if (!supported) return false;

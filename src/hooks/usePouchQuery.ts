@@ -16,7 +16,6 @@ export function usePouchQuery<T>(
   const querierRef = useRef(querier);
   querierRef.current = querier;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const stableDeps = deps ?? [];
 
   useEffect(() => {

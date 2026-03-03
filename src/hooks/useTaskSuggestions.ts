@@ -44,6 +44,8 @@ export function useTaskSuggestions(): {
     return generateSuggestions(rules, plants, settings, today, existingKeys);
   }, [rules, plants, tasks, settings, today]);
 
+  const activeSeasonId = activeSeason?.id;
+
   const acceptSuggestion = useCallback(
     async (suggestion: TaskSuggestion) => {
       try {
@@ -59,14 +61,14 @@ export function useTaskSuggestions(): {
           ...(suggestion.activityType != null
             ? { description: `Activity: ${suggestion.activityType}` }
             : {}),
-          ...(activeSeason?.id ? { seasonId: activeSeason.id } : {}),
+          ...(activeSeasonId ? { seasonId: activeSeasonId } : {}),
         });
         toast("Task added", "success");
       } catch {
         toast("Failed to add task", "error");
       }
     },
-    [activeSeason?.id, toast],
+    [activeSeasonId, toast],
   );
 
   const dismissSuggestion = useCallback(

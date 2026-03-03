@@ -127,7 +127,7 @@ type DirEntries = AsyncIterable<
 >;
 
 function dirEntries(dir: FileSystemDirectoryHandle): DirEntries {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (dir as any).entries() as DirEntries;
 }
 

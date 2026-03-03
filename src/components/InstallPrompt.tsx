@@ -32,24 +32,28 @@ function isStandalone(): boolean {
 
 const DISMISS_KEY = "jninty-install-dismissed";
 
+function shouldShowIOS(): boolean {
+  if (isStandalone()) return false;
+  const dismissed = localStorage.getItem(DISMISS_KEY);
+  if (dismissed) {
+    const ts = Number(dismissed);
+    if (Date.now() - ts < 7 * 24 * 60 * 60 * 1000) return false;
+  }
+  return isIOSSafari();
+}
+
 export default function InstallPrompt() {
-  const [showIOS, setShowIOS] = useState(false);
+  const [showIOS, setShowIOS] = useState(shouldShowIOS);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    // Don't show if already installed or previously dismissed
     if (isStandalone()) return;
     const dismissed = localStorage.getItem(DISMISS_KEY);
     if (dismissed) {
       const ts = Number(dismissed);
-      // Re-show after 7 days
       if (Date.now() - ts < 7 * 24 * 60 * 60 * 1000) return;
     }
-
-    if (isIOSSafari()) {
-      setShowIOS(true);
-      return;
-    }
+    if (isIOSSafari()) return;
 
     // Android / desktop Chrome install prompt
     const handler = (e: Event) => {

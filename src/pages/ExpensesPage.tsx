@@ -49,7 +49,8 @@ export default function ExpensesPage() {
   const activeSeason = usePouchQuery(() => seasonRepository.getActive());
 
   // Filters
-  const [seasonId, setSeasonId] = useState("");
+  const [selectedSeasonId, setSeasonId] = useState("");
+  const seasonId = selectedSeasonId || activeSeason?.id || "";
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [storeFilter, setStoreFilter] = useState("");
@@ -60,13 +61,6 @@ export default function ExpensesPage() {
   const [rows, setRows] = useState<ExpenseRow[] | null>(null);
   const [categoryTotals, setCategoryTotals] = useState<CategoryTotal[]>([]);
   const [storeTotals, setStoreTotals] = useState<StoreTotal[]>([]);
-
-  // Default to active season
-  useEffect(() => {
-    if (activeSeason && !seasonId) {
-      setSeasonId(activeSeason.id);
-    }
-  }, [activeSeason, seasonId]);
 
   const filters: ExpenseFilters = useMemo(() => {
     const f: ExpenseFilters = {};

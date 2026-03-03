@@ -28,13 +28,21 @@ export default function PhotoLightbox({
 
   const photoId = photoIds[currentIndex];
 
+  // Reset loading and zoom when the photo changes (render-time state update)
+  const [prevPhotoId, setPrevPhotoId] = useState(photoId);
+  if (photoId !== prevPhotoId) {
+    setPrevPhotoId(photoId);
+    setLoading(true);
+    setScale(1);
+  }
+
   // Load display-size photo
   useEffect(() => {
+    baseScale.current = 1;
     if (!photoId) return;
     let revoked = false;
     let objectUrl: string | undefined;
 
-    setLoading(true);
     void (async () => {
       const blob = await photoRepository.getDisplayBlob(photoId);
       if (revoked) return;
@@ -50,12 +58,6 @@ export default function PhotoLightbox({
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [photoId]);
-
-  // Reset zoom on slide change
-  useEffect(() => {
-    setScale(1);
-    baseScale.current = 1;
-  }, [currentIndex]);
 
   // Navigation
   const goNext = useCallback(() => {
@@ -100,7 +102,6 @@ export default function PhotoLightbox({
       initialPinchDistance.current = getTouchDistance(e.touches);
       baseScale.current = scale;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scale]);
 
   const handleTouchMove = useCallback(
