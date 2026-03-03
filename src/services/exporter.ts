@@ -30,11 +30,11 @@ import { z } from "zod";
 // ─── Constants ───
 
 const EXPORT_VERSION = 1;
-const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 5;
 
 // ─── Manifest schema ───
 
-const manifestSchema = z
+export const manifestSchema = z
   .object({
     exportVersion: z.number().int().positive(),
     schemaVersion: z.number().int().positive(),
@@ -69,7 +69,7 @@ export type ImportResult = {
 // Photos in the ZIP are stored as separate image files, not in a JSON array.
 // We validate that each photo JSON entry matches the photo schema minus blobs.
 
-const photoImportSchema = z
+export const photoImportSchema = z
   .object({
     id: z.string().uuid(),
     version: z.number().int().nonnegative(),
@@ -257,6 +257,81 @@ export async function exportAll(): Promise<Blob> {
   return await zip.generateAsync({ type: "blob" });
 }
 
+// ─── Table validations (shared with importer) ───
+
+export type TableValidation = {
+  filename: string;
+  schema: z.ZodSchema;
+  countKey: keyof ImportResult["counts"];
+  docType: string;
+};
+
+export function getTableValidations(): TableValidation[] {
+  return [
+    {
+      filename: "data/plantInstances.json",
+      schema: plantInstanceSchema,
+      countKey: "plantInstances",
+      docType: "plant",
+    },
+    {
+      filename: "data/journalEntries.json",
+      schema: journalEntrySchema,
+      countKey: "journalEntries",
+      docType: "journal",
+    },
+    { filename: "data/tasks.json", schema: taskSchema, countKey: "tasks", docType: "task" },
+    {
+      filename: "data/gardenBeds.json",
+      schema: gardenBedSchema,
+      countKey: "gardenBeds",
+      docType: "gardenBed",
+    },
+    {
+      filename: "data/settings.json",
+      schema: settingsSchema,
+      countKey: "settings",
+      docType: "settings",
+    },
+    {
+      filename: "data/photos.json",
+      schema: photoImportSchema,
+      countKey: "photos",
+      docType: "photo",
+    },
+    {
+      filename: "data/seasons.json",
+      schema: seasonSchema,
+      countKey: "seasons",
+      docType: "season",
+    },
+    {
+      filename: "data/plantings.json",
+      schema: plantingSchema,
+      countKey: "plantings",
+      docType: "planting",
+    },
+    {
+      filename: "data/seeds.json",
+      schema: seedSchema,
+      countKey: "seeds",
+      docType: "seed",
+    },
+    {
+      filename: "data/taskRules.json",
+      schema: taskRuleSchema,
+      countKey: "taskRules",
+      docType: "taskRule",
+    },
+    {
+      filename: "data/userPlantKnowledge.json",
+      schema: userPlantKnowledgeSchema,
+      countKey: "userPlantKnowledge",
+      docType: "userPlantKnowledge",
+    },
+  ];
+}
+
 // ─── Import (validate only for Phase 1) ───
 
 export async function importFromZip(file: File): Promise<ImportResult> {
@@ -315,63 +390,7 @@ export async function importFromZip(file: File): Promise<ImportResult> {
   }
 
   // Validate each data file
-  const tableValidations: Array<{
-    filename: string;
-    schema: z.ZodSchema;
-    countKey: keyof ImportResult["counts"];
-  }> = [
-    {
-      filename: "data/plantInstances.json",
-      schema: plantInstanceSchema,
-      countKey: "plantInstances",
-    },
-    {
-      filename: "data/journalEntries.json",
-      schema: journalEntrySchema,
-      countKey: "journalEntries",
-    },
-    { filename: "data/tasks.json", schema: taskSchema, countKey: "tasks" },
-    {
-      filename: "data/gardenBeds.json",
-      schema: gardenBedSchema,
-      countKey: "gardenBeds",
-    },
-    {
-      filename: "data/settings.json",
-      schema: settingsSchema,
-      countKey: "settings",
-    },
-    {
-      filename: "data/photos.json",
-      schema: photoImportSchema,
-      countKey: "photos",
-    },
-    {
-      filename: "data/seasons.json",
-      schema: seasonSchema,
-      countKey: "seasons",
-    },
-    {
-      filename: "data/plantings.json",
-      schema: plantingSchema,
-      countKey: "plantings",
-    },
-    {
-      filename: "data/seeds.json",
-      schema: seedSchema,
-      countKey: "seeds",
-    },
-    {
-      filename: "data/taskRules.json",
-      schema: taskRuleSchema,
-      countKey: "taskRules",
-    },
-    {
-      filename: "data/userPlantKnowledge.json",
-      schema: userPlantKnowledgeSchema,
-      countKey: "userPlantKnowledge",
-    },
-  ];
+  const tableValidations = getTableValidations();
 
   for (const { filename, schema, countKey } of tableValidations) {
     const dataFile = zip.file(filename);

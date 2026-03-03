@@ -23,6 +23,8 @@ import {
   type StorageUsage,
 } from "../services/storageUsage";
 import { exportAll, triggerDownload } from "../services/exporter";
+import ImportDialog from "../components/ImportDialog";
+import CsvImportDialog from "../components/CsvImportDialog";
 import { rebuildIndex } from "../db/search";
 import {
   searchLocation,
@@ -90,6 +92,8 @@ export default function SettingsPage() {
   const [rebuildCount, setRebuildCount] = useState<number | null>(null);
   const [rebuildError, setRebuildError] = useState<string | null>(null);
   const [clearingOriginals, setClearingOriginals] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showCsvDialog, setShowCsvDialog] = useState(false);
 
   // Sync
   const {
@@ -1128,6 +1132,27 @@ export default function SettingsPage() {
             )}
           </div>
 
+          {/* Import */}
+          <div>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => setShowImportDialog(true)}
+              >
+                Import Jninty Backup
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setShowCsvDialog(true)}
+              >
+                Import Plants from CSV
+              </Button>
+            </div>
+            <p className="mt-1 text-xs text-soil-500">
+              Restore from a backup ZIP or import plants from a CSV file
+            </p>
+          </div>
+
           {/* Clear original photos */}
           <div>
             <Button
@@ -1169,6 +1194,16 @@ export default function SettingsPage() {
       <p className="text-center text-xs text-soil-500">
         Jninty v{__APP_VERSION__}
       </p>
+
+      {/* Import dialogs */}
+      <ImportDialog
+        open={showImportDialog}
+        onClose={() => setShowImportDialog(false)}
+      />
+      <CsvImportDialog
+        open={showCsvDialog}
+        onClose={() => setShowCsvDialog(false)}
+      />
 
       {/* End-of-season review modal */}
       {showEndOfSeason && (

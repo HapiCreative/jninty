@@ -27,5 +27,8 @@ export {
   subscribeSyncStatus,
   getLastSyncedAt,
   testConnection,
+  destroyAndRecreate,
 } from "./pouchdb/client.ts";
 export type { SyncStatus } from "./pouchdb/client.ts";
+
+export { destroyAndRecreateOriginals } from "./pouchdb/originalsStore.ts";

@@ -173,3 +173,21 @@ export function stopSync(): void {
 export function getSyncStatus(): SyncStatus {
   return currentSyncStatus;
 }
+
+/**
+ * Destroy the local PouchDB and create a fresh, empty instance.
+ * Used during full-replace import to start from a clean slate.
+ * Cancels active sync and resets index state.
+ */
+export async function destroyAndRecreate(): Promise<void> {
+  if (activeSyncHandler) {
+    activeSyncHandler.cancel();
+    activeSyncHandler = null;
+  }
+  currentSyncStatus = "disabled";
+  notifySyncStatusListeners();
+
+  await localDB.destroy();
+  localDB = createLocalDB();
+  resetIndexState();
+}

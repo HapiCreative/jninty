@@ -125,6 +125,15 @@ export async function clearAllOriginals(): Promise<void> {
 }
 
 /**
+ * Destroy the originals DB and create a fresh, empty instance.
+ * Used during full-replace import.
+ */
+export async function destroyAndRecreateOriginals(): Promise<void> {
+  await originalsDB.destroy();
+  originalsDB = new PouchDB("jninty-originals", { adapter: "indexeddb" });
+}
+
+/**
  * Get total size of all stored originals in bytes.
  */
 export async function getOriginalsSizeBytes(): Promise<number> {
