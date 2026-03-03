@@ -20,6 +20,8 @@ import Button from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
 import PhotoThumbnail from "../components/PhotoThumbnail";
 import PhotoLightbox from "../components/PhotoLightbox";
+import PhotoTimelineTab from "../components/plant/PhotoTimelineTab";
+import type { PhotoWithContext } from "../components/plant/PhotoTimelineGrid";
 import {
   PlantPlaceholderIcon,
   ChevronLeftIcon,
@@ -27,7 +29,7 @@ import {
 } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 
-type Tab = "overview" | "season-history";
+type Tab = "overview" | "season-history" | "photo-timeline";
 
 // ─── Component ───
 
@@ -152,6 +154,77 @@ export default function PlantDetailPage() {
     const journalPhotos = journalEntries?.flatMap((e) => e.photoIds) ?? [];
     return Array.from(new Set([...plantPhotos, ...journalPhotos]));
   }, [plant, journalEntries]);
+
+  // Photos with journal context (for photo timeline)
+  const photosWithContext = useMemo<PhotoWithContext[]>(() => {
+    if (!journalEntries) return [];
+    const seen = new Set<string>();
+    const result: PhotoWithContext[] = [];
+
+    for (const entry of journalEntries) {
+      for (const photoId of entry.photoIds) {
+        if (!seen.has(photoId)) {
+          seen.add(photoId);
+          result.push({
+            photoId,
+            journalEntryId: entry.id,
+            activityType: entry.activityType,
+            body: entry.body,
+            title: entry.title,
+            isMilestone: entry.isMilestone,
+            milestoneType: entry.milestoneType,
+            createdAt: entry.createdAt,
+            seasonId: entry.seasonId,
+          });
+        }
+      }
+    }
+
+    // Include plant-level photos not in any journal entry
+    const plantPhotos = plant?.photoIds ?? [];
+    for (const photoId of plantPhotos) {
+      if (!seen.has(photoId)) {
+        seen.add(photoId);
+        result.push({
+          photoId,
+          journalEntryId: "",
+          activityType: "general",
+          body: "",
+          isMilestone: false,
+          createdAt: plant?.createdAt ?? new Date().toISOString(),
+          seasonId: "",
+        });
+      }
+    }
+
+    result.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    return result;
+  }, [journalEntries, plant]);
+
+  // Milestone entries (for growth story)
+  const milestoneEntries = useMemo(() => {
+    if (!journalEntries) return [];
+    return journalEntries
+      .filter((e) => e.isMilestone)
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  }, [journalEntries]);
+
+  // Captions for lightbox (photoId → journal body)
+  const captions = useMemo<Record<string, string>>(() => {
+    if (!journalEntries) return {};
+    const map: Record<string, string> = {};
+    for (const entry of journalEntries) {
+      const caption = entry.title ?? entry.body;
+      if (caption) {
+        for (const photoId of entry.photoIds) {
+          if (!(photoId in map)) {
+            map[photoId] = caption;
+          }
+        }
+      }
+    }
+    return map;
+  }, [journalEntries]);
 
   // ─── Planting outcome handler ───
 
@@ -287,7 +360,8 @@ export default function PlantDetailPage() {
         <div className="flex overflow-hidden rounded-lg border border-brown-200">
           {([
             { key: "overview" as const, label: "Overview" },
-            { key: "season-history" as const, label: "Season History" },
+            { key: "season-history" as const, label: "Seasons" },
+            { key: "photo-timeline" as const, label: "Photos" },
           ]).map((tab) => (
             <button
               key={tab.key}
@@ -310,6 +384,20 @@ export default function PlantDetailPage() {
             seasonMap={seasonMap}
             seasons={seasons ?? []}
             journalEntries={journalEntries ?? []}
+          />
+        )}
+
+        {activeTab === "photo-timeline" && (
+          <PhotoTimelineTab
+            photosWithContext={photosWithContext}
+            milestoneEntries={milestoneEntries}
+            onPhotoClick={(photoId) => {
+              const index = allPhotoIds.indexOf(photoId);
+              if (index !== -1) {
+                setLightboxIndex(index);
+                setShowLightbox(true);
+              }
+            }}
           />
         )}
 
@@ -646,6 +734,7 @@ export default function PlantDetailPage() {
           photoIds={allPhotoIds}
           initialIndex={lightboxIndex}
           onClose={() => setShowLightbox(false)}
+          captions={captions}
         />
       )}
     </div>

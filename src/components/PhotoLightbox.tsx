@@ -5,12 +5,14 @@ interface PhotoLightboxProps {
   photoIds: string[];
   initialIndex: number;
   onClose: () => void;
+  captions?: Record<string, string>;
 }
 
 export default function PhotoLightbox({
   photoIds,
   initialIndex,
   onClose,
+  captions,
 }: PhotoLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [src, setSrc] = useState<string | null>(null);
@@ -242,13 +244,22 @@ export default function PhotoLightbox({
         {loading ? (
           <div className="h-16 w-16 animate-spin rounded-full border-4 border-white/20 border-t-white" />
         ) : src ? (
-          <img
-            src={src}
-            alt={`Photo ${String(currentIndex + 1)}`}
-            className="max-h-full max-w-full object-contain transition-transform"
-            style={{ transform: `scale(${String(scale)})` }}
-            draggable={false}
-          />
+          <div className="relative flex max-h-full max-w-full items-center justify-center">
+            <img
+              src={src}
+              alt={`Photo ${String(currentIndex + 1)}`}
+              className="max-h-full max-w-full object-contain transition-transform"
+              style={{ transform: `scale(${String(scale)})` }}
+              draggable={false}
+            />
+            {photoId && captions?.[photoId] && scale === 1 && (
+              <div className="absolute right-0 bottom-0 left-0 bg-soil-900/70 px-4 py-3">
+                <p className="text-sm text-white/90 line-clamp-3">
+                  {captions[photoId]}
+                </p>
+              </div>
+            )}
+          </div>
         ) : (
           <p className="text-white/60">Photo not found</p>
         )}
