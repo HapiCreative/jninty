@@ -63,7 +63,7 @@ function DroppableDayCell({
       data-today={isToday ? "" : undefined}
       className={`relative border-r border-border-default px-0.5 py-0.5 text-center text-[10px] leading-tight ${
         isToday
-          ? "bg-green-100 font-bold text-green-800"
+          ? "bg-green-50 font-bold text-green-800"
           : isWeekendDay
             ? "bg-brown-50/60 text-text-muted"
             : isEven
@@ -73,9 +73,12 @@ function DroppableDayCell({
         isOver ? "!bg-blue-100 ring-2 ring-inset ring-blue-400" : ""
       }`}
     >
-      {day}
-      {isToday && (
-        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-green-500" />
+      {isToday ? (
+        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-700 text-[10px] font-bold text-white">
+          {day}
+        </span>
+      ) : (
+        day
       )}
       {isFrostDate && (
         <div className="pointer-events-none absolute inset-y-0 left-1/2 w-0 -translate-x-1/2 border-l-2 border-dashed border-terracotta-500/60" />
@@ -160,7 +163,7 @@ export default function TimelineRow({
       </div>
 
       {/* Day columns + bars */}
-      <div className="min-w-0 flex-1 overflow-x-auto">
+      <div className="relative min-w-0 flex-1 overflow-x-auto">
         <div
           className="grid"
           style={{
@@ -208,6 +211,16 @@ export default function TimelineRow({
             <div className="col-span-full h-6" />
           )}
         </div>
+
+        {/* Today vertical line spanning full row height */}
+        {hasToday && todayDay != null && (
+          <div
+            className="pointer-events-none absolute inset-y-0 z-20 w-0.5 bg-green-600"
+            style={{
+              left: `calc(${((todayDay - 0.5) / daysInMonth) * 100}%)`,
+            }}
+          />
+        )}
       </div>
     </div>
   );
