@@ -474,6 +474,24 @@ export default function SettingsPage() {
     }
   };
 
+  const [deleteSeasonId, setDeleteSeasonId] = useState<string | null>(null);
+  const [deletingSeason, setDeletingSeason] = useState(false);
+  const deleteSeasonName = seasons?.find((s) => s.id === deleteSeasonId)?.name;
+
+  const handleDeleteSeason = async () => {
+    if (!deleteSeasonId) return;
+    setDeletingSeason(true);
+    try {
+      await seasonRepository.softDelete(deleteSeasonId);
+      setDeleteSeasonId(null);
+      toast("Season deleted", "success");
+    } catch {
+      toast("Failed to delete season", "error");
+    } finally {
+      setDeletingSeason(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="mx-auto max-w-2xl space-y-6 p-4" role="status" aria-label="Loading settings">
@@ -1038,19 +1056,70 @@ export default function SettingsPage() {
                     {season.startDate} &ndash; {season.endDate}
                   </p>
                 </div>
-                {!season.isActive && (
+                <div className="flex items-center gap-1">
+                  {!season.isActive && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => void handleSetActive(season.id)}
+                    >
+                      Set Active
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
-                    onClick={() => void handleSetActive(season.id)}
+                    className="text-terracotta-600 hover:bg-terracotta-400/10"
+                    onClick={() => setDeleteSeasonId(season.id)}
                   >
-                    Set Active
+                    Delete
                   </Button>
-                )}
+                </div>
               </div>
             ))
           )}
         </div>
       </Card>
+
+      {/* Delete season confirmation dialog */}
+      {deleteSeasonId != null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-soil-900/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-season-dialog-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setDeleteSeasonId(null);
+          }}
+        >
+          <Card className="w-full max-w-sm">
+            <h3
+              id="delete-season-dialog-title"
+              className="font-display text-lg font-semibold text-text-primary"
+            >
+              Delete {deleteSeasonName}?
+            </h3>
+            <p className="mt-2 text-sm text-text-secondary">
+              This season will be removed. This action cannot be undone.
+            </p>
+            <div className="mt-4 flex justify-end gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => setDeleteSeasonId(null)}
+                disabled={deletingSeason}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                className="bg-accent hover:bg-accent-hover"
+                onClick={() => void handleDeleteSeason()}
+                disabled={deletingSeason}
+              >
+                {deletingSeason ? "Deleting\u2026" : "Delete"}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* ── Multi-Device Sync ── */}
       <Card>
