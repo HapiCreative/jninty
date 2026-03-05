@@ -410,7 +410,7 @@ export default function TimelineView() {
         >
           <div
             ref={scrollRef}
-            className="overflow-x-auto border-t border-border-default"
+            className="mx-3 mb-3 overflow-x-auto overflow-y-hidden rounded-xl border border-border-default bg-surface-elevated shadow-sm"
           >
             {monthRows.map((row) => (
               <TimelineRow

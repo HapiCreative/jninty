@@ -17,6 +17,7 @@ export default function TimelineBarComponent({ bar, onToggleComplete }: Timeline
 
   const [showPopover, setShowPopover] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -33,11 +34,35 @@ export default function TimelineBarComponent({ bar, onToggleComplete }: Timeline
     [setNodeRef],
   );
 
-  const handleClick = useCallback(() => {
-    if (!isDragging) {
-      setShowPopover((prev) => !prev);
-    }
-  }, [isDragging]);
+  // Track pointer start to distinguish click from drag.
+  // dnd-kit's listeners capture onPointerDown, so onClick doesn't fire reliably.
+  // Instead, we record the start position and check distance on pointerUp.
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      pointerStartRef.current = { x: e.clientX, y: e.clientY };
+      // Forward to dnd-kit's handler
+      const dndHandler = listeners?.onPointerDown as
+        | ((e: React.PointerEvent<HTMLDivElement>) => void)
+        | undefined;
+      dndHandler?.(e);
+    },
+    [listeners],
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      const start = pointerStartRef.current;
+      pointerStartRef.current = null;
+      if (!start || isDragging) return;
+
+      const dx = e.clientX - start.x;
+      const dy = e.clientY - start.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 8) {
+        setShowPopover((prev) => !prev);
+      }
+    },
+    [isDragging],
+  );
 
   // Close popover on outside click
   useEffect(() => {
@@ -50,6 +75,11 @@ export default function TimelineBarComponent({ bar, onToggleComplete }: Timeline
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [showPopover]);
+
+  // Close popover when drag starts
+  useEffect(() => {
+    if (isDragging) setShowPopover(false);
+  }, [isDragging]);
 
   // CSS Grid positioning: 1-based column start, spanning the correct number of days
   const gridColumn = `${startDay} / span ${span}`;
@@ -68,6 +98,9 @@ export default function TimelineBarComponent({ bar, onToggleComplete }: Timeline
       : {}),
   };
 
+  // Spread dnd-kit listeners but replace onPointerDown with our wrapper
+  const { onPointerDown: _dndPointerDown, ...restListeners } = listeners ?? {};
+
   return (
     <div
       ref={setRefs}
@@ -76,8 +109,9 @@ export default function TimelineBarComponent({ bar, onToggleComplete }: Timeline
       }`}
       style={style}
       title={`${task.title} — ${task.scheduledDate}`}
-      onClick={handleClick}
-      {...listeners}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      {...restListeners}
       {...attributes}
     >
       <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide opacity-80">
