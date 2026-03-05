@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { format, getDay, parseISO, isSameMonth, getDate } from "date-fns";
+import { format, getDay, parseISO, isSameMonth, getDate, isBefore, isAfter } from "date-fns";
 import { useDroppable } from "@dnd-kit/core";
 import TimelineBarComponent from "./TimelineBar.tsx";
 import { groupBarsBySchedule } from "../../hooks/useTimelineData.ts";
@@ -22,22 +22,45 @@ function isWeekend(monthDate: Date, day: number): boolean {
   return dow === 0 || dow === 6;
 }
 
+type SeasonTint = "winter" | "growing" | "fall";
+
+function getSeasonTint(
+  monthDate: Date,
+  day: number,
+  lastFrostDate: string,
+  firstFrostDate: string,
+): SeasonTint {
+  const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
+  const lastFrost = parseISO(lastFrostDate);
+  const firstFrost = parseISO(firstFrostDate);
+
+  if (isBefore(date, lastFrost)) return "winter";
+  if (isAfter(date, firstFrost)) return "fall";
+  return "growing";
+}
+
+const SEASON_BG: Record<SeasonTint, string> = {
+  winter: "bg-cream-200/40",   // cool cream tint
+  growing: "bg-green-50/25",   // soft green tint
+  fall: "bg-brown-50/50",      // warm amber tint
+};
+
 function DroppableDayCell({
   dateStr,
   day,
   isToday,
-  isEven,
   isWeekendDay,
   isFrostDate,
+  seasonTint,
   placementMode,
   onDayClick,
 }: {
   dateStr: string;
   day: number;
   isToday: boolean;
-  isEven: boolean;
   isWeekendDay: boolean;
   isFrostDate: boolean;
+  seasonTint: SeasonTint;
   placementMode: boolean;
   onDayClick: (date: string) => void;
 }) {
@@ -65,10 +88,8 @@ function DroppableDayCell({
         isToday
           ? "bg-green-50 font-bold text-green-800"
           : isWeekendDay
-            ? "bg-brown-50/60 text-text-muted"
-            : isEven
-              ? "bg-surface text-text-muted"
-              : "bg-surface-elevated text-text-muted"
+            ? "bg-brown-100/50 text-text-muted"
+            : `${SEASON_BG[seasonTint]} text-text-muted`
       } ${placementMode ? "cursor-crosshair hover:bg-green-50 hover:text-green-700" : ""} ${
         isOver ? "!bg-blue-100 ring-2 ring-inset ring-blue-400" : ""
       }`}
@@ -179,9 +200,9 @@ export default function TimelineRow({
                 dateStr={dateStr}
                 day={d}
                 isToday={hasToday && todayDay === d}
-                isEven={d % 2 === 0}
                 isWeekendDay={isWeekend(monthDate, d)}
                 isFrostDate={d === lastFrostDay || d === firstFrostDay}
+                seasonTint={getSeasonTint(monthDate, d, lastFrostDate, firstFrostDate)}
                 placementMode={placementMode ?? false}
                 onDayClick={handleDayClick}
               />
