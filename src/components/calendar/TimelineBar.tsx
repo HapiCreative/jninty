@@ -38,16 +38,18 @@ export default function TimelineBarComponent({ bar }: TimelineBarProps) {
   return (
     <div
       ref={setNodeRef}
-      className="flex min-w-0 cursor-grab items-center gap-1 overflow-hidden rounded px-1.5 py-0.5 text-[10px] font-medium leading-tight text-white active:cursor-grabbing"
+      className="flex min-w-0 cursor-grab items-center gap-1.5 overflow-hidden rounded-md px-2 py-1 text-[11px] font-medium leading-tight text-white shadow-sm active:cursor-grabbing"
       style={style}
       title={`${task.title} — ${task.scheduledDate}`}
       {...listeners}
       {...attributes}
     >
-      <span className="shrink-0 opacity-80">{label}</span>
+      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide opacity-80">
+        {label}
+      </span>
       <span className="truncate">{task.cropName}</span>
       {task.bedName && (
-        <span className="ml-auto shrink-0 truncate opacity-70">
+        <span className="ml-auto shrink-0 truncate text-[10px] opacity-70">
           {task.bedName}
         </span>
       )}

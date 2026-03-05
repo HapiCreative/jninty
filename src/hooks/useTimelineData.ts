@@ -12,6 +12,27 @@ import {
 import { usePouchQuery } from "./usePouchQuery.ts";
 import { scheduleTaskRepository } from "../db/index.ts";
 import type { ScheduleTask } from "../validation/scheduleTask.schema.ts";
+import type { ScheduleTaskType } from "../validation/scheduleTask.schema.ts";
+
+/** Default visual duration (in days) per task type */
+const TASK_SPAN_DAYS: Record<ScheduleTaskType, number> = {
+  seed_start: 3,
+  bed_prep: 2,
+  transplant: 3,
+  cultivate: 5,
+  harvest: 7,
+};
+
+/** Compute the bar span for a task, clamped to the month boundary */
+export function computeBarSpan(
+  taskType: ScheduleTaskType,
+  startDay: number,
+  daysInMonth: number,
+): { startDay: number; endDay: number } {
+  const span = TASK_SPAN_DAYS[taskType];
+  const endDay = Math.min(startDay + span - 1, daysInMonth);
+  return { startDay, endDay };
+}
 
 export interface TimelineBar {
   task: ScheduleTask;
@@ -63,10 +84,11 @@ export function useTimelineData(
         const taskDate = parseISO(task.scheduledDate);
         if (taskDate >= monthStart && taskDate <= monthEnd) {
           const day = taskDate.getDate();
+          const { startDay, endDay } = computeBarSpan(task.taskType, day, daysCount);
           bars.push({
             task,
-            startDay: day,
-            endDay: day,
+            startDay,
+            endDay,
           });
         }
       }
