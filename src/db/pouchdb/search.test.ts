@@ -20,6 +20,7 @@ const searchModule = await import("./search.ts");
 
 import type { PlantInstance } from "../../validation/plantInstance.schema.ts";
 import type { JournalEntry } from "../../validation/journalEntry.schema.ts";
+import type { ScheduleTask } from "../../validation/scheduleTask.schema.ts";
 
 const timestamp = new Date().toISOString();
 
@@ -385,6 +386,32 @@ describe("PouchDB search", () => {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       expect(searchModule.search("After Stop")).toHaveLength(0);
+    });
+  });
+
+  describe("addToIndex – scheduleTask", () => {
+    it("indexes a ScheduleTask and makes it searchable", () => {
+      const task: ScheduleTask = {
+        id: "st-1",
+        plantingScheduleId: "ps-1",
+        taskType: "harvest",
+        title: "Harvest Cherry Tomato",
+        scheduledDate: "2026-06-30",
+        originalDate: "2026-06-30",
+        sequenceOrder: 4,
+        cropName: "Tomato",
+        varietyName: "Cherry",
+        isCompleted: false,
+        version: 1,
+        createdAt: "2026-01-01T00:00:00.000Z",
+        updatedAt: "2026-01-01T00:00:00.000Z",
+      };
+
+      searchModule.addToIndex(task, "scheduleTask");
+      const results = searchModule.search("Cherry Tomato");
+      expect(results).toHaveLength(1);
+      expect(results[0]?.id).toBe("st-1");
+      expect(results[0]?.entityType).toBe("scheduleTask");
     });
   });
 

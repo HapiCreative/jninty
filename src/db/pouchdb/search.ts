@@ -189,10 +189,12 @@ export function handleChange(change: PouchDB.Core.ChangesResponseChange<object>)
 // ─── Public API ───
 
 export function addToIndex(
-  entity: PlantInstance | JournalEntry | UserPlantKnowledge,
+  entity: PlantInstance | JournalEntry | UserPlantKnowledge | ScheduleTask,
   type: EntityType,
 ): void {
-  if (type === "userPlantKnowledge") {
+  if (type === "scheduleTask") {
+    addOrUpdateDocument(scheduleTaskToDocument(entity as ScheduleTask));
+  } else if (type === "userPlantKnowledge") {
     addOrUpdateDocument(userKnowledgeToDocument(entity as UserPlantKnowledge));
   } else if (type === "plant") {
     addOrUpdateDocument(plantToDocument(entity as PlantInstance));

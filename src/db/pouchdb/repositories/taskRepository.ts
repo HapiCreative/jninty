@@ -212,6 +212,22 @@ export async function getAll(): Promise<Task[]> {
     .filter((r) => r.deletedAt == null);
 }
 
+export async function getByDateRange(
+  start: string,
+  end: string,
+): Promise<Task[]> {
+  await ensureAllIndexes();
+  const result = await localDB.find({
+    selector: {
+      docType: DOC_TYPE,
+      dueDate: { $gte: start, $lte: end },
+    },
+  });
+  return (result.docs as PouchDoc<Task>[])
+    .map(stripPouchFields)
+    .filter((r) => r.deletedAt == null && !r.isCompleted);
+}
+
 export async function getByPlantId(
   plantInstanceId: string,
 ): Promise<Task[]> {

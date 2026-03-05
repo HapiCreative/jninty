@@ -5,6 +5,7 @@ import {
   computeRescheduleUpdates,
   computeLateCompletionDelta,
   computeDownstreamUpdates,
+  computeScheduleDateUpdates,
 } from "./schedulingService.ts";
 
 describe("computeTaskDates", () => {
@@ -220,5 +221,57 @@ describe("computeDownstreamUpdates", () => {
     const downstream = [{ id: "t1", scheduledDate: "2026-04-10" }];
     expect(computeDownstreamUpdates(downstream, 0)).toEqual([]);
     expect(computeDownstreamUpdates(downstream, -2)).toEqual([]);
+  });
+});
+
+describe("computeScheduleDateUpdates", () => {
+  it("maps task types to corresponding ComputedDates fields", () => {
+    const tasks = [
+      { taskType: "seed_start" as const, scheduledDate: "2026-03-15" },
+      { taskType: "bed_prep" as const, scheduledDate: "2026-04-19" },
+      { taskType: "transplant" as const, scheduledDate: "2026-04-26" },
+      { taskType: "cultivate" as const, scheduledDate: "2026-05-03" },
+      { taskType: "harvest" as const, scheduledDate: "2026-06-30" },
+    ];
+
+    const result = computeScheduleDateUpdates(tasks, 60);
+
+    expect(result.seedStartDate).toBe("2026-03-15");
+    expect(result.bedPrepDate).toBe("2026-04-19");
+    expect(result.transplantDate).toBe("2026-04-26");
+    expect(result.cultivateStartDate).toBe("2026-05-03");
+    expect(result.harvestStartDate).toBe("2026-06-30");
+    // harvest end = Jun 30 + 60 = Aug 29
+    expect(result.harvestEndDate).toBe("2026-08-29");
+  });
+
+  it("computes harvestEndDate from scheduledDate + harvestWindowDays", () => {
+    const tasks = [
+      { taskType: "harvest" as const, scheduledDate: "2026-07-01" },
+    ];
+
+    const result = computeScheduleDateUpdates(tasks, 30);
+    expect(result.harvestStartDate).toBe("2026-07-01");
+    // Jul 1 + 30 = Jul 31
+    expect(result.harvestEndDate).toBe("2026-07-31");
+  });
+
+  it("returns only fields for present task types", () => {
+    const tasks = [
+      { taskType: "cultivate" as const, scheduledDate: "2026-05-03" },
+      { taskType: "harvest" as const, scheduledDate: "2026-06-30" },
+    ];
+
+    const result = computeScheduleDateUpdates(tasks, 14);
+    expect(result.seedStartDate).toBeUndefined();
+    expect(result.bedPrepDate).toBeUndefined();
+    expect(result.transplantDate).toBeUndefined();
+    expect(result.cultivateStartDate).toBe("2026-05-03");
+    expect(result.harvestStartDate).toBe("2026-06-30");
+  });
+
+  it("handles empty task array", () => {
+    const result = computeScheduleDateUpdates([], 30);
+    expect(result).toEqual({});
   });
 });

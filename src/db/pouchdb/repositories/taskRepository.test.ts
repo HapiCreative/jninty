@@ -151,6 +151,26 @@ describe("PouchDB taskRepository", () => {
     });
   });
 
+  describe("getByDateRange", () => {
+    it("returns only tasks within the date range", async () => {
+      await taskRepo.create({ ...baseTask, title: "Before", dueDate: "2026-03-01" });
+      await taskRepo.create({ ...baseTask, title: "Inside", dueDate: "2026-03-15" });
+      await taskRepo.create({ ...baseTask, title: "After", dueDate: "2026-04-05" });
+
+      const results = await taskRepo.getByDateRange("2026-03-01", "2026-03-31");
+      expect(results).toHaveLength(2);
+      expect(results.map((t) => t.title).sort()).toEqual(["Before", "Inside"]);
+    });
+
+    it("excludes completed tasks", async () => {
+      const task = await taskRepo.create({ ...baseTask, dueDate: "2026-03-15" });
+      await taskRepo.complete(task.id);
+
+      const results = await taskRepo.getByDateRange("2026-03-01", "2026-03-31");
+      expect(results).toHaveLength(0);
+    });
+  });
+
   describe("softDelete", () => {
     it("hides task from all queries", async () => {
       const task = await taskRepo.create(baseTask);

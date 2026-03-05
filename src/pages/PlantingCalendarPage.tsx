@@ -14,8 +14,6 @@ import {
   isSameMonth,
   isSameDay,
   isWithinInterval,
-  isBefore,
-  isAfter,
 } from "date-fns";
 import { useSettings } from "../hooks/useSettings";
 import { plantRepository, plantingRepository, seasonRepository, taskRepository, scheduleTaskRepository } from "../db/index.ts";
@@ -119,8 +117,18 @@ export default function PlantingCalendarPage({ initialMonth }: PlantingCalendarP
     [activeSeason],
   );
   const allPlants = usePouchQuery(() => plantRepository.getAll());
-  const allTasks = usePouchQuery(() => taskRepository.getAll());
-  const allScheduleTasks = usePouchQuery(() => scheduleTaskRepository.getAll());
+
+  const monthStartStr = useMemo(() => format(startOfMonth(currentMonth), "yyyy-MM-dd"), [currentMonth]);
+  const monthEndStr = useMemo(() => format(endOfMonth(currentMonth), "yyyy-MM-dd"), [currentMonth]);
+
+  const allTasks = usePouchQuery(
+    () => taskRepository.getByDateRange(monthStartStr, monthEndStr),
+    [monthStartStr, monthEndStr],
+  );
+  const allScheduleTasks = usePouchQuery(
+    () => scheduleTaskRepository.getByDateRange(monthStartStr, monthEndStr),
+    [monthStartStr, monthEndStr],
+  );
 
   // Weather frost warning
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -229,13 +237,8 @@ export default function PlantingCalendarPage({ initialMonth }: PlantingCalendarP
   const monthTasks = useMemo(() => {
     if (!allTasks) return new Map<string, Task[]>();
     const map = new Map<string, Task[]>();
-    const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(currentMonth);
 
     for (const task of allTasks) {
-      if (task.isCompleted) continue;
-      const taskDate = parseISO(task.dueDate);
-      if (isBefore(taskDate, monthStart) || isAfter(taskDate, monthEnd)) continue;
       const key = task.dueDate;
       const existing = map.get(key);
       if (existing) {
@@ -245,19 +248,15 @@ export default function PlantingCalendarPage({ initialMonth }: PlantingCalendarP
       }
     }
     return map;
-  }, [allTasks, currentMonth]);
+  }, [allTasks]);
 
   // Schedule tasks for the visible month
   const monthScheduleTasks = useMemo(() => {
     if (!allScheduleTasks) return new Map<string, ScheduleTask[]>();
     const map = new Map<string, ScheduleTask[]>();
-    const mStart = startOfMonth(currentMonth);
-    const mEnd = endOfMonth(currentMonth);
 
     for (const task of allScheduleTasks) {
       if (!filter.isVisible(task.taskType)) continue;
-      const taskDate = parseISO(task.scheduledDate);
-      if (isBefore(taskDate, mStart) || isAfter(taskDate, mEnd)) continue;
       const key = task.scheduledDate;
       const existing = map.get(key);
       if (existing) {
@@ -267,7 +266,7 @@ export default function PlantingCalendarPage({ initialMonth }: PlantingCalendarP
       }
     }
     return map;
-  }, [allScheduleTasks, currentMonth, filter]);
+  }, [allScheduleTasks, filter]);
 
   // Events for selected day
   const selectedDayEvents = useMemo(() => {

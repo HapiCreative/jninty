@@ -1,6 +1,6 @@
-import { useMemo, useCallback } from "react";
-import { loadCropDB, getCategories, getCropsByCategory } from "../data/cropdb/index.ts";
-import { searchCrops, type CropSearchResult } from "../services/cropDBSearch.ts";
+import { useMemo, useCallback, useEffect } from "react";
+import { loadCropDB, getCategories } from "../data/cropdb/index.ts";
+import { searchCrops, buildCropSearchIndex, type CropSearchResult } from "../services/cropDBSearch.ts";
 import { usePouchQuery } from "./usePouchQuery.ts";
 import { customCropRepository } from "../db/index.ts";
 import type { CropRecord } from "../data/cropdb/cropdb.types.ts";
@@ -26,11 +26,17 @@ export function useCropDB() {
     return [...builtIn, ...custom];
   }, [customCrops]);
 
+  // Rebuild crop search index when custom crops change
+  useEffect(() => {
+    buildCropSearchIndex(customCrops ?? []);
+  }, [customCrops]);
+
   const categories = useMemo(() => getCategories(), []);
 
   const getCropsForCategory = useCallback(
-    (category: string): CropRecord[] => getCropsByCategory(category),
-    [],
+    (category: string): CropRecord[] =>
+      allCrops.filter((c) => c.category === category),
+    [allCrops],
   );
 
   const search = useCallback(

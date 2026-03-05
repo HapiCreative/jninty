@@ -281,8 +281,9 @@ export async function getIncompleteDownstream(
 export async function updateBatch(
   updates: Array<{ id: string; changes: UpdateInput }>,
 ): Promise<ScheduleTask[]> {
-  const results: ScheduleTask[] = [];
   const timestamp = now();
+  const tasks: ScheduleTask[] = [];
+  const docs: PouchDoc<ScheduleTask>[] = [];
 
   for (const { id, changes } of updates) {
     const docId = `${DOC_TYPE}:${id}`;
@@ -310,9 +311,10 @@ export async function updateBatch(
     const parsed = scheduleTaskSchema.parse(updated);
     const doc = toPouchDoc(parsed, DOC_TYPE);
     doc._rev = existing._rev;
-    await localDB.put(doc);
-    results.push(parsed);
+    docs.push(doc);
+    tasks.push(parsed);
   }
 
-  return results;
+  await localDB.bulkDocs(docs);
+  return tasks;
 }
