@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { format } from "date-fns";
+import { format, getDay } from "date-fns";
 import { useDroppable } from "@dnd-kit/core";
 import TimelineBarComponent from "./TimelineBar.tsx";
 import { groupBarsBySchedule } from "../../hooks/useTimelineData.ts";
@@ -13,11 +13,19 @@ interface TimelineRowProps {
   onDayClick?: (date: string) => void;
 }
 
+/** Returns true if the given day (1-based) in the month is a Saturday or Sunday */
+function isWeekend(monthDate: Date, day: number): boolean {
+  const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), day);
+  const dow = getDay(date); // 0 = Sunday, 6 = Saturday
+  return dow === 0 || dow === 6;
+}
+
 function DroppableDayCell({
   dateStr,
   day,
   isToday,
   isEven,
+  isWeekendDay,
   placementMode,
   onDayClick,
 }: {
@@ -25,6 +33,7 @@ function DroppableDayCell({
   day: number;
   isToday: boolean;
   isEven: boolean;
+  isWeekendDay: boolean;
   placementMode: boolean;
   onDayClick: (date: string) => void;
 }) {
@@ -51,9 +60,11 @@ function DroppableDayCell({
       className={`relative border-r border-border-default px-0.5 py-0.5 text-center text-[10px] leading-tight ${
         isToday
           ? "bg-green-100 font-bold text-green-800"
-          : isEven
-            ? "bg-surface text-text-muted"
-            : "bg-surface-elevated text-text-muted"
+          : isWeekendDay
+            ? "bg-brown-50/60 text-text-muted"
+            : isEven
+              ? "bg-surface text-text-muted"
+              : "bg-surface-elevated text-text-muted"
       } ${placementMode ? "cursor-crosshair hover:bg-green-50 hover:text-green-700" : ""} ${
         isOver ? "!bg-blue-100 ring-2 ring-inset ring-blue-400" : ""
       }`}
@@ -146,6 +157,7 @@ export default function TimelineRow({
                 day={d}
                 isToday={hasToday && todayDay === d}
                 isEven={d % 2 === 0}
+                isWeekendDay={isWeekend(monthDate, d)}
                 placementMode={placementMode ?? false}
                 onDayClick={handleDayClick}
               />
