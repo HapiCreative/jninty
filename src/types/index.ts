@@ -47,3 +47,17 @@ export type {
   TaskRule,
 } from "../validation/taskRule.schema.ts";
 export type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";
+export type {
+  PlantingSchedule,
+  ScheduleDirection,
+  PlantingScheduleStatus,
+  CropSource,
+} from "../validation/plantingSchedule.schema.ts";
+export type {
+  ScheduleTask,
+  ScheduleTaskType,
+} from "../validation/scheduleTask.schema.ts";
+export type {
+  CustomCrop,
+  CustomVariety,
+} from "../validation/customCrop.schema.ts";

@@ -60,6 +60,31 @@ export type {
 } from "./plantKnowledge.schema.ts";
 export { userPlantKnowledgeSchema } from "./userPlantKnowledge.schema.ts";
 export type { UserPlantKnowledge } from "./userPlantKnowledge.schema.ts";
+export {
+  plantingScheduleSchema,
+  scheduleDirectionSchema,
+  plantingScheduleStatusSchema,
+  cropSourceSchema,
+} from "./plantingSchedule.schema.ts";
+export type {
+  PlantingSchedule,
+  ScheduleDirection,
+  PlantingScheduleStatus,
+  CropSource,
+} from "./plantingSchedule.schema.ts";
+export {
+  scheduleTaskSchema,
+  scheduleTaskTypeSchema,
+} from "./scheduleTask.schema.ts";
+export type {
+  ScheduleTask,
+  ScheduleTaskType,
+} from "./scheduleTask.schema.ts";
+export {
+  customCropSchema,
+  customVarietySchema,
+} from "./customCrop.schema.ts";
+export type { CustomCrop, CustomVariety } from "./customCrop.schema.ts";
 export { validateEntity } from "./helpers.ts";
 export type {
   ValidationResult,

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "strawberry",
+    "category": "Rosaceae",
+    "commonName": "Strawberry",
+    "varieties": [
+      {
+        "id": "strawberry-earliglow",
+        "name": "Earliglow",
+        "daysToMaturity": 365,
+        "daysToTransplant": null,
+        "seedingDepthInches": 0,
+        "spacingInches": 12,
+        "rowSpacingInches": 36,
+        "harvestWindowDays": 21,
+        "bedPrepLeadDays": 14,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "June-bearing variety. Pinch blossoms the first year to encourage strong root development. Produces one large flush of berries in early summer the following year. Excellent disease resistance and flavor. Hardy to USDA zone 4."
+      },
+      {
+        "id": "strawberry-ozark-beauty",
+        "name": "Ozark Beauty",
+        "daysToMaturity": 90,
+        "daysToTransplant": null,
+        "seedingDepthInches": 0,
+        "spacingInches": 12,
+        "rowSpacingInches": 36,
+        "harvestWindowDays": 120,
+        "bedPrepLeadDays": 14,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Everbearing variety producing two main flushes: late spring and early fall. Can fruit the first year if planted in early spring. Large, sweet berries. Vigorous runner production. Hardy to USDA zone 4."
+      },
+      {
+        "id": "strawberry-albion",
+        "name": "Albion",
+        "daysToMaturity": 90,
+        "daysToTransplant": null,
+        "seedingDepthInches": 0,
+        "spacingInches": 12,
+        "rowSpacingInches": 36,
+        "harvestWindowDays": 150,
+        "bedPrepLeadDays": 14,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Day-neutral variety that fruits continuously from late spring through fall regardless of day length. Firm, conical berries with excellent flavor. Produces fewer runners than June-bearing types. Hardy to USDA zone 4."
+      }
+    ]
+  },
+  {
+    "id": "blueberry",
+    "category": "Ericaceae",
+    "commonName": "Blueberry",
+    "varieties": [
+      {
+        "id": "blueberry-bluecrop",
+        "name": "Bluecrop",
+        "daysToMaturity": 730,
+        "daysToTransplant": null,
+        "seedingDepthInches": 2,
+        "spacingInches": 72,
+        "rowSpacingInches": 96,
+        "harvestWindowDays": 35,
+        "bedPrepLeadDays": 30,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Northern highbush midseason variety and the most widely planted blueberry worldwide. Reliable heavy crops of medium-large berries. Requires acidic soil (pH 4.5-5.5). Plant at least two varieties for cross-pollination. Remove blossoms for the first two years to establish strong roots. Hardy to USDA zone 4."
+      },
+      {
+        "id": "blueberry-duke",
+        "name": "Duke",
+        "daysToMaturity": 730,
+        "daysToTransplant": null,
+        "seedingDepthInches": 2,
+        "spacingInches": 72,
+        "rowSpacingInches": 96,
+        "harvestWindowDays": 28,
+        "bedPrepLeadDays": 30,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Northern highbush early-season variety. Blooms late but ripens early, reducing frost damage risk to flowers. Consistent yields of mild, sweet berries. Requires acidic soil (pH 4.5-5.5) and cross-pollination with another variety. Hardy to USDA zone 4."
+      }
+    ]
+  },
+  {
+    "id": "raspberry",
+    "category": "Rosaceae",
+    "commonName": "Raspberry",
+    "varieties": [
+      {
+        "id": "raspberry-heritage",
+        "name": "Heritage",
+        "daysToMaturity": 365,
+        "daysToTransplant": null,
+        "seedingDepthInches": 2,
+        "spacingInches": 24,
+        "rowSpacingInches": 72,
+        "harvestWindowDays": 60,
+        "bedPrepLeadDays": 21,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Everbearing (primocane-fruiting) red raspberry. Produces a fall crop on first-year canes and an optional early summer crop on overwintered canes. Can be mowed to the ground in late winter for simplified management with a single fall harvest. Medium-sized, firm berries with excellent flavor. Hardy to USDA zone 4."
+      },
+      {
+        "id": "raspberry-latham",
+        "name": "Latham",
+        "daysToMaturity": 540,
+        "daysToTransplant": null,
+        "seedingDepthInches": 2,
+        "spacingInches": 24,
+        "rowSpacingInches": 72,
+        "harvestWindowDays": 28,
+        "bedPrepLeadDays": 21,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Summer-bearing (floricane-fruiting) red raspberry. Fruits on second-year canes in midsummer. One of the hardiest raspberry varieties available. Round, dark red berries. Prune out spent canes after harvest. Very cold tolerant, hardy to USDA zone 3."
+      }
+    ]
+  }
+]

@@ -1,0 +1,243 @@
+[
+  {
+    "id": "basil",
+    "category": "Lamiaceae",
+    "commonName": "Basil",
+    "varieties": [
+      {
+        "id": "basil-sweet",
+        "name": "Sweet",
+        "daysToMaturity": 60,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 12,
+        "rowSpacingInches": 18,
+        "harvestWindowDays": 90,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": false,
+        "notes": "Pinch flower buds to encourage bushy growth and prolong harvest. Thrives in full sun with consistent moisture. Sensitive to cold — do not transplant until nighttime temps stay above 50°F."
+      },
+      {
+        "id": "basil-thai",
+        "name": "Thai",
+        "daysToMaturity": 65,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 12,
+        "rowSpacingInches": 18,
+        "harvestWindowDays": 90,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": false,
+        "notes": "Compact variety with anise-clove flavor. More heat-tolerant than sweet basil. Attractive purple stems and flowers. Pinch tips regularly to delay bolting."
+      },
+      {
+        "id": "basil-purple",
+        "name": "Purple",
+        "daysToMaturity": 70,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 12,
+        "rowSpacingInches": 18,
+        "harvestWindowDays": 85,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": false,
+        "notes": "Slower to mature than sweet basil. Deep purple foliage adds ornamental value. Germination can be slightly lower — sow extra seeds. Flavor is milder with a slight clove note."
+      }
+    ]
+  },
+  {
+    "id": "cilantro",
+    "category": "Apiaceae",
+    "commonName": "Cilantro",
+    "varieties": [
+      {
+        "id": "cilantro-slow-bolt",
+        "name": "Slow Bolt",
+        "daysToMaturity": 50,
+        "daysToTransplant": 21,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 6,
+        "rowSpacingInches": 12,
+        "harvestWindowDays": 21,
+        "bedPrepLeadDays": 5,
+        "successionIntervalDays": 14,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Bred to resist bolting in warm weather. Direct sow preferred — cilantro has a taproot and dislikes transplanting. Succession sow every 2 weeks for continuous harvest. Allow some plants to bolt for coriander seed."
+      },
+      {
+        "id": "cilantro-santo",
+        "name": "Santo",
+        "daysToMaturity": 50,
+        "daysToTransplant": 21,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 6,
+        "rowSpacingInches": 12,
+        "harvestWindowDays": 18,
+        "bedPrepLeadDays": 5,
+        "successionIntervalDays": 14,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Popular variety with good leaf production. Bolts faster than Slow Bolt in heat — best for spring and fall planting. Succession sow every 2 weeks. Tolerates light frost."
+      }
+    ]
+  },
+  {
+    "id": "parsley",
+    "category": "Apiaceae",
+    "commonName": "Parsley",
+    "varieties": [
+      {
+        "id": "parsley-italian-flat-leaf",
+        "name": "Italian Flat-Leaf",
+        "daysToMaturity": 75,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 8,
+        "rowSpacingInches": 12,
+        "harvestWindowDays": 120,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": 21,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Biennial grown as an annual. Stronger flavor than curly types. Slow to germinate (14–28 days) — soak seeds overnight to speed things up. Cut outer stems first to encourage continued growth. Frost-tolerant and can overwinter in mild climates."
+      },
+      {
+        "id": "parsley-curly",
+        "name": "Curly",
+        "daysToMaturity": 70,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 8,
+        "rowSpacingInches": 12,
+        "harvestWindowDays": 120,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": 21,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Classic garnish variety with tightly curled leaves. Slightly milder flavor than flat-leaf. Slow germination — be patient. Biennial; will bolt in second year. Tolerates frost and partial shade."
+      }
+    ]
+  },
+  {
+    "id": "dill",
+    "category": "Apiaceae",
+    "commonName": "Dill",
+    "varieties": [
+      {
+        "id": "dill-bouquet",
+        "name": "Bouquet",
+        "daysToMaturity": 45,
+        "daysToTransplant": null,
+        "seedingDepthInches": 0.25,
+        "spacingInches": 9,
+        "rowSpacingInches": 12,
+        "harvestWindowDays": 21,
+        "bedPrepLeadDays": 5,
+        "successionIntervalDays": 14,
+        "directSow": true,
+        "indoorStart": false,
+        "frostHardy": true,
+        "notes": "Fast-growing annual with large seed heads ideal for pickling. Direct sow only — dill has a taproot and does not transplant well. Succession sow every 2 weeks. Self-seeds readily if flower heads are left. Tolerates light frost."
+      }
+    ]
+  },
+  {
+    "id": "mint",
+    "category": "Lamiaceae",
+    "commonName": "Mint",
+    "varieties": [
+      {
+        "id": "mint-peppermint",
+        "name": "Peppermint",
+        "daysToMaturity": 90,
+        "daysToTransplant": 35,
+        "seedingDepthInches": 0.125,
+        "spacingInches": 18,
+        "rowSpacingInches": 24,
+        "harvestWindowDays": 150,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Aggressive perennial spreader — grow in containers or use root barriers. Propagates easily from cuttings or runners. High menthol content gives strong cooling flavor. Harvest before flowering for best flavor. Cut back hard in midsummer to encourage fresh growth."
+      },
+      {
+        "id": "mint-spearmint",
+        "name": "Spearmint",
+        "daysToMaturity": 90,
+        "daysToTransplant": 35,
+        "seedingDepthInches": 0.125,
+        "spacingInches": 18,
+        "rowSpacingInches": 24,
+        "harvestWindowDays": 150,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Milder and sweeter than peppermint. Equally aggressive — always contain plantings. Thrives in partial shade with moist soil. Dies back in winter but returns reliably in spring. Frequent harvesting keeps plants bushy."
+      }
+    ]
+  },
+  {
+    "id": "rosemary",
+    "category": "Lamiaceae",
+    "commonName": "Rosemary",
+    "varieties": [
+      {
+        "id": "rosemary-common",
+        "name": "Common",
+        "daysToMaturity": 120,
+        "daysToTransplant": 56,
+        "seedingDepthInches": 0.125,
+        "spacingInches": 24,
+        "rowSpacingInches": 36,
+        "harvestWindowDays": 365,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": false,
+        "indoorStart": true,
+        "frostHardy": false,
+        "notes": "Woody perennial hardy to USDA zone 7–8. Very slow to germinate (21–28 days) with low germination rates — propagation from cuttings is more reliable. Requires excellent drainage; do not overwater. Full sun, lean soil. In cold climates grow in pots and bring indoors for winter."
+      }
+    ]
+  },
+  {
+    "id": "thyme",
+    "category": "Lamiaceae",
+    "commonName": "Thyme",
+    "varieties": [
+      {
+        "id": "thyme-common",
+        "name": "Common",
+        "daysToMaturity": 90,
+        "daysToTransplant": 42,
+        "seedingDepthInches": 0.125,
+        "spacingInches": 12,
+        "rowSpacingInches": 18,
+        "harvestWindowDays": 365,
+        "bedPrepLeadDays": 7,
+        "successionIntervalDays": null,
+        "directSow": true,
+        "indoorStart": true,
+        "frostHardy": true,
+        "notes": "Hardy perennial (zones 5–9). Slow to germinate — start indoors for best results. Prefers well-drained soil and full sun. Trim after flowering to keep plants compact and prevent woodiness. Harvest lightly in the first year to let plants establish."
+      }
+    ]
+  }
+]

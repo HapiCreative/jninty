@@ -18,7 +18,7 @@ import SeedBankPage from "./pages/SeedBankPage";
 import SeedDetailPage from "./pages/SeedDetailPage";
 import SeedFormPage from "./pages/SeedFormPage";
 import QuickLogPage from "./pages/QuickLogPage";
-import PlantingCalendarPage from "./pages/PlantingCalendarPage";
+import CalendarPage from "./pages/CalendarPage";
 import SeasonComparisonPage from "./pages/SeasonComparisonPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import ExpenseFormPage from "./pages/ExpenseFormPage";
@@ -29,6 +29,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import InstallPrompt from "./components/InstallPrompt";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 import { rebuildIndex, startListening } from "./db/search.ts";
+import { buildCropSearchIndex } from "./services/cropDBSearch.ts";
 import { checkAndNotifyTasks } from "./services/notifications.ts";
 import {
   startNotificationListening,
@@ -55,6 +56,11 @@ export default function App() {
     rebuildIndex()
       .then(() => startListening())
       .catch(console.error);
+  }, []);
+
+  // Initialize CropDB search index (separate MiniSearch instance)
+  useEffect(() => {
+    buildCropSearchIndex([]);
   }, []);
 
   // Check for due/overdue tasks on mount and window focus
@@ -90,7 +96,7 @@ export default function App() {
               <Route path="seeds/new" element={<SeedFormPage />} />
               <Route path="seeds/:id" element={<SeedDetailPage />} />
               <Route path="seeds/:id/edit" element={<SeedFormPage />} />
-              <Route path="calendar" element={<PlantingCalendarPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
               <Route path="seasons/compare" element={<SeasonComparisonPage />} />
               <Route
                 path="map"

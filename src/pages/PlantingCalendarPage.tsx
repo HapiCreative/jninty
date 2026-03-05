@@ -18,7 +18,7 @@ import {
   isAfter,
 } from "date-fns";
 import { useSettings } from "../hooks/useSettings";
-import { plantRepository, plantingRepository, seasonRepository, taskRepository } from "../db/index.ts";
+import { plantRepository, plantingRepository, seasonRepository, taskRepository, scheduleTaskRepository } from "../db/index.ts";
 import { getBySpecies } from "../services/knowledgeBase";
 import {
   computePlantingWindows,
@@ -29,11 +29,17 @@ import {
   formatTemp,
   type WeatherData,
 } from "../services/weather";
+import { useRescheduling } from "../hooks/useRescheduling.ts";
+import { useTaskFilter } from "../hooks/useTaskFilter.ts";
+import { useToast } from "../components/ui/Toast.tsx";
+import TaskFilterToolbar from "../components/calendar/TaskFilterToolbar.tsx";
+import { TASK_TYPE_COLORS, TASK_TYPE_LABELS } from "../components/calendar/taskTypeColors.ts";
 import Card from "../components/ui/Card";
-import { ChevronLeftIcon, ChevronRightIcon } from "../components/icons";
+import { ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
 import type { PlantInstance } from "../validation/plantInstance.schema";
 import type { Task } from "../validation/task.schema";
+import type { ScheduleTask } from "../validation/scheduleTask.schema.ts";
 
 // ─── Window color config ───
 
@@ -98,6 +104,9 @@ export default function PlantingCalendarPage() {
   const { settings, loading: settingsLoading } = useSettings();
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const filter = useTaskFilter();
+  const { completeWithPropagation } = useRescheduling();
+  const { toast } = useToast();
 
   const activeSeason = usePouchQuery(() => seasonRepository.getActive());
   const allPlantings = usePouchQuery(
@@ -106,6 +115,7 @@ export default function PlantingCalendarPage() {
   );
   const allPlants = usePouchQuery(() => plantRepository.getAll());
   const allTasks = usePouchQuery(() => taskRepository.getAll());
+  const allScheduleTasks = usePouchQuery(() => scheduleTaskRepository.getAll());
 
   // Weather frost warning
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -232,6 +242,28 @@ export default function PlantingCalendarPage() {
     return map;
   }, [allTasks, currentMonth]);
 
+  // Schedule tasks for the visible month
+  const monthScheduleTasks = useMemo(() => {
+    if (!allScheduleTasks) return new Map<string, ScheduleTask[]>();
+    const map = new Map<string, ScheduleTask[]>();
+    const mStart = startOfMonth(currentMonth);
+    const mEnd = endOfMonth(currentMonth);
+
+    for (const task of allScheduleTasks) {
+      if (!filter.isVisible(task.taskType)) continue;
+      const taskDate = parseISO(task.scheduledDate);
+      if (isBefore(taskDate, mStart) || isAfter(taskDate, mEnd)) continue;
+      const key = task.scheduledDate;
+      const existing = map.get(key);
+      if (existing) {
+        existing.push(task);
+      } else {
+        map.set(key, [task]);
+      }
+    }
+    return map;
+  }, [allScheduleTasks, currentMonth, filter]);
+
   // Events for selected day
   const selectedDayEvents = useMemo(() => {
     if (!selectedDay) return [];
@@ -246,13 +278,41 @@ export default function PlantingCalendarPage() {
     return monthTasks.get(key) ?? [];
   }, [selectedDay, monthTasks]);
 
+  // Schedule tasks for selected day
+  const selectedDayScheduleTasks = useMemo(() => {
+    if (!selectedDay) return [];
+    const key = format(selectedDay, "yyyy-MM-dd");
+    return monthScheduleTasks.get(key) ?? [];
+  }, [selectedDay, monthScheduleTasks]);
+
+  // Handle schedule task completion
+  async function handleCompleteScheduleTask(task: ScheduleTask) {
+    try {
+      const today = format(new Date(), "yyyy-MM-dd");
+      if (task.isCompleted) {
+        await scheduleTaskRepository.uncomplete(task.id);
+      } else {
+        const result = await completeWithPropagation(task.id, today);
+        if (result) {
+          toast(
+            `Downstream tasks shifted by +${result.daysDelta} day${result.daysDelta === 1 ? "" : "s"}`,
+            "info",
+          );
+        }
+      }
+    } catch {
+      toast("Failed to update task", "error");
+    }
+  }
+
   // Loading
   if (
     settingsLoading ||
     activeSeason === undefined ||
     allPlantings === undefined ||
     allPlants === undefined ||
-    allTasks === undefined
+    allTasks === undefined ||
+    allScheduleTasks === undefined
   ) {
     return (
       <div className="mx-auto max-w-2xl space-y-4 p-4" role="status" aria-label="Loading calendar">
@@ -328,6 +388,11 @@ export default function PlantingCalendarPage() {
         </span>
       </div>
 
+      {/* Task type filter */}
+      <div className="mt-3">
+        <TaskFilterToolbar filter={filter} />
+      </div>
+
       {/* Calendar grid */}
       <div className="mt-3 overflow-hidden rounded-xl border border-border-default bg-surface-elevated shadow-sm">
         {/* Weekday headers */}
@@ -353,8 +418,10 @@ export default function PlantingCalendarPage() {
             const isFirstFrost = isSameDay(day, firstFrostDate);
             const events = dayEventsMap.get(dateKey);
             const tasks = monthTasks.get(dateKey);
+            const scheduleTasks = monthScheduleTasks.get(dateKey);
             const hasEvents = events != null && events.length > 0;
             const hasTasks = tasks != null && tasks.length > 0;
+            const hasScheduleTasks = scheduleTasks != null && scheduleTasks.length > 0;
 
             // Collect unique window type dots for this day
             const uniqueDots = new Set<string>();
@@ -389,7 +456,7 @@ export default function PlantingCalendarPage() {
                 </span>
 
                 {/* Event dots */}
-                {(hasEvents || hasTasks) && (
+                {(hasEvents || hasTasks || hasScheduleTasks) && (
                   <div className="mt-auto flex flex-wrap justify-center gap-0.5 pb-0.5">
                     {WINDOW_TYPES.map((wt) =>
                       uniqueDots.has(wt.key) ? (
@@ -399,6 +466,17 @@ export default function PlantingCalendarPage() {
                         />
                       ) : null,
                     )}
+                    {hasScheduleTasks &&
+                      (() => {
+                        const stTypes = new Set(scheduleTasks!.map((t) => t.taskType));
+                        return [...stTypes].map((tt) => (
+                          <span
+                            key={`st-${tt}`}
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{ backgroundColor: TASK_TYPE_COLORS[tt] }}
+                          />
+                        ));
+                      })()}
                     {hasTasks && (
                       <span className="h-1.5 w-1.5 rotate-45 bg-brown-600" />
                     )}
@@ -442,7 +520,10 @@ export default function PlantingCalendarPage() {
       </Card>
 
       {/* Selected day detail panel */}
-      {selectedDay && (selectedDayEvents.length > 0 || selectedDayTasks.length > 0) && (
+      {selectedDay &&
+        (selectedDayEvents.length > 0 ||
+          selectedDayTasks.length > 0 ||
+          selectedDayScheduleTasks.length > 0) && (
         <Card className="mt-4">
           <h3 className="font-display text-base font-semibold text-text-heading">
             {format(selectedDay, "EEEE, MMMM d, yyyy")}
@@ -468,10 +549,60 @@ export default function PlantingCalendarPage() {
             </div>
           )}
 
-          {/* Tasks */}
+          {/* Schedule tasks */}
+          {selectedDayScheduleTasks.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-text-secondary">
+                Schedule Tasks
+              </p>
+              {selectedDayScheduleTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2"
+                  style={{ backgroundColor: `${TASK_TYPE_COLORS[task.taskType]}15` }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleCompleteScheduleTask(task)}
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors"
+                    style={{
+                      borderColor: TASK_TYPE_COLORS[task.taskType],
+                      backgroundColor: task.isCompleted
+                        ? TASK_TYPE_COLORS[task.taskType]
+                        : "transparent",
+                    }}
+                  >
+                    {task.isCompleted && (
+                      <CheckIcon className="h-3 w-3 text-white" />
+                    )}
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <span
+                      className={`text-sm font-medium ${task.isCompleted ? "line-through text-text-muted" : "text-text-primary"}`}
+                    >
+                      {task.title}
+                    </span>
+                    <span className="ml-2 text-xs text-text-muted">
+                      {task.cropName}
+                    </span>
+                  </div>
+                  <span
+                    className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-white"
+                    style={{ backgroundColor: TASK_TYPE_COLORS[task.taskType] }}
+                  >
+                    {TASK_TYPE_LABELS[task.taskType]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Manual tasks */}
           {selectedDayTasks.length > 0 && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs font-medium text-text-secondary uppercase tracking-wide">Tasks</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-text-secondary">
+                Tasks
+              </p>
               {selectedDayTasks.map((task) => (
                 <div
                   key={task.id}
@@ -489,7 +620,10 @@ export default function PlantingCalendarPage() {
       )}
 
       {/* Selected day with no events */}
-      {selectedDay && selectedDayEvents.length === 0 && selectedDayTasks.length === 0 && (
+      {selectedDay &&
+        selectedDayEvents.length === 0 &&
+        selectedDayTasks.length === 0 &&
+        selectedDayScheduleTasks.length === 0 && (
         <Card className="mt-4">
           <p className="text-center text-sm text-text-secondary">
             No planting windows or tasks on {format(selectedDay, "MMMM d")}.

@@ -1,8 +1,13 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { format, parseISO, formatISO, startOfDay } from "date-fns";
-import { taskRepository, plantRepository, seasonRepository } from "../db/index.ts";
-import type { Task, TaskPriority, PlantInstance } from "../types";
+import {
+  taskRepository,
+  plantRepository,
+  seasonRepository,
+  scheduleTaskRepository,
+} from "../db/index.ts";
+import type { Task, TaskPriority, PlantInstance, ScheduleTask } from "../types";
 import {
   PRIORITY_LABELS,
   PRIORITY_VARIANT,
@@ -24,7 +29,16 @@ import { useToast } from "../components/ui/Toast";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { useTaskSuggestions } from "../hooks/useTaskSuggestions.ts";
 import { useNotifications } from "../hooks/useNotifications.ts";
+import { useRescheduling } from "../hooks/useRescheduling.ts";
 import NotificationPrompt from "../components/NotificationPrompt.tsx";
+import TaskOriginFilter, {
+  type TaskOrigin,
+} from "../components/tasks/TaskOriginFilter.tsx";
+import TaskTypeFilter from "../components/tasks/TaskTypeFilter.tsx";
+import ScheduleTaskItem from "../components/tasks/ScheduleTaskItem.tsx";
+import DailyChecklist from "../components/tasks/DailyChecklist.tsx";
+import WeeklyChecklist from "../components/tasks/WeeklyChecklist.tsx";
+import type { ScheduleTaskType } from "../validation/scheduleTask.schema.ts";
 
 // ─── Constants ───
 
@@ -37,11 +51,21 @@ const PRIORITY_ORDER: Record<TaskPriority, number> = {
   low: 2,
 };
 
+type TaskView = "list" | "daily" | "weekly";
+
+const ALL_TASK_TYPES = new Set<ScheduleTaskType>([
+  "seed_start",
+  "bed_prep",
+  "transplant",
+  "cultivate",
+  "harvest",
+]);
+
 function todayDate(): string {
   return formatISO(startOfDay(new Date()), { representation: "date" });
 }
 
-// ─── Task item ───
+// ─── Task item (manual tasks) ───
 
 function TaskItem({
   task,
@@ -402,12 +426,14 @@ function TaskFormModal({
 export default function TasksPage() {
   const { toast } = useToast();
   const allTasks = usePouchQuery(() => taskRepository.getAll());
+  const allScheduleTasks = usePouchQuery(() => scheduleTaskRepository.getAll());
   const allPlants = usePouchQuery(() => plantRepository.getAll());
   const allSeasons = usePouchQuery(() => seasonRepository.getAll());
   const activeSeason = usePouchQuery(() => seasonRepository.getActive());
   const { suggestions, acceptSuggestion, dismissSuggestion } =
     useTaskSuggestions();
   const notifications = useNotifications();
+  const { completeWithPropagation } = useRescheduling();
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
 
   const [showCompleted, setShowCompleted] = useState(false);
@@ -416,6 +442,13 @@ export default function TasksPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [sortBy, setSortBy] = useState<"dueDate" | "priority">("dueDate");
   const [seasonFilter, setSeasonFilter] = useState<string | null>(null);
+
+  // New filter state
+  const [originFilter, setOriginFilter] = useState<TaskOrigin>("all");
+  const [taskTypeFilter, setTaskTypeFilter] = useState<Set<ScheduleTaskType>>(
+    () => new Set(ALL_TASK_TYPES),
+  );
+  const [view, setView] = useState<TaskView>("list");
 
   // Resolve effective filter: null = not yet user-chosen, fall back to active season
   const effectiveSeasonFilter =
@@ -431,7 +464,7 @@ export default function TasksPage() {
     return map;
   }, [allPlants]);
 
-  // Split and sort tasks
+  // Split and sort manual tasks
   const { pendingTasks, completedTasks } = useMemo(() => {
     if (!allTasks)
       return { pendingTasks: [] as Task[], completedTasks: [] as Task[] };
@@ -479,6 +512,34 @@ export default function TasksPage() {
     return { pendingTasks: pending, completedTasks: completed };
   }, [allTasks, sortBy, effectiveSeasonFilter]);
 
+  // Filter and sort schedule tasks
+  const { pendingScheduleTasks, completedScheduleTasks } = useMemo(() => {
+    if (!allScheduleTasks)
+      return {
+        pendingScheduleTasks: [] as ScheduleTask[],
+        completedScheduleTasks: [] as ScheduleTask[],
+      };
+
+    const filtered = allScheduleTasks.filter((t) =>
+      taskTypeFilter.has(t.taskType),
+    );
+
+    const pending = filtered
+      .filter((t) => !t.isCompleted)
+      .sort((a, b) => (a.scheduledDate < b.scheduledDate ? -1 : 1));
+
+    const completed = filtered
+      .filter((t) => t.isCompleted)
+      .sort((a, b) => {
+        if (a.completedAt && b.completedAt) {
+          return b.completedAt > a.completedAt ? 1 : b.completedAt < a.completedAt ? -1 : 0;
+        }
+        return 0;
+      });
+
+    return { pendingScheduleTasks: pending, completedScheduleTasks: completed };
+  }, [allScheduleTasks, taskTypeFilter]);
+
   async function handleToggleComplete(task: Task) {
     try {
       if (task.isCompleted) {
@@ -490,6 +551,28 @@ export default function TasksPage() {
       toast("Failed to update task", "error");
     }
   }
+
+  const handleCompleteScheduleTask = useCallback(
+    async (task: ScheduleTask) => {
+      try {
+        const today = todayDate();
+        if (task.isCompleted) {
+          await scheduleTaskRepository.uncomplete(task.id);
+        } else {
+          const result = await completeWithPropagation(task.id, today);
+          if (result) {
+            toast(
+              `Downstream tasks shifted by +${result.daysDelta} day${result.daysDelta === 1 ? "" : "s"}`,
+              "info",
+            );
+          }
+        }
+      } catch {
+        toast("Failed to update task", "error");
+      }
+    },
+    [completeWithPropagation, toast],
+  );
 
   async function handleDelete(id: string) {
     if (!window.confirm("Delete this task?")) return;
@@ -513,7 +596,7 @@ export default function TasksPage() {
   }
 
   // Loading state
-  if (allTasks === undefined) {
+  if (allTasks === undefined || allScheduleTasks === undefined) {
     return (
       <div className="mx-auto max-w-2xl p-4" role="status" aria-label="Loading tasks">
         <Skeleton className="h-8 w-24" />
@@ -527,7 +610,25 @@ export default function TasksPage() {
   }
 
   const today = todayDate();
-  const overdueCount = pendingTasks.filter((t) => t.dueDate < today).length;
+
+  // Compute counts based on origin filter
+  const showManual = originFilter === "all" || originFilter === "manual";
+  const showSchedule = originFilter === "all" || originFilter === "schedule";
+
+  const visiblePendingManual = showManual ? pendingTasks : [];
+  const visiblePendingSchedule = showSchedule ? pendingScheduleTasks : [];
+  const visibleCompletedManual = showManual ? completedTasks : [];
+  const visibleCompletedSchedule = showSchedule ? completedScheduleTasks : [];
+
+  const totalPending =
+    visiblePendingManual.length + visiblePendingSchedule.length;
+  const overdueManual = visiblePendingManual.filter(
+    (t) => t.dueDate < today,
+  ).length;
+  const overdueSchedule = visiblePendingSchedule.filter(
+    (t) => t.scheduledDate < today,
+  ).length;
+  const overdueCount = overdueManual + overdueSchedule;
 
   return (
     <div className="mx-auto max-w-2xl p-4">
@@ -537,7 +638,7 @@ export default function TasksPage() {
           Tasks
         </h1>
         <span className="text-sm text-text-secondary">
-          {pendingTasks.length} pending
+          {totalPending} pending
           {overdueCount > 0 && (
             <span className="ml-1 text-terracotta-600">
               ({overdueCount} overdue)
@@ -546,143 +647,176 @@ export default function TasksPage() {
         </span>
       </div>
 
-      {/* Season filter */}
-      {allSeasons && allSeasons.length > 0 && (
-        <div className="mt-3">
-          <label htmlFor="season-filter" className="sr-only">
-            Filter by season
-          </label>
-          <select
-            id="season-filter"
-            value={effectiveSeasonFilter}
-            onChange={(e) => setSeasonFilter(e.target.value)}
-            className={selectClass}
-          >
-            <option value="">All Seasons</option>
-            {allSeasons.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.year})
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {/* Sort control */}
-      {pendingTasks.length > 0 && (
-        <div className="mt-3 flex items-center gap-2">
-          <span className="text-xs text-text-secondary">Sort by:</span>
-          <div className="flex overflow-hidden rounded-lg border border-border-strong">
-            {(
-              [
-                { value: "dueDate" as const, label: "Due Date" },
-                { value: "priority" as const, label: "Priority" },
-              ] as const
-            ).map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => setSortBy(opt.value)}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors ${
-                  sortBy === opt.value
-                    ? "bg-primary text-text-on-primary"
-                    : "bg-surface text-text-secondary hover:bg-surface-muted"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Suggested Tasks */}
-      {suggestions && suggestions.length > 0 && (
-        <section className="mt-4">
-          <h2 className="font-display text-base font-semibold text-text-heading">
-            Suggested ({suggestions.length})
-          </h2>
-          <div className="mt-2">
-            <SuggestionsList
-              suggestions={suggestions}
-              plantNames={plantNames}
-              onAccept={acceptSuggestion}
-              onDismiss={dismissSuggestion}
-              showBadge
-            />
-          </div>
-        </section>
-      )}
-
-      {/* Pending tasks */}
-      {pendingTasks.length === 0 && completedTasks.length === 0 ? (
-        <div className="mt-12 text-center">
-          <ClipboardCheckIcon className="mx-auto h-16 w-16 text-text-muted" />
-          <p className="mt-4 text-lg font-medium text-text-secondary">No tasks yet</p>
-          <p className="mt-1 text-sm text-text-secondary">
-            Add your first task with the + button below.
-          </p>
-        </div>
-      ) : pendingTasks.length === 0 ? (
-        <Card className="mt-4">
-          <p className="text-center text-sm text-text-secondary">
-            All tasks completed!
-          </p>
-        </Card>
-      ) : (
-        <div className="mt-4 space-y-2">
-          {pendingTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              isOverdue={task.dueDate < today}
-              plantName={
-                task.plantInstanceId
-                  ? plantNames.get(task.plantInstanceId)
-                  : undefined
-              }
-              isExpanded={expandedTaskId === task.id}
-              onToggle={() =>
-                setExpandedTaskId(
-                  expandedTaskId === task.id ? null : task.id,
-                )
-              }
-              onComplete={() => handleToggleComplete(task)}
-              onEdit={() => handleEdit(task)}
-              onDelete={() => handleDelete(task.id)}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Completed tasks — collapsible */}
-      {completedTasks.length > 0 && (
-        <div className="mt-6">
+      {/* View switcher */}
+      <div className="mt-3 flex items-center gap-2">
+        {(
+          [
+            { value: "list" as const, label: "List" },
+            { value: "daily" as const, label: "Daily" },
+            { value: "weekly" as const, label: "Weekly" },
+          ] as const
+        ).map((opt) => (
           <button
+            key={opt.value}
             type="button"
-            onClick={() => setShowCompleted(!showCompleted)}
-            className="flex w-full items-center gap-2 text-left"
+            onClick={() => setView(opt.value)}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              view === opt.value
+                ? "bg-primary text-text-on-primary"
+                : "bg-surface-muted text-text-secondary hover:bg-surface"
+            }`}
           >
-            <ChevronDownIcon
-              className={`h-4 w-4 text-text-secondary transition-transform ${
-                showCompleted ? "" : "-rotate-90"
-              }`}
-            />
-            <span className="font-display text-lg font-semibold text-text-heading">
-              Completed
-            </span>
-            <span className="text-sm text-text-secondary">
-              ({completedTasks.length})
-            </span>
+            {opt.label}
           </button>
+        ))}
+      </div>
 
-          {showCompleted && (
-            <div className="mt-2 space-y-2">
-              {completedTasks.map((task) => (
+      {/* Filters row */}
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <TaskOriginFilter value={originFilter} onChange={setOriginFilter} />
+
+        {showSchedule && (
+          <TaskTypeFilter
+            selected={taskTypeFilter}
+            onChange={setTaskTypeFilter}
+          />
+        )}
+      </div>
+
+      {/* Daily checklist view */}
+      {view === "daily" && (
+        <div className="mt-4">
+          <DailyChecklist
+            scheduleTasks={visiblePendingSchedule}
+            manualTasks={visiblePendingManual}
+            today={today}
+            onCompleteScheduleTask={handleCompleteScheduleTask}
+            onCompleteManualTask={(t) => handleToggleComplete(t)}
+          />
+        </div>
+      )}
+
+      {/* Weekly checklist view */}
+      {view === "weekly" && (
+        <div className="mt-4">
+          <WeeklyChecklist
+            scheduleTasks={visiblePendingSchedule}
+            manualTasks={visiblePendingManual}
+            today={today}
+            onCompleteScheduleTask={handleCompleteScheduleTask}
+            onCompleteManualTask={(t) => handleToggleComplete(t)}
+          />
+        </div>
+      )}
+
+      {/* List view */}
+      {view === "list" && (
+        <>
+          {/* Season filter */}
+          {allSeasons && allSeasons.length > 0 && (
+            <div className="mt-3">
+              <label htmlFor="season-filter" className="sr-only">
+                Filter by season
+              </label>
+              <select
+                id="season-filter"
+                value={effectiveSeasonFilter}
+                onChange={(e) => setSeasonFilter(e.target.value)}
+                className={selectClass}
+              >
+                <option value="">All Seasons</option>
+                {allSeasons.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name} ({s.year})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Sort control */}
+          {totalPending > 0 && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-text-secondary">Sort by:</span>
+              <div className="flex overflow-hidden rounded-lg border border-border-strong">
+                {(
+                  [
+                    { value: "dueDate" as const, label: "Due Date" },
+                    { value: "priority" as const, label: "Priority" },
+                  ] as const
+                ).map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setSortBy(opt.value)}
+                    className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                      sortBy === opt.value
+                        ? "bg-primary text-text-on-primary"
+                        : "bg-surface text-text-secondary hover:bg-surface-muted"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Suggested Tasks */}
+          {suggestions && suggestions.length > 0 && (
+            <section className="mt-4">
+              <h2 className="font-display text-base font-semibold text-text-heading">
+                Suggested ({suggestions.length})
+              </h2>
+              <div className="mt-2">
+                <SuggestionsList
+                  suggestions={suggestions}
+                  plantNames={plantNames}
+                  onAccept={acceptSuggestion}
+                  onDismiss={dismissSuggestion}
+                  showBadge
+                />
+              </div>
+            </section>
+          )}
+
+          {/* Empty state */}
+          {totalPending === 0 &&
+          visibleCompletedManual.length === 0 &&
+          visibleCompletedSchedule.length === 0 ? (
+            <div className="mt-12 text-center">
+              <ClipboardCheckIcon className="mx-auto h-16 w-16 text-text-muted" />
+              <p className="mt-4 text-lg font-medium text-text-secondary">
+                No tasks yet
+              </p>
+              <p className="mt-1 text-sm text-text-secondary">
+                Add your first task with the + button below.
+              </p>
+            </div>
+          ) : totalPending === 0 ? (
+            <Card className="mt-4">
+              <p className="text-center text-sm text-text-secondary">
+                All tasks completed!
+              </p>
+            </Card>
+          ) : (
+            <div className="mt-4 space-y-2">
+              {/* Pending schedule tasks */}
+              {visiblePendingSchedule.map((task) => (
+                <ScheduleTaskItem
+                  key={task.id}
+                  task={task}
+                  isOverdue={task.scheduledDate < today}
+                  onComplete={() => handleCompleteScheduleTask(task)}
+                />
+              ))}
+
+              {/* Pending manual tasks */}
+              {visiblePendingManual.map((task) => (
                 <TaskItem
                   key={task.id}
                   task={task}
-                  isOverdue={false}
+                  isOverdue={task.dueDate < today}
                   plantName={
                     task.plantInstanceId
                       ? plantNames.get(task.plantInstanceId)
@@ -701,7 +835,68 @@ export default function TasksPage() {
               ))}
             </div>
           )}
-        </div>
+
+          {/* Completed tasks — collapsible */}
+          {(visibleCompletedManual.length > 0 ||
+            visibleCompletedSchedule.length > 0) && (
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => setShowCompleted(!showCompleted)}
+                className="flex w-full items-center gap-2 text-left"
+              >
+                <ChevronDownIcon
+                  className={`h-4 w-4 text-text-secondary transition-transform ${
+                    showCompleted ? "" : "-rotate-90"
+                  }`}
+                />
+                <span className="font-display text-lg font-semibold text-text-heading">
+                  Completed
+                </span>
+                <span className="text-sm text-text-secondary">
+                  (
+                  {visibleCompletedManual.length +
+                    visibleCompletedSchedule.length}
+                  )
+                </span>
+              </button>
+
+              {showCompleted && (
+                <div className="mt-2 space-y-2">
+                  {visibleCompletedSchedule.map((task) => (
+                    <ScheduleTaskItem
+                      key={task.id}
+                      task={task}
+                      isOverdue={false}
+                      onComplete={() => handleCompleteScheduleTask(task)}
+                    />
+                  ))}
+                  {visibleCompletedManual.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      isOverdue={false}
+                      plantName={
+                        task.plantInstanceId
+                          ? plantNames.get(task.plantInstanceId)
+                          : undefined
+                      }
+                      isExpanded={expandedTaskId === task.id}
+                      onToggle={() =>
+                        setExpandedTaskId(
+                          expandedTaskId === task.id ? null : task.id,
+                        )
+                      }
+                      onComplete={() => handleToggleComplete(task)}
+                      onEdit={() => handleEdit(task)}
+                      onDelete={() => handleDelete(task.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {/* FAB */}

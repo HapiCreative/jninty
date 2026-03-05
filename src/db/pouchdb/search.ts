@@ -4,10 +4,11 @@ import { stripPouchFields, type PouchDoc } from "./utils.ts";
 import type { PlantInstance } from "../../validation/plantInstance.schema.ts";
 import type { JournalEntry } from "../../validation/journalEntry.schema.ts";
 import type { UserPlantKnowledge } from "../../validation/userPlantKnowledge.schema.ts";
+import type { ScheduleTask } from "../../validation/scheduleTask.schema.ts";
 
 // ─── Types ───
 
-type EntityType = "plant" | "journal" | "userPlantKnowledge";
+type EntityType = "plant" | "journal" | "userPlantKnowledge" | "scheduleTask";
 
 type SearchDocument = {
   id: string;
@@ -110,6 +111,20 @@ function userKnowledgeToDocument(entry: UserPlantKnowledge): SearchDocument {
   };
 }
 
+function scheduleTaskToDocument(task: ScheduleTask): SearchDocument {
+  return {
+    id: task.id,
+    entityType: "scheduleTask",
+    title: task.title,
+    body: task.description ?? "",
+    species: task.cropName,
+    variety: task.varietyName,
+    nickname: "",
+    tags: task.bedName ?? "",
+    activityType: task.taskType,
+  };
+}
+
 // ─── Internal helpers ───
 
 function addOrUpdateDocument(doc: SearchDocument): void {
@@ -166,6 +181,8 @@ export function handleChange(change: PouchDB.Core.ChangesResponseChange<object>)
     addOrUpdateDocument(journalToDocument(entity as unknown as JournalEntry));
   } else if (docType === "userPlantKnowledge") {
     addOrUpdateDocument(userKnowledgeToDocument(entity as unknown as UserPlantKnowledge));
+  } else if (docType === "scheduleTask") {
+    addOrUpdateDocument(scheduleTaskToDocument(entity as unknown as ScheduleTask));
   }
 }
 
@@ -216,7 +233,7 @@ export async function rebuildIndex(): Promise<number> {
     if (!raw) continue;
 
     const docType = (raw as unknown as Record<string, unknown>)["docType"] as string | undefined;
-    if (docType !== "plant" && docType !== "journal" && docType !== "userPlantKnowledge") continue;
+    if (docType !== "plant" && docType !== "journal" && docType !== "userPlantKnowledge" && docType !== "scheduleTask") continue;
 
     const entity = stripPouchFields(raw as PouchDoc<Record<string, unknown>>);
     const deletedAt = (entity as Record<string, unknown>)["deletedAt"];
@@ -228,6 +245,8 @@ export async function rebuildIndex(): Promise<number> {
       addOrUpdateDocument(journalToDocument(entity as unknown as JournalEntry));
     } else if (docType === "userPlantKnowledge") {
       addOrUpdateDocument(userKnowledgeToDocument(entity as unknown as UserPlantKnowledge));
+    } else if (docType === "scheduleTask") {
+      addOrUpdateDocument(scheduleTaskToDocument(entity as unknown as ScheduleTask));
     }
     count++;
   }
