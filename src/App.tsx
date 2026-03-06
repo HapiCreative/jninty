@@ -92,6 +92,7 @@ export default function App() {
               <Route path="plants/:id/edit" element={<PlantFormPage />} />
               <Route path="journal" element={<JournalPage />} />
               <Route path="journal/new" element={<JournalEntryFormPage />} />
+              <Route path="journal/:id/edit" element={<JournalEntryFormPage />} />
               <Route path="seeds" element={<SeedBankPage />} />
               <Route path="seeds/new" element={<SeedFormPage />} />
               <Route path="seeds/:id" element={<SeedDetailPage />} />

@@ -96,6 +96,9 @@ export default function SettingsPage() {
   const [clearingOriginals, setClearingOriginals] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [showCsvDialog, setShowCsvDialog] = useState(false);
+  const [demoBusy, setDemoBusy] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
+  const [clearDemoBusy, setClearDemoBusy] = useState(false);
 
   // Sync
   const {
@@ -374,6 +377,38 @@ export default function SettingsPage() {
       toast("Rebuild failed", "error");
     } finally {
       setRebuildBusy(false);
+    }
+  };
+
+  const handleLoadDemo = async () => {
+    setDemoBusy(true);
+    setDemoError(null);
+    try {
+      const { loadDemoData } = await import("../services/demoSeeder.ts");
+      await loadDemoData();
+      toast("Demo data loaded", "success");
+      // Reload page so all queries refetch
+      window.location.reload();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to load demo data";
+      setDemoError(msg);
+      toast("Failed to load demo data", "error");
+    } finally {
+      setDemoBusy(false);
+    }
+  };
+
+  const handleClearDemo = async () => {
+    setClearDemoBusy(true);
+    try {
+      const { clearDemoData } = await import("../services/demoSeeder.ts");
+      await clearDemoData();
+      toast("All data cleared", "success");
+      window.location.reload();
+    } catch {
+      toast("Failed to clear data", "error");
+    } finally {
+      setClearDemoBusy(false);
     }
   };
 
@@ -1354,6 +1389,34 @@ export default function SettingsPage() {
             </div>
             <p className="mt-1 text-xs text-text-muted">
               Restore from a backup ZIP or import plants from a CSV file
+            </p>
+          </div>
+
+          {/* Demo data */}
+          <div>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => void handleLoadDemo()}
+                disabled={demoBusy || clearDemoBusy}
+              >
+                {demoBusy ? "Loading…" : "Load Demo Data"}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => void handleClearDemo()}
+                disabled={demoBusy || clearDemoBusy}
+                className="text-red-600 hover:text-red-700"
+              >
+                {clearDemoBusy ? "Clearing…" : "Clear All Data"}
+              </Button>
+            </div>
+            {demoError && (
+              <p className="mt-1 text-sm text-red-600">{demoError}</p>
+            )}
+            <p className="mt-1 text-xs text-text-muted">
+              Load sample plants, journal entries, tasks, and more for
+              exploration. Clear removes all data from the app.
             </p>
           </div>
 

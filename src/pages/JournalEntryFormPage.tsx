@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { ZodError } from "zod";
 import { plantRepository, photoRepository, journalRepository, gardenBedRepository } from "../db/index.ts";
@@ -51,7 +51,9 @@ const FIELD_LABELS: Record<string, string> = {
 
 export default function JournalEntryFormPage() {
   const navigate = useNavigate();
+  const { id: editId } = useParams<{ id: string }>();
   const { settings } = useSettings();
+  const isEdit = Boolean(editId);
 
   // Form state
   const [activityType, setActivityType] = useState<ActivityType | "">("");
@@ -74,10 +76,38 @@ export default function JournalEntryFormPage() {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
+  // Edit mode: existing entry & its season
+  const [existingSeasonId, setExistingSeasonId] = useState<string | null>(null);
+  const [existingPhotoIds, setExistingPhotoIds] = useState<string[]>([]);
+  const [loaded, setLoaded] = useState(!isEdit);
+
   // Load data for dropdowns + active season
   const plants = usePouchQuery(() => plantRepository.getByStatus("active"));
   const gardenBeds = usePouchQuery(() => gardenBedRepository.getAll());
   const activeSeason = useActiveSeason();
+
+  // Load existing entry for edit mode
+  useEffect(() => {
+    if (!editId) return;
+    let cancelled = false;
+    void journalRepository.getById(editId).then((entry) => {
+      if (cancelled || !entry) return;
+      setActivityType(entry.activityType);
+      setPlantId(entry.plantInstanceId ?? "");
+      setBedId(entry.bedId ?? "");
+      setTitle(entry.title ?? "");
+      setBody(entry.body);
+      setIsMilestone(entry.isMilestone);
+      setMilestoneType(entry.milestoneType ?? "");
+      setHarvestWeight(
+        entry.harvestWeight != null ? String(entry.harvestWeight) : "",
+      );
+      setExistingSeasonId(entry.seasonId);
+      setExistingPhotoIds(entry.photoIds);
+      setLoaded(true);
+    });
+    return () => { cancelled = true; };
+  }, [editId]);
 
   // Cleanup preview URLs on unmount
   useEffect(() => {
@@ -136,8 +166,8 @@ export default function JournalEntryFormPage() {
     setSaving(true);
 
     try {
-      // Save photos
-      const photoIds: string[] = [];
+      // Save new photos
+      const newPhotoIds: string[] = [];
       for (const p of photos) {
         const saved = await photoRepository.createWithFiles({
           thumbnailBlob: p.thumbnailBlob,
@@ -146,12 +176,17 @@ export default function JournalEntryFormPage() {
           width: p.width,
           height: p.height,
         });
-        photoIds.push(saved.id);
+        newPhotoIds.push(saved.id);
       }
 
-      // Build input — use conditional spread for optional fields
-      // to satisfy exactOptionalPropertyTypes
-      if (!activeSeason) {
+      // Combine existing + new photo IDs for edit mode
+      const photoIds = isEdit
+        ? [...existingPhotoIds, ...newPhotoIds]
+        : newPhotoIds;
+
+      // Determine season: keep existing in edit mode, otherwise use active
+      const seasonId = isEdit ? existingSeasonId : activeSeason?.id;
+      if (!seasonId) {
         setErrors(["No active season found. Create one in Settings."]);
         setSaving(false);
         return;
@@ -159,26 +194,11 @@ export default function JournalEntryFormPage() {
 
       const weight = parseFloat(harvestWeight);
 
-      // Auto-capture weather snapshot if location is configured
-      let weatherSnapshot:
-        | { tempC: number; humidity: number; conditions: string }
-        | undefined;
-      if (settings.latitude != null && settings.longitude != null) {
-        const snapshot = await fetchWeatherSnapshot(
-          settings.latitude,
-          settings.longitude,
-        );
-        if (snapshot) {
-          weatherSnapshot = snapshot;
-        }
-      }
-
-      const entry = await journalRepository.create({
+      const fields = {
         activityType: activityType as ActivityType,
         body: body.trim(),
         photoIds,
         isMilestone,
-        seasonId: activeSeason.id,
         ...(plantId ? { plantInstanceId: plantId } : {}),
         ...(bedId ? { bedId } : {}),
         ...(title.trim() ? { title: title.trim() } : {}),
@@ -188,8 +208,32 @@ export default function JournalEntryFormPage() {
         ...(activityType === "harvest" && !isNaN(weight) && weight >= 0
           ? { harvestWeight: weight }
           : {}),
-        ...(weatherSnapshot ? { weatherSnapshot } : {}),
-      });
+      };
+
+      let entry;
+      if (isEdit && editId) {
+        entry = await journalRepository.update(editId, fields);
+      } else {
+        // Auto-capture weather snapshot if location is configured (new entries only)
+        let weatherSnapshot:
+          | { tempC: number; humidity: number; conditions: string }
+          | undefined;
+        if (settings.latitude != null && settings.longitude != null) {
+          const snapshot = await fetchWeatherSnapshot(
+            settings.latitude,
+            settings.longitude,
+          );
+          if (snapshot) {
+            weatherSnapshot = snapshot;
+          }
+        }
+
+        entry = await journalRepository.create({
+          ...fields,
+          seasonId,
+          ...(weatherSnapshot ? { weatherSnapshot } : {}),
+        });
+      }
 
       // Update search index
       addToIndex(entry, "journal");
@@ -231,7 +275,7 @@ export default function JournalEntryFormPage() {
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
         <h1 className="font-display text-2xl font-bold text-text-heading">
-          New Journal Entry
+          {isEdit ? "Edit Journal Entry" : "New Journal Entry"}
         </h1>
       </div>
 
@@ -500,8 +544,8 @@ export default function JournalEntryFormPage() {
 
         {/* Submit */}
         <div className="flex gap-3">
-          <Button type="submit" disabled={saving}>
-            {saving ? "Saving..." : "Save Entry"}
+          <Button type="submit" disabled={saving || !loaded}>
+            {saving ? "Saving..." : isEdit ? "Update Entry" : "Save Entry"}
           </Button>
           <Button
             type="button"

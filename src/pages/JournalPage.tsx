@@ -1,9 +1,10 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { FixedSizeList, type ListChildComponentProps } from "react-window";
 import { formatDistanceToNow, startOfWeek, startOfMonth } from "date-fns";
 import { journalRepository, plantRepository, photoRepository, seasonRepository } from "../db/index.ts";
+import { removeFromIndex, serializeIndex } from "../db/search";
 import {
   search as searchIndex,
   loadIndex,
@@ -16,9 +17,12 @@ import {
 } from "../constants/plantLabels";
 import { useDebounce } from "../hooks/useDebounce";
 import { useSettings } from "../hooks/useSettings";
+import { useToast } from "../components/ui/Toast";
 import { formatTemp } from "../services/weather";
 import Badge from "../components/ui/Badge";
+import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import Card from "../components/ui/Card";
 import PhotoThumbnail from "../components/PhotoThumbnail";
 import { PlusIcon, CloseIcon, ClipboardCheckIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
@@ -117,13 +121,18 @@ function EntryDetail({
   plantName,
   temperatureUnit,
   onClose,
+  onEdit,
+  onDelete,
 }: {
   entry: JournalEntry;
   plantName: string | undefined;
   temperatureUnit: "fahrenheit" | "celsius";
   onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }) {
   const [displayUrl, setDisplayUrl] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   useFocusTrap(modalRef);
 
@@ -262,6 +271,44 @@ function EntryDetail({
                 </p>
               )}
           </div>
+
+          {/* Edit / Delete actions */}
+          <div className="mt-4 flex gap-2 border-t border-border-default pt-4">
+            <Button variant="secondary" onClick={onEdit}>
+              Edit
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-red-600 hover:text-red-700"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              Delete
+            </Button>
+          </div>
+
+          {/* Delete confirmation */}
+          {showDeleteConfirm && (
+            <Card className="mt-3 border-terracotta-400/30 bg-terracotta-400/5">
+              <p className="text-sm text-text-secondary">
+                Delete this journal entry? This cannot be undone.
+              </p>
+              <div className="mt-3 flex justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  className="bg-accent hover:bg-accent-hover"
+                  onClick={onDelete}
+                >
+                  Delete
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </div>
@@ -320,6 +367,8 @@ function AddEntryFab() {
 // ─── Main page component ───
 
 export default function JournalPage() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const { settings } = useSettings();
   const allEntries = usePouchQuery(() => journalRepository.getAll());
   const allPlants = usePouchQuery(() => plantRepository.getAll());
@@ -339,6 +388,19 @@ export default function JournalPage() {
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(
     null,
   );
+
+  // Delete handler
+  const handleDeleteEntry = useCallback(async (entry: JournalEntry) => {
+    try {
+      await journalRepository.softDelete(entry.id);
+      removeFromIndex(entry.id);
+      void serializeIndex();
+      setSelectedEntry(null);
+      toast("Journal entry deleted", "success");
+    } catch {
+      toast("Failed to delete entry", "error");
+    }
+  }, [toast]);
 
   // List container height
   const [listHeight, setListHeight] = useState(400);
@@ -634,6 +696,12 @@ export default function JournalPage() {
           }
           temperatureUnit={settings.temperatureUnit}
           onClose={() => setSelectedEntry(null)}
+          onEdit={() => {
+            const id = selectedEntry.id;
+            setSelectedEntry(null);
+            void navigate(`/journal/${id}/edit`);
+          }}
+          onDelete={() => void handleDeleteEntry(selectedEntry)}
         />
       )}
     </div>
