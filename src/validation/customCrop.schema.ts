@@ -23,6 +23,7 @@ export const customVarietySchema = z
 export const customCropSchema = baseEntitySchema
   .extend({
     category: z.string().min(1),
+    family: z.string().min(1).optional(),
     commonName: z.string().min(1),
     varieties: z.array(customVarietySchema).min(1),
   })

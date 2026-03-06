@@ -98,10 +98,10 @@ describe("CropDB Loader", () => {
 
   describe("getCropsByCategory", () => {
     it("returns crops filtered by category", () => {
-      const solanaceae = getCropsByCategory("Solanaceae");
-      expect(solanaceae.length).toBeGreaterThan(0);
-      for (const crop of solanaceae) {
-        expect(crop.category).toBe("Solanaceae");
+      const vegetables = getCropsByCategory("Vegetable");
+      expect(vegetables.length).toBeGreaterThan(0);
+      for (const crop of vegetables) {
+        expect(crop.category).toBe("Vegetable");
       }
     });
 

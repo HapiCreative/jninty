@@ -18,6 +18,7 @@ export interface CropVariety {
 export interface CropRecord {
   id: string;
   category: string;
+  family: string;
   commonName: string;
   varieties: CropVariety[];
 }

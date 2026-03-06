@@ -1,7 +1,8 @@
 [
   {
     "id": "tomato",
-    "category": "Solanaceae",
+    "category": "Vegetable",
+    "family": "Solanaceae",
     "commonName": "Tomato",
     "varieties": [
       {
@@ -104,7 +105,8 @@
   },
   {
     "id": "pepper",
-    "category": "Solanaceae",
+    "category": "Vegetable",
+    "family": "Solanaceae",
     "commonName": "Pepper",
     "varieties": [
       {
@@ -175,7 +177,8 @@
   },
   {
     "id": "lettuce",
-    "category": "Asteraceae",
+    "category": "Vegetable",
+    "family": "Asteraceae",
     "commonName": "Lettuce",
     "varieties": [
       {
@@ -246,7 +249,8 @@
   },
   {
     "id": "cucumber",
-    "category": "Cucurbitaceae",
+    "category": "Vegetable",
+    "family": "Cucurbitaceae",
     "commonName": "Cucumber",
     "varieties": [
       {
@@ -254,7 +258,7 @@
         "name": "Slicing",
         "daysToMaturity": 60,
         "daysToTransplant": 21,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 18,
         "rowSpacingInches": 48,
         "harvestWindowDays": 30,
@@ -270,7 +274,7 @@
         "name": "Pickling",
         "daysToMaturity": 55,
         "daysToTransplant": 21,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 12,
         "rowSpacingInches": 48,
         "harvestWindowDays": 25,
@@ -286,7 +290,7 @@
         "name": "English",
         "daysToMaturity": 65,
         "daysToTransplant": 21,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 18,
         "rowSpacingInches": 48,
         "harvestWindowDays": 30,
@@ -301,7 +305,8 @@
   },
   {
     "id": "zucchini",
-    "category": "Cucurbitaceae",
+    "category": "Vegetable",
+    "family": "Cucurbitaceae",
     "commonName": "Zucchini",
     "varieties": [
       {
@@ -309,7 +314,7 @@
         "name": "Black Beauty",
         "daysToMaturity": 50,
         "daysToTransplant": 21,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 36,
         "rowSpacingInches": 48,
         "harvestWindowDays": 45,
@@ -325,7 +330,7 @@
         "name": "Golden",
         "daysToMaturity": 50,
         "daysToTransplant": 21,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 36,
         "rowSpacingInches": 48,
         "harvestWindowDays": 45,
@@ -340,7 +345,8 @@
   },
   {
     "id": "carrot",
-    "category": "Apiaceae",
+    "category": "Vegetable",
+    "family": "Apiaceae",
     "commonName": "Carrot",
     "varieties": [
       {
@@ -395,7 +401,8 @@
   },
   {
     "id": "bean",
-    "category": "Fabaceae",
+    "category": "Vegetable",
+    "family": "Fabaceae",
     "commonName": "Bean",
     "varieties": [
       {
@@ -450,7 +457,8 @@
   },
   {
     "id": "pea",
-    "category": "Fabaceae",
+    "category": "Vegetable",
+    "family": "Fabaceae",
     "commonName": "Pea",
     "varieties": [
       {
@@ -489,7 +497,8 @@
   },
   {
     "id": "broccoli",
-    "category": "Brassicaceae",
+    "category": "Vegetable",
+    "family": "Brassicaceae",
     "commonName": "Broccoli",
     "varieties": [
       {
@@ -528,7 +537,8 @@
   },
   {
     "id": "kale",
-    "category": "Brassicaceae",
+    "category": "Vegetable",
+    "family": "Brassicaceae",
     "commonName": "Kale",
     "varieties": [
       {
@@ -567,7 +577,8 @@
   },
   {
     "id": "spinach",
-    "category": "Amaranthaceae",
+    "category": "Vegetable",
+    "family": "Amaranthaceae",
     "commonName": "Spinach",
     "varieties": [
       {
@@ -606,7 +617,8 @@
   },
   {
     "id": "onion",
-    "category": "Amaryllidaceae",
+    "category": "Vegetable",
+    "family": "Amaryllidaceae",
     "commonName": "Onion",
     "varieties": [
       {
@@ -661,7 +673,8 @@
   },
   {
     "id": "garlic",
-    "category": "Amaryllidaceae",
+    "category": "Vegetable",
+    "family": "Amaryllidaceae",
     "commonName": "Garlic",
     "varieties": [
       {
@@ -669,7 +682,7 @@
         "name": "Softneck",
         "daysToMaturity": 240,
         "daysToTransplant": null,
-        "seedingDepthInches": 2.0,
+        "seedingDepthInches": 2,
         "spacingInches": 6,
         "rowSpacingInches": 12,
         "harvestWindowDays": 14,
@@ -685,7 +698,7 @@
         "name": "Hardneck",
         "daysToMaturity": 240,
         "daysToTransplant": null,
-        "seedingDepthInches": 2.0,
+        "seedingDepthInches": 2,
         "spacingInches": 6,
         "rowSpacingInches": 12,
         "harvestWindowDays": 14,
@@ -700,7 +713,8 @@
   },
   {
     "id": "corn",
-    "category": "Poaceae",
+    "category": "Vegetable",
+    "family": "Poaceae",
     "commonName": "Corn",
     "varieties": [
       {
@@ -739,7 +753,8 @@
   },
   {
     "id": "potato",
-    "category": "Solanaceae",
+    "category": "Vegetable",
+    "family": "Solanaceae",
     "commonName": "Potato",
     "varieties": [
       {
@@ -747,7 +762,7 @@
         "name": "Russet",
         "daysToMaturity": 100,
         "daysToTransplant": null,
-        "seedingDepthInches": 4.0,
+        "seedingDepthInches": 4,
         "spacingInches": 12,
         "rowSpacingInches": 30,
         "harvestWindowDays": 14,
@@ -763,7 +778,7 @@
         "name": "Red",
         "daysToMaturity": 80,
         "daysToTransplant": null,
-        "seedingDepthInches": 4.0,
+        "seedingDepthInches": 4,
         "spacingInches": 12,
         "rowSpacingInches": 30,
         "harvestWindowDays": 14,
@@ -779,7 +794,7 @@
         "name": "Yukon Gold",
         "daysToMaturity": 90,
         "daysToTransplant": null,
-        "seedingDepthInches": 4.0,
+        "seedingDepthInches": 4,
         "spacingInches": 12,
         "rowSpacingInches": 30,
         "harvestWindowDays": 14,

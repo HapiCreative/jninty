@@ -8,6 +8,7 @@ export interface CropSearchResult {
   cropName: string;
   varietyName: string;
   category: string;
+  family: string;
   source: "builtin" | "custom";
 }
 
@@ -17,6 +18,7 @@ interface CropSearchDoc {
   cropName: string;
   varietyName: string;
   category: string;
+  family: string;
   source: "builtin" | "custom";
 }
 
@@ -30,12 +32,13 @@ export function buildCropSearchIndex(
   customCrops: CustomCrop[],
 ): MiniSearch<CropSearchDoc> {
   const index = new MiniSearch<CropSearchDoc>({
-    fields: ["cropName", "varietyName", "category"],
+    fields: ["cropName", "varietyName", "category", "family"],
     storeFields: [
       "cropId",
       "cropName",
       "varietyName",
       "category",
+      "family",
       "source",
     ],
     searchOptions: {
@@ -57,6 +60,7 @@ export function buildCropSearchIndex(
         cropName: crop.commonName,
         varietyName: variety.name,
         category: crop.category,
+        family: crop.family,
         source: "builtin",
       });
     }
@@ -71,6 +75,7 @@ export function buildCropSearchIndex(
         cropName: crop.commonName,
         varietyName: variety.name,
         category: crop.category,
+        family: crop.family ?? "",
         source: "custom",
       });
     }

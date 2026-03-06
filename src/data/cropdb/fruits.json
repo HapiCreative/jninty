@@ -1,7 +1,8 @@
 [
   {
     "id": "strawberry",
-    "category": "Rosaceae",
+    "category": "Fruit",
+    "family": "Rosaceae",
     "commonName": "Strawberry",
     "varieties": [
       {
@@ -56,7 +57,8 @@
   },
   {
     "id": "blueberry",
-    "category": "Ericaceae",
+    "category": "Fruit",
+    "family": "Ericaceae",
     "commonName": "Blueberry",
     "varieties": [
       {
@@ -95,7 +97,8 @@
   },
   {
     "id": "raspberry",
-    "category": "Rosaceae",
+    "category": "Fruit",
+    "family": "Rosaceae",
     "commonName": "Raspberry",
     "varieties": [
       {

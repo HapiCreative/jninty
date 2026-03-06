@@ -1,7 +1,8 @@
 [
   {
     "id": "sunflower",
-    "category": "Asteraceae",
+    "category": "Flower",
+    "family": "Asteraceae",
     "commonName": "Sunflower",
     "varieties": [
       {
@@ -9,7 +10,7 @@
         "name": "Mammoth",
         "daysToMaturity": 80,
         "daysToTransplant": null,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 24,
         "rowSpacingInches": 30,
         "harvestWindowDays": 14,
@@ -25,7 +26,7 @@
         "name": "Teddy Bear",
         "daysToMaturity": 65,
         "daysToTransplant": null,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 18,
         "rowSpacingInches": 24,
         "harvestWindowDays": 10,
@@ -41,7 +42,7 @@
         "name": "Autumn Beauty",
         "daysToMaturity": 70,
         "daysToTransplant": null,
-        "seedingDepthInches": 1.0,
+        "seedingDepthInches": 1,
         "spacingInches": 18,
         "rowSpacingInches": 24,
         "harvestWindowDays": 21,
@@ -56,7 +57,8 @@
   },
   {
     "id": "zinnia",
-    "category": "Asteraceae",
+    "category": "Flower",
+    "family": "Asteraceae",
     "commonName": "Zinnia",
     "varieties": [
       {
@@ -111,7 +113,8 @@
   },
   {
     "id": "marigold",
-    "category": "Asteraceae",
+    "category": "Flower",
+    "family": "Asteraceae",
     "commonName": "Marigold",
     "varieties": [
       {
@@ -150,7 +153,8 @@
   },
   {
     "id": "cosmos",
-    "category": "Asteraceae",
+    "category": "Flower",
+    "family": "Asteraceae",
     "commonName": "Cosmos",
     "varieties": [
       {
@@ -189,7 +193,8 @@
   },
   {
     "id": "nasturtium",
-    "category": "Tropaeolaceae",
+    "category": "Flower",
+    "family": "Tropaeolaceae",
     "commonName": "Nasturtium",
     "varieties": [
       {
