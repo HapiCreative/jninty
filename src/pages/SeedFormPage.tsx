@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ZodError } from "zod";
 import { seedRepository } from "../db/index.ts";
@@ -10,6 +10,8 @@ import Input from "../components/ui/Input";
 import StoreAutosuggest from "../components/StoreAutosuggest";
 import { ChevronLeftIcon } from "../components/icons";
 import Skeleton from "../components/ui/Skeleton";
+import { searchKnowledge, getCropGroup } from "../services/knowledgeBase";
+import type { PlantKnowledge } from "../validation/plantKnowledge.schema";
 
 const selectClass =
   "w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25";
@@ -51,6 +53,16 @@ export default function SeedFormPage() {
   const [storageLocation, setStorageLocation] = useState("");
   const [notes, setNotes] = useState("");
 
+  // Species autocomplete state
+  const [showSpeciesSuggestions, setShowSpeciesSuggestions] = useState(false);
+  const [speciesResults, setSpeciesResults] = useState<PlantKnowledge[]>([]);
+  const [matchedCropGroup, setMatchedCropGroup] = useState<string | null>(null);
+  const speciesWrapperRef = useRef<HTMLDivElement>(null);
+
+  // Variety suggestions state
+  const [showVarietySuggestions, setShowVarietySuggestions] = useState(false);
+  const varietyWrapperRef = useRef<HTMLDivElement>(null);
+
   // Submission state
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -87,6 +99,85 @@ export default function SeedFormPage() {
       setLoading(false);
     })();
   }, [id, navigate]);
+
+  // Click-outside detection for species dropdown
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        speciesWrapperRef.current &&
+        !speciesWrapperRef.current.contains(e.target as Node)
+      ) {
+        setShowSpeciesSuggestions(false);
+      }
+      if (
+        varietyWrapperRef.current &&
+        !varietyWrapperRef.current.contains(e.target as Node)
+      ) {
+        setShowVarietySuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Compute variety suggestions from matched crop group
+  const varietySuggestions = (() => {
+    if (!matchedCropGroup) return [];
+    const entries = getCropGroup(matchedCropGroup);
+    const varieties = entries
+      .filter((e) => e.variety)
+      .map((e) => e.variety!);
+    if (!variety.trim()) return varieties;
+    const q = variety.toLowerCase();
+    return varieties.filter((v) => v.toLowerCase().includes(q));
+  })();
+
+  const handleSpeciesChange = (value: string) => {
+    setSpecies(value);
+    setMatchedCropGroup(null);
+    if (value.trim().length >= 2) {
+      const all = searchKnowledge(value);
+      // Deduplicate by species — prefer base entry (no variety) per species
+      const bySpecies = new Map<string, PlantKnowledge>();
+      for (const r of all) {
+        const existing = bySpecies.get(r.species);
+        if (!existing) {
+          bySpecies.set(r.species, r);
+        } else if (existing.variety && !r.variety) {
+          // Prefer the base entry (no variety) over a variety
+          bySpecies.set(r.species, r);
+        }
+      }
+      const unique = [...bySpecies.values()].slice(0, 10);
+      setSpeciesResults(unique);
+      setShowSpeciesSuggestions(unique.length > 0);
+    } else {
+      setSpeciesResults([]);
+      setShowSpeciesSuggestions(false);
+    }
+  };
+
+  const handleSpeciesSelect = (result: PlantKnowledge) => {
+    setSpecies(
+      result.variety
+        ? result.cropGroup.charAt(0).toUpperCase() + result.cropGroup.slice(1)
+        : result.commonName,
+    );
+    setMatchedCropGroup(result.cropGroup);
+    setShowSpeciesSuggestions(false);
+  };
+
+  const handleVarietyChange = (value: string) => {
+    setVariety(value);
+    if (matchedCropGroup) {
+      setShowVarietySuggestions(true);
+    }
+  };
+
+  const handleVarietySelect = (v: string) => {
+    setVariety(v);
+    setShowVarietySuggestions(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,13 +333,43 @@ export default function SeedFormPage() {
               >
                 Species <span className="text-terracotta-500">*</span>
               </label>
-              <Input
-                id="seed-species"
-                type="text"
-                placeholder="e.g. Solanum lycopersicum"
-                value={species}
-                onChange={(e) => setSpecies(e.target.value)}
-              />
+              <div ref={speciesWrapperRef} className="relative">
+                <input
+                  id="seed-species"
+                  type="text"
+                  placeholder="e.g. Solanum lycopersicum"
+                  value={species}
+                  onChange={(e) => handleSpeciesChange(e.target.value)}
+                  onFocus={() => {
+                    if (speciesResults.length > 0)
+                      setShowSpeciesSuggestions(true);
+                  }}
+                  autoComplete="off"
+                  className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
+                />
+                {showSpeciesSuggestions && speciesResults.length > 0 && (
+                  <ul className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-border-strong bg-surface-elevated shadow-lg">
+                    {speciesResults.map((r) => (
+                      <li key={r.species}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleSpeciesSelect(r)}
+                          className="w-full px-3 py-2 text-left text-sm text-text-primary hover:bg-surface"
+                        >
+                          {r.variety
+                            ? r.cropGroup.charAt(0).toUpperCase() +
+                              r.cropGroup.slice(1)
+                            : r.commonName}{" "}
+                          <span className="text-text-muted">
+                            ({r.species})
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
             {/* Variety */}
@@ -259,13 +380,37 @@ export default function SeedFormPage() {
               >
                 Variety
               </label>
-              <Input
-                id="seed-variety"
-                type="text"
-                placeholder="e.g. San Marzano"
-                value={variety}
-                onChange={(e) => setVariety(e.target.value)}
-              />
+              <div ref={varietyWrapperRef} className="relative">
+                <input
+                  id="seed-variety"
+                  type="text"
+                  placeholder="e.g. San Marzano"
+                  value={variety}
+                  onChange={(e) => handleVarietyChange(e.target.value)}
+                  onFocus={() => {
+                    if (matchedCropGroup)
+                      setShowVarietySuggestions(true);
+                  }}
+                  autoComplete="off"
+                  className="w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-focus-ring focus:outline-none focus:ring-2 focus:ring-focus-ring/25"
+                />
+                {showVarietySuggestions && varietySuggestions.length > 0 && (
+                  <ul className="absolute z-20 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-border-strong bg-surface-elevated shadow-lg">
+                    {varietySuggestions.map((v) => (
+                      <li key={v}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => handleVarietySelect(v)}
+                          className="w-full px-3 py-2 text-left text-sm text-text-primary hover:bg-surface"
+                        >
+                          {v}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
 
             {/* Brand */}

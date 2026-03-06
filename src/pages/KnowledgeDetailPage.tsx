@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { usePouchQuery } from "../hooks/usePouchQuery.ts";
 import { userPlantKnowledgeRepository } from "../db/index.ts";
-import { findKnowledgeItemById } from "../services/knowledgeBase";
+import { findKnowledgeItemById, getCropGroup, builtInEntryId } from "../services/knowledgeBase";
 import { TYPE_LABELS } from "../constants/plantLabels";
 import {
   SUN_LABELS,
@@ -140,6 +140,7 @@ export default function KnowledgeDetailPage() {
             {SOURCE_LABELS[source]}
           </Badge>
           {data.isPerennial && <Badge variant="default">Perennial</Badge>}
+          {data.family && <Badge variant="default">{data.family}</Badge>}
         </div>
       </div>
 
@@ -270,6 +271,77 @@ export default function KnowledgeDetailPage() {
           </Card>
         )}
 
+        {/* Scheduling Info */}
+        {data.scheduling && (
+          <Card>
+            <h2 className="font-display text-lg font-semibold text-text-heading">
+              Scheduling Info
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {data.scheduling.directSow && (
+                <Badge variant="success">Direct Sow</Badge>
+              )}
+              {data.scheduling.indoorStart && (
+                <Badge variant="success">Indoor Start</Badge>
+              )}
+              {data.scheduling.frostHardy && (
+                <Badge variant="default">Frost Hardy</Badge>
+              )}
+            </div>
+            <dl className="mt-3 space-y-2">
+              {data.scheduling.seedingDepthInches > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-sm text-text-secondary">Seeding Depth</dt>
+                  <dd className="text-sm font-medium text-text-primary">
+                    {data.scheduling.seedingDepthInches} inches
+                  </dd>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <dt className="text-sm text-text-secondary">Row Spacing</dt>
+                <dd className="text-sm font-medium text-text-primary">
+                  {data.scheduling.rowSpacingInches} inches
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-sm text-text-secondary">Harvest Window</dt>
+                <dd className="text-sm font-medium text-text-primary">
+                  {data.scheduling.harvestWindowDays} days
+                </dd>
+              </div>
+              {data.scheduling.successionIntervalDays != null && (
+                <div className="flex justify-between">
+                  <dt className="text-sm text-text-secondary">Succession Interval</dt>
+                  <dd className="text-sm font-medium text-text-primary">
+                    {data.scheduling.successionIntervalDays} days
+                  </dd>
+                </div>
+              )}
+              {data.scheduling.bedPrepLeadDays > 0 && (
+                <div className="flex justify-between">
+                  <dt className="text-sm text-text-secondary">Bed Prep Lead</dt>
+                  <dd className="text-sm font-medium text-text-primary">
+                    {data.scheduling.bedPrepLeadDays} days
+                  </dd>
+                </div>
+              )}
+              {data.scheduling.daysToTransplant != null && (
+                <div className="flex justify-between">
+                  <dt className="text-sm text-text-secondary">Days to Transplant</dt>
+                  <dd className="text-sm font-medium text-text-primary">
+                    {data.scheduling.daysToTransplant} days
+                  </dd>
+                </div>
+              )}
+            </dl>
+            {data.scheduling.notes && (
+              <p className="mt-3 text-sm text-text-secondary">
+                {data.scheduling.notes}
+              </p>
+            )}
+          </Card>
+        )}
+
         {/* Companion Planting */}
         {((data.goodCompanions && data.goodCompanions.length > 0) ||
           (data.badCompanions && data.badCompanions.length > 0)) && (
@@ -341,6 +413,33 @@ export default function KnowledgeDetailPage() {
             )}
           </Card>
         )}
+
+        {/* Related Varieties */}
+        {(() => {
+          const siblings = getCropGroup(data.cropGroup).filter(
+            (s) => builtInEntryId(s.species, s.variety) !== id,
+          );
+          if (siblings.length === 0) return null;
+          return (
+            <Card>
+              <h2 className="font-display text-lg font-semibold text-text-heading">
+                Related Varieties
+              </h2>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {siblings.map((s) => (
+                  <Link
+                    key={builtInEntryId(s.species, s.variety)}
+                    to={`/knowledge/${builtInEntryId(s.species, s.variety)}`}
+                  >
+                    <Badge variant="default">
+                      {s.variety ?? s.commonName}
+                    </Badge>
+                  </Link>
+                ))}
+              </div>
+            </Card>
+          );
+        })()}
 
         {/* Actions (custom only) */}
         {source === "custom" && (
