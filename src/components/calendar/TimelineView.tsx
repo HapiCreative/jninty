@@ -79,7 +79,7 @@ function CropPickerPanel({
 
 export default function TimelineView() {
   const [monthRange, setMonthRange] = useState<MonthRange>(3);
-  const [startDate, _setStartDate] = useState(() => startOfMonth(new Date()));
+  const [startDate] = useState(() => startOfMonth(new Date()));
   const filter = useTaskFilter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { createSchedule } = useScheduling();
