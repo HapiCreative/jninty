@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { startOfMonth, addMonths, subMonths, differenceInCalendarDays, parseISO, format } from "date-fns";
+import { startOfMonth, differenceInCalendarDays, parseISO, format } from "date-fns";
 import {
   DndContext,
   DragOverlay,
@@ -115,18 +115,6 @@ export default function TimelineView() {
   });
   const keyboardSensor = useSensor(KeyboardSensor);
   const sensors = useSensors(pointerSensor, touchSensor, keyboardSensor);
-
-  const handleToday = useCallback(() => {
-    setStartDate(startOfMonth(new Date()));
-  }, []);
-
-  const handlePrev = useCallback(() => {
-    setStartDate((prev) => subMonths(prev, monthRange));
-  }, [monthRange]);
-
-  const handleNext = useCallback(() => {
-    setStartDate((prev) => addMonths(prev, monthRange));
-  }, [monthRange]);
 
   // Scroll to today column on mount and when startDate changes
   useEffect(() => {
@@ -338,9 +326,6 @@ export default function TimelineView() {
       <TimelineToolbar
         monthRange={monthRange}
         onMonthRangeChange={setMonthRange}
-        onToday={handleToday}
-        onPrev={handlePrev}
-        onNext={handleNext}
         filter={filter}
       />
 
