@@ -1,16 +1,14 @@
 import PouchDB from "pouchdb";
 import PouchDBFind from "pouchdb-find";
-import PouchDBAdapterIndexedDB from "pouchdb-adapter-indexeddb";
 
 PouchDB.plugin(PouchDBFind);
-PouchDB.plugin(PouchDBAdapterIndexedDB);
 
 import { resetIndexState } from "./indexes.ts";
 
 let dbCounter = 0;
 
 function createLocalDB(name = "jninty") {
-  return new PouchDB(name, { adapter: "indexeddb" });
+  return new PouchDB(name);
 }
 
 export let localDB = createLocalDB();

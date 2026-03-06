@@ -6,6 +6,7 @@ import {
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
+  closestCenter,
   useSensor,
   useSensors,
   type DragStartEvent,
@@ -405,6 +406,7 @@ export default function TimelineView() {
       ) : (
         <DndContext
           sensors={sensors}
+          collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >

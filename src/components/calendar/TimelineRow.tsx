@@ -85,7 +85,7 @@ function DroppableDayCell({
         }
       }}
       data-today={isToday ? "" : undefined}
-      className={`relative border-r border-border-default px-0.5 py-0.5 text-center text-[10px] leading-tight ${
+      className={`relative border-r border-border-default px-0.5 py-1 text-center text-xs leading-tight ${
         isToday
           ? "bg-green-50 font-bold text-green-800"
           : isWeekendDay
@@ -96,7 +96,7 @@ function DroppableDayCell({
       }`}
     >
       {isToday ? (
-        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-700 text-[10px] font-bold text-white">
+        <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-700 text-xs font-bold text-white">
           {day}
         </span>
       ) : (
@@ -176,11 +176,11 @@ export default function TimelineRow({
   return (
     <div className="flex border-b border-border-default">
       {/* Month label — sticky left */}
-      <div className="sticky left-0 z-10 flex w-16 shrink-0 flex-col justify-center border-r border-border-default bg-surface-elevated px-2 py-1">
-        <span className="text-xs font-semibold text-text-heading leading-tight">
+      <div className="sticky left-0 z-10 flex w-16 shrink-0 flex-col justify-center border-r border-border-default bg-surface-elevated px-2 py-1.5">
+        <span className="text-sm font-semibold text-text-heading leading-tight">
           {label.split(" ")[0]}
         </span>
-        <span className="text-[10px] text-text-secondary leading-tight">
+        <span className="text-xs text-text-secondary leading-tight">
           {label.split(" ")[1]}
         </span>
       </div>

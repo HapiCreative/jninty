@@ -3,8 +3,8 @@ import { localDB } from "./client.ts";
 /**
  * Shared index initialization for all PouchDB-Find queries.
  *
- * IMPORTANT: Only ONE index is created. PouchDB-Find + pouchdb-adapter-indexeddb
- * + fake-indexeddb has a bug where having >1 _design/ doc causes find() to
+ * IMPORTANT: Only ONE index is created. PouchDB-Find + fake-indexeddb
+ * has a bug where having >1 _design/ doc causes find() to
  * return empty results. Since all queries filter by `docType` first and do
  * additional filtering in JavaScript, a single `["docType"]` index is sufficient.
  *
