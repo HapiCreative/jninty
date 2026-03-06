@@ -26,7 +26,8 @@ import { useFocusTrap } from "../hooks/useFocusTrap";
 
 // ─── Constants ───
 
-const ITEM_HEIGHT = 100;
+const ITEM_HEIGHT = 120;
+const VIRTUALIZE_THRESHOLD = 20;
 
 type DateRange = "all" | "week" | "month";
 
@@ -457,7 +458,7 @@ export default function JournalPage() {
   // Loading state
   if (allEntries === undefined) {
     return (
-      <div className="mx-auto max-w-3xl p-4" role="status" aria-label="Loading journal">
+      <div className="mx-auto max-w-3xl px-4 pt-4" role="status" aria-label="Loading journal">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="mt-4 h-10 w-full" />
         <div className="mt-4 space-y-2">
@@ -569,7 +570,7 @@ export default function JournalPage() {
 
       {/* Feed */}
       {filteredEntries.length === 0 ? (
-        <div className="mt-12 text-center">
+        <div className="mx-auto mt-12 max-w-3xl text-center">
           {allEntries.length === 0 ? (
             <>
               <ClipboardCheckIcon className="mx-auto h-16 w-16 text-text-muted" />
@@ -592,18 +593,31 @@ export default function JournalPage() {
           )}
         </div>
       ) : (
-        <div ref={containerRef} className="mt-3 flex-1">
-          <FixedSizeList
-            height={listHeight}
-            width="100%"
-            itemCount={filteredEntries.length}
-            itemSize={ITEM_HEIGHT}
-            itemData={rowData}
-            overscanCount={5}
-          >
-            {EntryRow}
-          </FixedSizeList>
-        </div>
+        filteredEntries.length >= VIRTUALIZE_THRESHOLD ? (
+          <div ref={containerRef} className="mx-auto mt-3 w-full max-w-3xl flex-1">
+            <FixedSizeList
+              height={listHeight}
+              width="100%"
+              itemCount={filteredEntries.length}
+              itemSize={ITEM_HEIGHT}
+              itemData={rowData}
+              overscanCount={5}
+            >
+              {EntryRow}
+            </FixedSizeList>
+          </div>
+        ) : (
+          <div className="mx-auto mt-3 w-full max-w-3xl pb-24">
+            {filteredEntries.map((entry, index) => (
+              <EntryRow
+                key={entry.id}
+                index={index}
+                style={{}}
+                data={rowData}
+              />
+            ))}
+          </div>
+        )
       )}
 
       {/* FAB */}
