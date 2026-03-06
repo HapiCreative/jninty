@@ -9,8 +9,13 @@ import { resetIndexState } from "./indexes.ts";
 
 let dbCounter = 0;
 
+// In tests (fake-indexeddb), use the explicit indexeddb adapter.
+// In the browser, use PouchDB's built-in idb adapter which avoids the
+// ConstraintError on the seq index during CouchDB sync.
 function createLocalDB(name = "jninty") {
-  return new PouchDB(name, { adapter: "indexeddb" });
+  return import.meta.env.MODE === "test"
+    ? new PouchDB(name, { adapter: "indexeddb" })
+    : new PouchDB(name);
 }
 
 export let localDB = createLocalDB();

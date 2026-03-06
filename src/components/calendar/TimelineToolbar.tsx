@@ -1,4 +1,3 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "../icons.tsx";
 import TaskFilterToolbar from "./TaskFilterToolbar.tsx";
 import type { TaskFilterState } from "../../hooks/useTaskFilter.ts";
 
@@ -9,50 +8,18 @@ const RANGE_OPTIONS: MonthRange[] = [1, 3, 6, 12, 24];
 interface TimelineToolbarProps {
   monthRange: MonthRange;
   onMonthRangeChange: (range: MonthRange) => void;
-  onToday: () => void;
-  onPrev: () => void;
-  onNext: () => void;
   filter: TaskFilterState;
 }
 
 export default function TimelineToolbar({
   monthRange,
   onMonthRangeChange,
-  onToday,
-  onPrev,
-  onNext,
   filter,
 }: TimelineToolbarProps) {
   return (
     <div className="space-y-2 px-3 py-2">
-      {/* Top row: navigation + range selector */}
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={onPrev}
-            aria-label="Previous period"
-            className="rounded-lg p-1.5 text-text-heading transition-colors hover:bg-surface-muted"
-          >
-            <ChevronLeftIcon className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onToday}
-            className="rounded-lg px-2.5 py-1 text-xs font-medium text-text-heading transition-colors hover:bg-surface-muted"
-          >
-            Today
-          </button>
-          <button
-            type="button"
-            onClick={onNext}
-            aria-label="Next period"
-            className="rounded-lg p-1.5 text-text-heading transition-colors hover:bg-surface-muted"
-          >
-            <ChevronRightIcon className="h-4 w-4" />
-          </button>
-        </div>
-
+      {/* Top row: range selector */}
+      <div className="flex items-center">
         <div className="ml-auto flex items-center gap-0.5 rounded-lg bg-surface-muted p-0.5">
           {RANGE_OPTIONS.map((range) => (
             <button

@@ -11,9 +11,9 @@ import PouchDBAdapterIndexedDB from "pouchdb-adapter-indexeddb";
 
 PouchDB.plugin(PouchDBAdapterIndexedDB);
 
-let originalsDB: PouchDB.Database = new PouchDB("jninty-originals", {
-  adapter: "indexeddb",
-});
+let originalsDB: PouchDB.Database = import.meta.env.MODE === "test"
+  ? new PouchDB("jninty-originals", { adapter: "indexeddb" })
+  : new PouchDB("jninty-originals");
 
 /**
  * Replace the originals DB instance (for tests).
@@ -130,7 +130,9 @@ export async function clearAllOriginals(): Promise<void> {
  */
 export async function destroyAndRecreateOriginals(): Promise<void> {
   await originalsDB.destroy();
-  originalsDB = new PouchDB("jninty-originals", { adapter: "indexeddb" });
+  originalsDB = import.meta.env.MODE === "test"
+    ? new PouchDB("jninty-originals", { adapter: "indexeddb" })
+    : new PouchDB("jninty-originals");
 }
 
 /**

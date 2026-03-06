@@ -1,11 +1,12 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { startOfMonth, addMonths, subMonths, differenceInCalendarDays, parseISO } from "date-fns";
+import { startOfMonth, differenceInCalendarDays, parseISO, format } from "date-fns";
 import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
+  closestCenter,
   useSensor,
   useSensors,
   type DragStartEvent,
@@ -26,6 +27,8 @@ import DirectionPicker from "../scheduling/DirectionPicker.tsx";
 import Skeleton from "../ui/Skeleton.tsx";
 import type { ScheduleDirection } from "../../validation/plantingSchedule.schema.ts";
 import StartingFlowWizard from "../startingFlow/StartingFlowWizard.tsx";
+import { useSettings } from "../../hooks/useSettings.tsx";
+import { scheduleTaskRepository } from "../../db/index.ts";
 import type { ScheduleTask } from "../../validation/scheduleTask.schema.ts";
 import type { TimelineBar } from "../../hooks/useTimelineData.ts";
 
@@ -82,6 +85,7 @@ export default function TimelineView() {
   const { createSchedule } = useScheduling();
   const { rescheduleGroup, rescheduleSingleTask } = useRescheduling();
   const { toast } = useToast();
+  const { settings } = useSettings();
 
   // Crop picker state
   const [showPicker, setShowPicker] = useState(false);
@@ -111,18 +115,6 @@ export default function TimelineView() {
   });
   const keyboardSensor = useSensor(KeyboardSensor);
   const sensors = useSensors(pointerSensor, touchSensor, keyboardSensor);
-
-  const handleToday = useCallback(() => {
-    setStartDate(startOfMonth(new Date()));
-  }, []);
-
-  const handlePrev = useCallback(() => {
-    setStartDate((prev) => subMonths(prev, monthRange));
-  }, [monthRange]);
-
-  const handleNext = useCallback(() => {
-    setStartDate((prev) => addMonths(prev, monthRange));
-  }, [monthRange]);
 
   // Scroll to today column on mount and when startDate changes
   useEffect(() => {
@@ -226,6 +218,31 @@ export default function TimelineView() {
     setHarvestDrag(null);
   }, []);
 
+  // --- Task completion toggle ---
+  const handleToggleComplete = useCallback(
+    async (taskId: string) => {
+      try {
+        const task = await scheduleTaskRepository.getById(taskId);
+        if (!task) return;
+        const changes: Parameters<typeof scheduleTaskRepository.update>[1] = task.isCompleted
+          ? { isCompleted: false }
+          : {
+              isCompleted: true,
+              completedDate: format(new Date(), "yyyy-MM-dd"),
+              completedAt: new Date().toISOString(),
+            };
+        await scheduleTaskRepository.update(taskId, changes);
+        toast(
+          task.isCompleted ? "Task marked incomplete" : "Task completed!",
+          "success",
+        );
+      } catch {
+        toast("Failed to update task", "error");
+      }
+    },
+    [toast],
+  );
+
   // --- Crop picker handlers ---
   const handleCropSelect = useCallback((selection: CropSelection) => {
     setShowPicker(false);
@@ -309,9 +326,6 @@ export default function TimelineView() {
       <TimelineToolbar
         monthRange={monthRange}
         onMonthRangeChange={setMonthRange}
-        onToday={handleToday}
-        onPrev={handlePrev}
-        onNext={handleNext}
         filter={filter}
       />
 
@@ -377,12 +391,13 @@ export default function TimelineView() {
       ) : (
         <DndContext
           sensors={sensors}
+          collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <div
             ref={scrollRef}
-            className="overflow-x-auto border-t border-border-default"
+            className="mx-3 mb-3 overflow-x-auto overflow-y-hidden rounded-xl border border-border-default bg-surface-elevated shadow-sm"
           >
             {monthRows.map((row) => (
               <TimelineRow
@@ -391,6 +406,9 @@ export default function TimelineView() {
                 filter={filter}
                 placementMode={placement !== null}
                 onDayClick={handleDayClick}
+                lastFrostDate={settings.lastFrostDate}
+                firstFrostDate={settings.firstFrostDate}
+                onToggleComplete={handleToggleComplete}
               />
             ))}
           </div>
