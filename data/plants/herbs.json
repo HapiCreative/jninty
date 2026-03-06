@@ -4,6 +4,8 @@
     "commonName": "Basil",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "basil",
+    "family": "Lamiaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 1,
     "directSowWeeksAfterLastFrost": 2,
@@ -16,16 +18,185 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "pepper", "oregano"],
-    "badCompanions": ["sage", "rue"],
-    "commonPests": ["aphids", "slugs", "Japanese beetles"],
-    "commonDiseases": ["fusarium wilt", "downy mildew"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "badCompanions": [
+      "sage",
+      "rue"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Ocimum basilicum",
+    "variety": "Sweet",
+    "commonName": "Sweet Basil",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "basil",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 1,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 60,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich, moist",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 90,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Pinch flower buds to encourage bushy growth and prolong harvest. Thrives in full sun with consistent moisture. Sensitive to cold — do not transplant until nighttime temps stay above 50°F."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "badCompanions": [
+      "sage",
+      "rue"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Ocimum basilicum",
+    "variety": "Thai",
+    "commonName": "Thai Basil",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "basil",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 1,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich, moist",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 90,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Compact variety with anise-clove flavor. More heat-tolerant than sweet basil. Attractive purple stems and flowers. Pinch tips regularly to delay bolting."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "badCompanions": [
+      "sage",
+      "rue"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Ocimum basilicum",
+    "variety": "Purple",
+    "commonName": "Purple Basil",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "basil",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 1,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 70,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich, moist",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 85,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Slower to mature than sweet basil. Deep purple foliage adds ornamental value. Germination can be slightly lower — sow extra seeds. Flavor is milder with a slight clove note."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "badCompanions": [
+      "sage",
+      "rue"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "downy mildew"
+    ]
   },
   {
     "species": "Coriandrum sativum",
     "commonName": "Cilantro",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "cilantro",
+    "family": "Apiaceae",
     "directSowWeeksBeforeLastFrost": 2,
     "directSowWeeksAfterLastFrost": 0,
     "daysToGermination": 10,
@@ -37,16 +208,132 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 8,
     "growthRate": "fast",
-    "goodCompanions": ["beans", "peas", "tomato", "spinach"],
-    "badCompanions": ["fennel", "dill"],
-    "commonPests": ["aphids", "whiteflies"],
-    "commonDiseases": ["leaf spot", "powdery mildew"]
+    "goodCompanions": [
+      "beans",
+      "peas",
+      "tomato",
+      "spinach"
+    ],
+    "badCompanions": [
+      "fennel",
+      "dill"
+    ],
+    "commonPests": [
+      "aphids",
+      "whiteflies"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "powdery mildew"
+    ]
+  },
+  {
+    "species": "Coriandrum sativum",
+    "variety": "Slow Bolt",
+    "commonName": "Slow Bolt Cilantro",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "cilantro",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 10,
+    "daysToMaturity": 50,
+    "spacingInches": 6,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, light, fertile",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 8,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 5,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Bred to resist bolting in warm weather. Direct sow preferred — cilantro has a taproot and dislikes transplanting. Succession sow every 2 weeks for continuous harvest. Allow some plants to bolt for coriander seed."
+    },
+    "goodCompanions": [
+      "beans",
+      "peas",
+      "tomato",
+      "spinach"
+    ],
+    "badCompanions": [
+      "fennel",
+      "dill"
+    ],
+    "commonPests": [
+      "aphids",
+      "whiteflies"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "powdery mildew"
+    ]
+  },
+  {
+    "species": "Coriandrum sativum",
+    "variety": "Santo",
+    "commonName": "Santo Cilantro",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "cilantro",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 10,
+    "daysToMaturity": 50,
+    "spacingInches": 6,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, light, fertile",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 8,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 18,
+      "bedPrepLeadDays": 5,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Popular variety with good leaf production. Bolts faster than Slow Bolt in heat — best for spring and fall planting. Succession sow every 2 weeks. Tolerates light frost."
+    },
+    "goodCompanions": [
+      "beans",
+      "peas",
+      "tomato",
+      "spinach"
+    ],
+    "badCompanions": [
+      "fennel",
+      "dill"
+    ],
+    "commonPests": [
+      "aphids",
+      "whiteflies"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "powdery mildew"
+    ]
   },
   {
     "species": "Petroselinum crispum",
     "commonName": "Parsley",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "parsley",
+    "family": "Apiaceae",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": -2,
     "directSowWeeksBeforeLastFrost": 4,
@@ -59,16 +346,137 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 12,
     "growthRate": "moderate",
-    "goodCompanions": ["tomato", "asparagus", "corn", "rose"],
-    "badCompanions": ["lettuce", "mint"],
-    "commonPests": ["parsleyworms", "aphids", "carrot rust fly"],
-    "commonDiseases": ["leaf spot", "crown rot"]
+    "goodCompanions": [
+      "tomato",
+      "asparagus",
+      "corn",
+      "rose"
+    ],
+    "badCompanions": [
+      "lettuce",
+      "mint"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids",
+      "carrot rust fly"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "crown rot"
+    ]
+  },
+  {
+    "species": "Petroselinum crispum",
+    "variety": "Italian Flat-Leaf",
+    "commonName": "Italian Flat-Leaf Parsley",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "parsley",
+    "family": "Apiaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": -2,
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 21,
+    "daysToMaturity": 75,
+    "spacingInches": 8,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Rich, moist, well-drained",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 12,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 120,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Biennial grown as an annual. Stronger flavor than curly types. Slow to germinate (14–28 days) — soak seeds overnight to speed things up. Cut outer stems first to encourage continued growth. Frost-tolerant and can overwinter in mild climates."
+    },
+    "goodCompanions": [
+      "tomato",
+      "asparagus",
+      "corn",
+      "rose"
+    ],
+    "badCompanions": [
+      "lettuce",
+      "mint"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids",
+      "carrot rust fly"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "crown rot"
+    ]
+  },
+  {
+    "species": "Petroselinum crispum",
+    "variety": "Curly",
+    "commonName": "Curly Parsley",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "parsley",
+    "family": "Apiaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": -2,
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 21,
+    "daysToMaturity": 70,
+    "spacingInches": 8,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Rich, moist, well-drained",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 12,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 120,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Classic garnish variety with tightly curled leaves. Slightly milder flavor than flat-leaf. Slow germination — be patient. Biennial; will bolt in second year. Tolerates frost and partial shade."
+    },
+    "goodCompanions": [
+      "tomato",
+      "asparagus",
+      "corn",
+      "rose"
+    ],
+    "badCompanions": [
+      "lettuce",
+      "mint"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids",
+      "carrot rust fly"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "crown rot"
+    ]
   },
   {
     "species": "Anethum graveolens",
     "commonName": "Dill",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "dill",
+    "family": "Apiaceae",
     "directSowWeeksBeforeLastFrost": 2,
     "directSowWeeksAfterLastFrost": 0,
     "daysToGermination": 10,
@@ -80,16 +488,80 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["cabbage", "lettuce", "onion", "cucumber"],
-    "badCompanions": ["carrot", "tomato"],
-    "commonPests": ["parsleyworms", "aphids"],
-    "commonDiseases": ["downy mildew"]
+    "goodCompanions": [
+      "cabbage",
+      "lettuce",
+      "onion",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "carrot",
+      "tomato"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Anethum graveolens",
+    "variety": "Bouquet",
+    "commonName": "Bouquet Dill",
+    "plantType": "herb",
+    "isPerennial": false,
+    "cropGroup": "dill",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 10,
+    "daysToMaturity": 45,
+    "spacingInches": 9,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, slightly acidic",
+    "matureHeightInches": 36,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 5,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Fast-growing annual with large seed heads ideal for pickling. Direct sow only — dill has a taproot and does not transplant well. Succession sow every 2 weeks. Self-seeds readily if flower heads are left. Tolerates light frost."
+    },
+    "goodCompanions": [
+      "cabbage",
+      "lettuce",
+      "onion",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "carrot",
+      "tomato"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "downy mildew"
+    ]
   },
   {
     "species": "Mentha spp.",
     "commonName": "Mint",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "mint",
+    "family": "Lamiaceae",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 14,
@@ -101,16 +573,132 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 36,
     "growthRate": "fast",
-    "goodCompanions": ["cabbage", "tomato", "peas"],
-    "badCompanions": ["parsley", "chamomile"],
-    "commonPests": ["spider mites", "aphids", "flea beetles"],
-    "commonDiseases": ["mint rust", "verticillium wilt"]
+    "goodCompanions": [
+      "cabbage",
+      "tomato",
+      "peas"
+    ],
+    "badCompanions": [
+      "parsley",
+      "chamomile"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "mint rust",
+      "verticillium wilt"
+    ]
+  },
+  {
+    "species": "Mentha spp.",
+    "variety": "Peppermint",
+    "commonName": "Peppermint Mint",
+    "plantType": "herb",
+    "isPerennial": true,
+    "cropGroup": "mint",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToGermination": 14,
+    "daysToMaturity": 90,
+    "spacingInches": 18,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "high",
+    "soilPreference": "Rich, moist",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 36,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 35,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 150,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Aggressive perennial spreader — grow in containers or use root barriers. Propagates easily from cuttings or runners. High menthol content gives strong cooling flavor. Harvest before flowering for best flavor. Cut back hard in midsummer to encourage fresh growth."
+    },
+    "goodCompanions": [
+      "cabbage",
+      "tomato",
+      "peas"
+    ],
+    "badCompanions": [
+      "parsley",
+      "chamomile"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "mint rust",
+      "verticillium wilt"
+    ]
+  },
+  {
+    "species": "Mentha spp.",
+    "variety": "Spearmint",
+    "commonName": "Spearmint Mint",
+    "plantType": "herb",
+    "isPerennial": true,
+    "cropGroup": "mint",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToGermination": 14,
+    "daysToMaturity": 90,
+    "spacingInches": 18,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "high",
+    "soilPreference": "Rich, moist",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 36,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 35,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 150,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Milder and sweeter than peppermint. Equally aggressive — always contain plantings. Thrives in partial shade with moist soil. Dies back in winter but returns reliably in spring. Frequent harvesting keeps plants bushy."
+    },
+    "goodCompanions": [
+      "cabbage",
+      "tomato",
+      "peas"
+    ],
+    "badCompanions": [
+      "parsley",
+      "chamomile"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "mint rust",
+      "verticillium wilt"
+    ]
   },
   {
     "species": "Salvia rosmarinus",
     "commonName": "Rosemary",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "rosemary",
+    "family": "Lamiaceae",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 21,
@@ -122,16 +710,84 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 36,
     "growthRate": "slow",
-    "goodCompanions": ["beans", "cabbage", "carrot", "sage"],
-    "badCompanions": ["cucumber", "squash"],
-    "commonPests": ["spider mites", "aphids", "spittlebugs"],
-    "commonDiseases": ["root rot", "powdery mildew"]
+    "goodCompanions": [
+      "beans",
+      "cabbage",
+      "carrot",
+      "sage"
+    ],
+    "badCompanions": [
+      "cucumber",
+      "squash"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids",
+      "spittlebugs"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "powdery mildew"
+    ]
+  },
+  {
+    "species": "Salvia rosmarinus",
+    "variety": "Common",
+    "commonName": "Common Rosemary",
+    "plantType": "herb",
+    "isPerennial": true,
+    "cropGroup": "rosemary",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 10,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 21,
+    "daysToMaturity": 120,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "low",
+    "soilPreference": "Well-drained, sandy, slightly alkaline",
+    "matureHeightInches": 48,
+    "matureSpreadInches": 36,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 365,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Woody perennial hardy to USDA zone 7–8. Very slow to germinate (21–28 days) with low germination rates — propagation from cuttings is more reliable. Requires excellent drainage; do not overwater. Full sun, lean soil. In cold climates grow in pots and bring indoors for winter."
+    },
+    "goodCompanions": [
+      "beans",
+      "cabbage",
+      "carrot",
+      "sage"
+    ],
+    "badCompanions": [
+      "cucumber",
+      "squash"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids",
+      "spittlebugs"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "powdery mildew"
+    ]
   },
   {
     "species": "Thymus vulgaris",
     "commonName": "Thyme",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "thyme",
+    "family": "Lamiaceae",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 14,
@@ -143,15 +799,73 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 12,
     "growthRate": "slow",
-    "goodCompanions": ["cabbage", "eggplant", "potato", "strawberry"],
-    "commonPests": ["spider mites", "aphids"],
-    "commonDiseases": ["root rot", "gray mold"]
+    "goodCompanions": [
+      "cabbage",
+      "eggplant",
+      "potato",
+      "strawberry"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "gray mold"
+    ]
+  },
+  {
+    "species": "Thymus vulgaris",
+    "variety": "Common",
+    "commonName": "Common Thyme",
+    "plantType": "herb",
+    "isPerennial": true,
+    "cropGroup": "thyme",
+    "family": "Lamiaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": 1,
+    "daysToGermination": 14,
+    "daysToMaturity": 90,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "low",
+    "soilPreference": "Well-drained, sandy, lean",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 12,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 365,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Hardy perennial (zones 5–9). Slow to germinate — start indoors for best results. Prefers well-drained soil and full sun. Trim after flowering to keep plants compact and prevent woodiness. Harvest lightly in the first year to let plants establish."
+    },
+    "goodCompanions": [
+      "cabbage",
+      "eggplant",
+      "potato",
+      "strawberry"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "gray mold"
+    ]
   },
   {
     "species": "Origanum vulgare",
     "commonName": "Oregano",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "oregano",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 10,
@@ -163,15 +877,26 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["pepper", "tomato", "beans"],
-    "commonPests": ["aphids", "spider mites"],
-    "commonDiseases": ["root rot", "mint rust"]
+    "goodCompanions": [
+      "pepper",
+      "tomato",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "mint rust"
+    ]
   },
   {
     "species": "Salvia officinalis",
     "commonName": "Sage",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "sage",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 14,
@@ -183,16 +908,32 @@
     "matureHeightInches": 30,
     "matureSpreadInches": 24,
     "growthRate": "moderate",
-    "goodCompanions": ["cabbage", "carrot", "rosemary", "beans"],
-    "badCompanions": ["cucumber", "onion", "rue"],
-    "commonPests": ["spider mites", "slugs"],
-    "commonDiseases": ["powdery mildew", "root rot"]
+    "goodCompanions": [
+      "cabbage",
+      "carrot",
+      "rosemary",
+      "beans"
+    ],
+    "badCompanions": [
+      "cucumber",
+      "onion",
+      "rue"
+    ],
+    "commonPests": [
+      "spider mites",
+      "slugs"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "root rot"
+    ]
   },
   {
     "species": "Allium schoenoprasum",
     "commonName": "Chives",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "chives",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": -2,
     "directSowWeeksBeforeLastFrost": 4,
@@ -205,16 +946,30 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 8,
     "growthRate": "moderate",
-    "goodCompanions": ["carrot", "tomato", "rose", "grape"],
-    "badCompanions": ["beans", "peas"],
-    "commonPests": ["onion thrips"],
-    "commonDiseases": ["downy mildew", "rust"]
+    "goodCompanions": [
+      "carrot",
+      "tomato",
+      "rose",
+      "grape"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas"
+    ],
+    "commonPests": [
+      "onion thrips"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "rust"
+    ]
   },
   {
     "species": "Lavandula angustifolia",
     "commonName": "Lavender",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "lavender",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 21,
@@ -226,16 +981,31 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 24,
     "growthRate": "slow",
-    "goodCompanions": ["rose", "thyme", "oregano", "echinacea"],
-    "badCompanions": ["mint"],
-    "commonPests": ["aphids", "whiteflies", "spittlebugs"],
-    "commonDiseases": ["root rot", "leaf spot"]
+    "goodCompanions": [
+      "rose",
+      "thyme",
+      "oregano",
+      "echinacea"
+    ],
+    "badCompanions": [
+      "mint"
+    ],
+    "commonPests": [
+      "aphids",
+      "whiteflies",
+      "spittlebugs"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "leaf spot"
+    ]
   },
   {
     "species": "Cymbopogon citratus",
     "commonName": "Lemongrass",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "lemongrass",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 3,
     "daysToGermination": 14,
@@ -247,15 +1017,24 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "pepper", "citrus"],
-    "commonPests": ["spider mites"],
-    "commonDiseases": ["rust"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "citrus"
+    ],
+    "commonPests": [
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "rust"
+    ]
   },
   {
     "species": "Artemisia dracunculus",
     "commonName": "Tarragon",
     "plantType": "herb",
     "isPerennial": true,
+    "cropGroup": "tarragon",
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 14,
     "daysToMaturity": 60,
@@ -266,15 +1045,26 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 12,
     "growthRate": "moderate",
-    "goodCompanions": ["eggplant", "tomato", "pepper"],
-    "commonPests": ["aphids", "spider mites"],
-    "commonDiseases": ["root rot", "downy mildew"]
+    "goodCompanions": [
+      "eggplant",
+      "tomato",
+      "pepper"
+    ],
+    "commonPests": [
+      "aphids",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "root rot",
+      "downy mildew"
+    ]
   },
   {
     "species": "Foeniculum vulgare",
     "commonName": "Fennel",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "fennel",
     "directSowWeeksAfterLastFrost": 1,
     "daysToGermination": 10,
     "daysToMaturity": 65,
@@ -285,16 +1075,31 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 18,
     "growthRate": "fast",
-    "goodCompanions": ["dill", "sage"],
-    "badCompanions": ["tomato", "beans", "pepper", "kohlrabi"],
-    "commonPests": ["parsleyworms", "aphids"],
-    "commonDiseases": ["cercospora leaf blight", "downy mildew"]
+    "goodCompanions": [
+      "dill",
+      "sage"
+    ],
+    "badCompanions": [
+      "tomato",
+      "beans",
+      "pepper",
+      "kohlrabi"
+    ],
+    "commonPests": [
+      "parsleyworms",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "cercospora leaf blight",
+      "downy mildew"
+    ]
   },
   {
     "species": "Matricaria chamomilla",
     "commonName": "Chamomile",
     "plantType": "herb",
     "isPerennial": false,
+    "cropGroup": "chamomile",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 10,
     "daysToMaturity": 60,
@@ -305,9 +1110,20 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["cabbage", "onion", "cucumber"],
-    "badCompanions": ["mint"],
-    "commonPests": ["aphids"],
-    "commonDiseases": ["powdery mildew", "botrytis"]
+    "goodCompanions": [
+      "cabbage",
+      "onion",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "mint"
+    ],
+    "commonPests": [
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "botrytis"
+    ]
   }
 ]

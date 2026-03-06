@@ -16,8 +16,6 @@ export * as expenseRepository from "./pouchdb/repositories/expenseRepository.ts"
 export * as userPlantKnowledgeRepository from "./pouchdb/repositories/userPlantKnowledgeRepository.ts";
 export * as plantingScheduleRepository from "./pouchdb/repositories/plantingScheduleRepository.ts";
 export * as scheduleTaskRepository from "./pouchdb/repositories/scheduleTaskRepository.ts";
-export * as customCropRepository from "./pouchdb/repositories/customCropRepository.ts";
-
 // ─── Search ───
 export * as search from "./pouchdb/search.ts";
 

@@ -1,10 +1,10 @@
-import { getCropById } from "../../data/cropdb/index.ts";
-import type { CropVariety } from "../../data/cropdb/cropdb.types.ts";
+import { getCropGroup, builtInEntryId } from "../../services/knowledgeBase.ts";
+import type { PlantKnowledge } from "../../validation/plantKnowledge.schema.ts";
 
 interface StepSelectVarietyProps {
   cropId: string;
   cropName: string;
-  onSelect: (variety: CropVariety) => void;
+  onSelect: (entry: PlantKnowledge) => void;
   onBack: () => void;
 }
 
@@ -14,8 +14,7 @@ export default function StepSelectVariety({
   onSelect,
   onBack,
 }: StepSelectVarietyProps) {
-  const crop = getCropById(cropId);
-  const varieties = crop?.varieties ?? [];
+  const entries = getCropGroup(cropId).filter((e) => e.scheduling != null);
 
   return (
     <div>
@@ -34,31 +33,31 @@ export default function StepSelectVariety({
         Varieties for <strong>{cropName}</strong>
       </p>
 
-      {varieties.length === 0 ? (
+      {entries.length === 0 ? (
         <p className="mt-4 text-sm text-text-muted">
           No varieties found for this crop.
         </p>
       ) : (
         <div className="mt-4 space-y-1.5">
-          {varieties.map((v) => (
+          {entries.map((entry) => (
             <button
-              key={v.id}
+              key={builtInEntryId(entry.species, entry.variety)}
               type="button"
-              onClick={() => onSelect(v)}
+              onClick={() => onSelect(entry)}
               className="flex w-full items-center justify-between rounded-lg border border-border-default px-3 py-2.5 text-left transition-colors hover:bg-surface-muted"
             >
               <div>
                 <span className="text-sm font-medium text-text-primary">
-                  {v.name}
+                  {entry.variety ?? entry.commonName}
                 </span>
                 <div className="mt-0.5 flex items-center gap-2 text-xs text-text-muted">
-                  <span>{v.daysToMaturity} days to maturity</span>
-                  {v.indoorStart && (
+                  <span>{entry.daysToMaturity} days to maturity</span>
+                  {entry.scheduling?.indoorStart && (
                     <span className="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-medium text-blue-700">
                       Indoor start
                     </span>
                   )}
-                  {v.directSow && (
+                  {entry.scheduling?.directSow && (
                     <span className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-medium text-green-700">
                       Direct sow
                     </span>

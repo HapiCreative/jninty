@@ -185,11 +185,19 @@ export default function KnowledgeFormPage() {
 
       // Build input, only including optional fields when they have values
       // (to satisfy exactOptionalPropertyTypes)
+      // Derive cropGroup from commonName (slugified)
+      const cropGroup = commonName
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
       const input: Parameters<typeof userPlantKnowledgeRepository.create>[0] = {
         species: species.trim(),
         commonName: commonName.trim(),
         plantType,
         isPerennial,
+        cropGroup,
         sunNeeds,
         waterNeeds,
       };

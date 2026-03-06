@@ -10,12 +10,16 @@ import { useScheduling } from "../../hooks/useScheduling.ts";
 import { useToast } from "../ui/Toast.tsx";
 import { useModalA11y } from "../../hooks/useModalA11y.ts";
 import { useFocusTrap } from "../../hooks/useFocusTrap.ts";
-import { getVarietyById } from "../../data/cropdb/index.ts";
+import {
+  builtInEntryId,
+  getCropGroup,
+} from "../../services/knowledgeBase.ts";
 import {
   computeTaskDates,
   type ComputedDates,
+  type SchedulingDateFields,
 } from "../../services/schedulingService.ts";
-import type { CropVariety } from "../../data/cropdb/cropdb.types.ts";
+import type { PlantKnowledge } from "../../validation/plantKnowledge.schema.ts";
 import type { ScheduleDirection, CropSource } from "../../validation/plantingSchedule.schema.ts";
 
 type WizardStep =
@@ -41,7 +45,7 @@ interface WizardState {
   cropSource: CropSource;
   varietyId: string;
   varietyName: string;
-  variety: CropVariety | null;
+  schedulingFields: SchedulingDateFields | null;
   direction: ScheduleDirection;
   anchorDate: string;
   dates: ComputedDates | null;
@@ -55,7 +59,7 @@ const initialState: WizardState = {
   cropSource: "builtin",
   varietyId: "",
   varietyName: "",
-  variety: null,
+  schedulingFields: null,
   direction: "forward",
   anchorDate: "",
   dates: null,
@@ -65,6 +69,21 @@ const initialState: WizardState = {
 
 interface StartingFlowWizardProps {
   onClose: () => void;
+}
+
+function extractSchedulingFields(
+  entry: PlantKnowledge,
+): SchedulingDateFields | null {
+  if (!entry.scheduling) return null;
+  return {
+    daysToMaturity:
+      entry.daysToMaturity ?? entry.scheduling.harvestWindowDays,
+    daysToTransplant: entry.scheduling.daysToTransplant,
+    bedPrepLeadDays: entry.scheduling.bedPrepLeadDays,
+    harvestWindowDays: entry.scheduling.harvestWindowDays,
+    indoorStart: entry.scheduling.indoorStart,
+    directSow: entry.scheduling.directSow,
+  };
 }
 
 export default function StartingFlowWizard({
@@ -95,12 +114,13 @@ export default function StartingFlowWizard({
   }, []);
 
   const handleVarietySelect = useCallback(
-    (variety: CropVariety) => {
+    (entry: PlantKnowledge) => {
+      const fields = extractSchedulingFields(entry);
       setState((prev) => ({
         ...prev,
-        varietyId: variety.id,
-        varietyName: variety.name,
-        variety,
+        varietyId: builtInEntryId(entry.species, entry.variety),
+        varietyName: entry.variety ?? entry.commonName,
+        schedulingFields: fields,
       }));
       setStep("date");
     },
@@ -109,10 +129,15 @@ export default function StartingFlowWizard({
 
   const handleDateConfirm = useCallback(
     (date: string, direction: ScheduleDirection) => {
-      const variety = getVarietyById(state.cropId, state.varietyId);
-      if (!variety) return;
+      // Re-lookup the entry from the knowledge base
+      const entries = getCropGroup(state.cropId);
+      const entry = entries.find(
+        (e) => builtInEntryId(e.species, e.variety) === state.varietyId,
+      );
+      const fields = entry ? extractSchedulingFields(entry) : state.schedulingFields;
+      if (!fields) return;
 
-      const dates = computeTaskDates(variety, date, direction);
+      const dates = computeTaskDates(fields, date, direction);
       setState((prev) => ({
         ...prev,
         anchorDate: date,
@@ -121,7 +146,7 @@ export default function StartingFlowWizard({
       }));
       setStep("preview");
     },
-    [state.cropId, state.varietyId],
+    [state.cropId, state.varietyId, state.schedulingFields],
   );
 
   const handleDateChange = useCallback((key: string, date: string) => {

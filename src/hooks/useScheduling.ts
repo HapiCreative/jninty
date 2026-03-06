@@ -2,8 +2,12 @@ import { useCallback } from "react";
 import {
   computeTaskDates,
   buildTaskInputs,
+  type SchedulingDateFields,
 } from "../services/schedulingService.ts";
-import { getVarietyById } from "../data/cropdb/index.ts";
+import {
+  builtInEntryId,
+  getCropGroup,
+} from "../services/knowledgeBase.ts";
 import {
   plantingScheduleRepository,
   scheduleTaskRepository,
@@ -11,7 +15,6 @@ import {
 import type { ScheduleDirection, CropSource } from "../validation/plantingSchedule.schema.ts";
 import type { ScheduleTask } from "../validation/scheduleTask.schema.ts";
 import type { PlantingSchedule } from "../validation/plantingSchedule.schema.ts";
-import type { CropVariety } from "../data/cropdb/cropdb.types.ts";
 
 export interface CreateScheduleParams {
   cropId: string;
@@ -36,25 +39,39 @@ export interface SuccessionParams extends CreateScheduleParams {
   count: number;
 }
 
-function lookupVariety(
+function lookupSchedulingFields(
   cropId: string,
   varietyId: string,
-): CropVariety | undefined {
-  return getVarietyById(cropId, varietyId);
+): SchedulingDateFields | undefined {
+  // cropId is the cropGroup, varietyId is the builtInEntryId
+  const entries = getCropGroup(cropId);
+  const entry = entries.find(
+    (e) => builtInEntryId(e.species, e.variety) === varietyId,
+  );
+  if (!entry?.scheduling) return undefined;
+
+  return {
+    daysToMaturity: entry.daysToMaturity ?? entry.scheduling.harvestWindowDays,
+    daysToTransplant: entry.scheduling.daysToTransplant,
+    bedPrepLeadDays: entry.scheduling.bedPrepLeadDays,
+    harvestWindowDays: entry.scheduling.harvestWindowDays,
+    indoorStart: entry.scheduling.indoorStart,
+    directSow: entry.scheduling.directSow,
+  };
 }
 
 export function useScheduling() {
   const createSchedule = useCallback(
     async (params: CreateScheduleParams): Promise<CreateScheduleResult> => {
-      const variety = lookupVariety(params.cropId, params.varietyId);
-      if (!variety) {
+      const fields = lookupSchedulingFields(params.cropId, params.varietyId);
+      if (!fields) {
         throw new Error(
-          `Variety not found: ${params.cropId}/${params.varietyId}`,
+          `Scheduling data not found: ${params.cropId}/${params.varietyId}`,
         );
       }
 
       const dates = computeTaskDates(
-        variety,
+        fields,
         params.anchorDate,
         params.direction,
       );

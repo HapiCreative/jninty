@@ -29,7 +29,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import InstallPrompt from "./components/InstallPrompt";
 import { loadBuiltInRules } from "./services/taskRuleLoader.ts";
 import { rebuildIndex, startListening } from "./db/search.ts";
-import { buildCropSearchIndex } from "./services/cropDBSearch.ts";
+import { buildSchedulableSearchIndex } from "./services/knowledgeBase.ts";
 import { checkAndNotifyTasks } from "./services/notifications.ts";
 import {
   startNotificationListening,
@@ -58,9 +58,9 @@ export default function App() {
       .catch(console.error);
   }, []);
 
-  // Initialize CropDB search index (separate MiniSearch instance)
+  // Initialize schedulable plant search index
   useEffect(() => {
-    buildCropSearchIndex([]);
+    buildSchedulableSearchIndex();
   }, []);
 
   // Check for due/overdue tasks on mount and window focus

@@ -1,10 +1,10 @@
-import { getCropById } from "../../data/cropdb/index.ts";
-import type { CropVariety } from "../../data/cropdb/cropdb.types.ts";
+import { getCropGroup, builtInEntryId } from "../../services/knowledgeBase.ts";
+import type { PlantKnowledge } from "../../validation/plantKnowledge.schema.ts";
 
 interface VarietySelectorProps {
   cropId: string;
   cropName: string;
-  onSelect: (variety: CropVariety) => void;
+  onSelect: (entry: PlantKnowledge) => void;
   onBack: () => void;
 }
 
@@ -14,8 +14,7 @@ export default function VarietySelector({
   onSelect,
   onBack,
 }: VarietySelectorProps) {
-  const crop = getCropById(cropId);
-  const varieties = crop?.varieties ?? [];
+  const entries = getCropGroup(cropId).filter((e) => e.scheduling != null);
 
   return (
     <div>
@@ -42,25 +41,25 @@ export default function VarietySelector({
       </div>
 
       <ul className="mt-2 space-y-1">
-        {varieties.map((variety) => (
-          <li key={variety.id}>
+        {entries.map((entry) => (
+          <li key={builtInEntryId(entry.species, entry.variety)}>
             <button
               type="button"
-              onClick={() => onSelect(variety)}
+              onClick={() => onSelect(entry)}
               className="flex w-full items-baseline justify-between rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-surface-muted"
             >
               <span className="font-medium text-text-heading">
-                {variety.name}
+                {entry.variety ?? entry.commonName}
               </span>
               <span className="text-xs text-text-muted">
-                {variety.daysToMaturity}d to maturity
+                {entry.daysToMaturity}d to maturity
               </span>
             </button>
           </li>
         ))}
       </ul>
 
-      {varieties.length === 0 && (
+      {entries.length === 0 && (
         <p className="mt-3 text-center text-xs text-text-muted">
           No varieties found for this crop.
         </p>

@@ -16,6 +16,7 @@ const validPlant = {
   commonName: "Cherry Tomato",
   plantType: "vegetable" as const,
   isPerennial: false,
+  cropGroup: "tomato",
   indoorStartWeeksBeforeLastFrost: 6,
   transplantWeeksAfterLastFrost: 2,
   daysToGermination: 7,
@@ -45,6 +46,7 @@ describe("plantKnowledgeSchema", () => {
       commonName: "Tomato",
       plantType: "vegetable",
       isPerennial: false,
+      cropGroup: "tomato",
       sunNeeds: "full_sun",
       waterNeeds: "high",
     };

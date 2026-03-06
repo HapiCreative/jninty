@@ -119,6 +119,7 @@ const mockUserEntry: UserPlantKnowledge = {
   commonName: "My Custom Plant",
   plantType: "vegetable",
   isPerennial: false,
+  cropGroup: "my-custom-plant",
   sunNeeds: "full_sun",
   waterNeeds: "moderate",
 };

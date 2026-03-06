@@ -1,5 +1,4 @@
 import { addDays, differenceInCalendarDays, formatISO, parseISO } from "date-fns";
-import type { CropVariety } from "../data/cropdb/cropdb.types.ts";
 import type { ScheduleTaskType } from "../validation/scheduleTask.schema.ts";
 
 // ─── Types ───
@@ -66,18 +65,17 @@ function toISO(date: Date): string {
 
 // ─── Core date computation ───
 
-type VarietyDateFields = Pick<
-  CropVariety,
-  | "daysToMaturity"
-  | "daysToTransplant"
-  | "bedPrepLeadDays"
-  | "harvestWindowDays"
-  | "indoorStart"
-  | "directSow"
->;
+export type SchedulingDateFields = {
+  daysToMaturity: number;
+  daysToTransplant: number | null;
+  bedPrepLeadDays: number;
+  harvestWindowDays: number;
+  indoorStart: boolean;
+  directSow: boolean;
+};
 
 export function computeTaskDates(
-  variety: VarietyDateFields,
+  variety: SchedulingDateFields,
   anchorDate: string,
   direction: "forward" | "backward",
 ): ComputedDates {

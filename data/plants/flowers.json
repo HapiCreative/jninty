@@ -4,6 +4,8 @@
     "commonName": "Sunflower",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "sunflower",
+    "family": "Asteraceae",
     "directSowWeeksAfterLastFrost": 1,
     "daysToGermination": 7,
     "daysToMaturity": 70,
@@ -14,16 +16,187 @@
     "matureHeightInches": 84,
     "matureSpreadInches": 18,
     "growthRate": "fast",
-    "goodCompanions": ["cucumber", "squash", "corn", "lettuce"],
-    "badCompanions": ["potato", "pole beans"],
-    "commonPests": ["aphids", "sunflower beetles", "birds"],
-    "commonDiseases": ["downy mildew", "rust", "sclerotinia"]
+    "goodCompanions": [
+      "cucumber",
+      "squash",
+      "corn",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "potato",
+      "pole beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "sunflower beetles",
+      "birds"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "rust",
+      "sclerotinia"
+    ]
+  },
+  {
+    "species": "Helianthus annuus",
+    "variety": "Mammoth",
+    "commonName": "Mammoth Sunflower",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "sunflower",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 7,
+    "daysToMaturity": 80,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 84,
+    "matureSpreadInches": 18,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Single-stem giant reaching 10-12 ft. Produces one large head per stalk; excellent for seed harvest. Sow after last frost when soil is at least 50 °F."
+    },
+    "goodCompanions": [
+      "cucumber",
+      "squash",
+      "corn",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "potato",
+      "pole beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "sunflower beetles",
+      "birds"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "rust",
+      "sclerotinia"
+    ]
+  },
+  {
+    "species": "Helianthus annuus",
+    "variety": "Teddy Bear",
+    "commonName": "Teddy Bear Sunflower",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "sunflower",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 84,
+    "matureSpreadInches": 18,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 10,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Dwarf variety (2-3 ft) with fully double, fluffy golden blooms. Great for containers and borders. Does not transplant well due to taproot."
+    },
+    "goodCompanions": [
+      "cucumber",
+      "squash",
+      "corn",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "potato",
+      "pole beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "sunflower beetles",
+      "birds"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "rust",
+      "sclerotinia"
+    ]
+  },
+  {
+    "species": "Helianthus annuus",
+    "variety": "Autumn Beauty",
+    "commonName": "Autumn Beauty Sunflower",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "sunflower",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 7,
+    "daysToMaturity": 70,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 84,
+    "matureSpreadInches": 18,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Multi-branching variety (5-7 ft) with blooms in red, bronze, yellow, and bicolor shades. Produces multiple cut flowers per plant over a longer period than single-stem types."
+    },
+    "goodCompanions": [
+      "cucumber",
+      "squash",
+      "corn",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "potato",
+      "pole beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "sunflower beetles",
+      "birds"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "rust",
+      "sclerotinia"
+    ]
   },
   {
     "species": "Tagetes spp.",
     "commonName": "Marigold",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "marigold",
+    "family": "Asteraceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 0,
     "directSowWeeksAfterLastFrost": 0,
@@ -36,16 +209,134 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "pepper", "beans", "squash", "cucumber"],
-    "badCompanions": ["cabbage"],
-    "commonPests": ["spider mites", "aphids"],
-    "commonDiseases": ["powdery mildew", "botrytis"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beans",
+      "squash",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "cabbage"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "botrytis"
+    ]
+  },
+  {
+    "species": "Tagetes spp.",
+    "variety": "French",
+    "commonName": "French Marigold",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "marigold",
+    "family": "Asteraceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 0,
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 5,
+    "daysToMaturity": 50,
+    "spacingInches": 8,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, average fertility",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 28,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 75,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Compact plants (6-12 in.) with double crested blooms in yellow, orange, and red bicolors. Excellent border and companion plant; may deter some garden pests. Deadhead regularly for continuous bloom."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beans",
+      "squash",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "cabbage"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "botrytis"
+    ]
+  },
+  {
+    "species": "Tagetes spp.",
+    "variety": "African",
+    "commonName": "African Marigold",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "marigold",
+    "family": "Asteraceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 0,
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 5,
+    "daysToMaturity": 70,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, average fertility",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 28,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Tall plants (2-3 ft) bearing large 3-5 in. pom-pom blooms in gold, yellow, and orange. Start indoors 4-6 weeks before last frost for longest bloom season. Heat and drought tolerant once established."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beans",
+      "squash",
+      "cucumber"
+    ],
+    "badCompanions": [
+      "cabbage"
+    ],
+    "commonPests": [
+      "spider mites",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "botrytis"
+    ]
   },
   {
     "species": "Zinnia elegans",
     "commonName": "Zinnia",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "zinnia",
+    "family": "Asteraceae",
     "directSowWeeksAfterLastFrost": 0,
     "daysToGermination": 7,
     "daysToMaturity": 60,
@@ -56,15 +347,158 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "pepper", "squash"],
-    "commonPests": ["Japanese beetles", "aphids"],
-    "commonDiseases": ["powdery mildew", "bacterial leaf spot"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "squash"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "bacterial leaf spot"
+    ]
+  },
+  {
+    "species": "Zinnia elegans",
+    "variety": "Giant Dahlia",
+    "commonName": "Giant Dahlia Zinnia",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "zinnia",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 7,
+    "daysToMaturity": 75,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 36,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Large 4-6 in. dahlia-form blooms on 3-4 ft stems in a wide color range. Excellent cut flower with long vase life. Pinch at 12 in. to encourage branching."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "squash"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "bacterial leaf spot"
+    ]
+  },
+  {
+    "species": "Zinnia elegans",
+    "variety": "Profusion",
+    "commonName": "Profusion Zinnia",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "zinnia",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 7,
+    "daysToMaturity": 60,
+    "spacingInches": 10,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 36,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 75,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Compact mounding habit (12-18 in.) with prolific single blooms. Outstanding disease resistance to powdery mildew. Self-cleaning; no deadheading needed for continuous bloom."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "squash"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "bacterial leaf spot"
+    ]
+  },
+  {
+    "species": "Zinnia elegans",
+    "variety": "State Fair",
+    "commonName": "State Fair Zinnia",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "zinnia",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 7,
+    "daysToMaturity": 80,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, neutral pH",
+    "matureHeightInches": 36,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 55,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Tall variety (3-4 ft) with massive 5 in. double blooms. Classic mix includes scarlet, orange, yellow, pink, lavender, and white. Prefers full sun and good air circulation."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "squash"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "bacterial leaf spot"
+    ]
   },
   {
     "species": "Petunia × hybrida",
     "commonName": "Petunia",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "petunia",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 10,
@@ -76,15 +510,27 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 18,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "pepper", "beans"],
-    "commonPests": ["aphids", "caterpillars", "slugs"],
-    "commonDiseases": ["botrytis", "tobacco mosaic virus"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "caterpillars",
+      "slugs"
+    ],
+    "commonDiseases": [
+      "botrytis",
+      "tobacco mosaic virus"
+    ]
   },
   {
     "species": "Rosa spp.",
     "commonName": "Rose",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "rose",
     "transplantWeeksAfterLastFrost": -2,
     "daysToMaturity": 365,
     "spacingInches": 36,
@@ -94,16 +540,34 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 48,
     "growthRate": "moderate",
-    "goodCompanions": ["garlic", "chives", "lavender", "marigold", "parsley"],
-    "badCompanions": ["bunchgrass"],
-    "commonPests": ["aphids", "Japanese beetles", "rose midges", "spider mites"],
-    "commonDiseases": ["black spot", "powdery mildew", "rust"]
+    "goodCompanions": [
+      "garlic",
+      "chives",
+      "lavender",
+      "marigold",
+      "parsley"
+    ],
+    "badCompanions": [
+      "bunchgrass"
+    ],
+    "commonPests": [
+      "aphids",
+      "Japanese beetles",
+      "rose midges",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "black spot",
+      "powdery mildew",
+      "rust"
+    ]
   },
   {
     "species": "Dahlia spp.",
     "commonName": "Dahlia",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "dahlia",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 10,
@@ -115,15 +579,30 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["marigold", "zinnia", "cosmos"],
-    "commonPests": ["slugs", "aphids", "spider mites", "earwigs"],
-    "commonDiseases": ["powdery mildew", "botrytis", "dahlia smut"]
+    "goodCompanions": [
+      "marigold",
+      "zinnia",
+      "cosmos"
+    ],
+    "commonPests": [
+      "slugs",
+      "aphids",
+      "spider mites",
+      "earwigs"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "botrytis",
+      "dahlia smut"
+    ]
   },
   {
     "species": "Cosmos bipinnatus",
     "commonName": "Cosmos",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "cosmos",
+    "family": "Asteraceae",
     "directSowWeeksAfterLastFrost": 0,
     "daysToGermination": 7,
     "daysToMaturity": 50,
@@ -134,15 +613,115 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "squash", "beans"],
-    "commonPests": ["aphids", "thrips"],
-    "commonDiseases": ["powdery mildew", "stem canker"]
+    "goodCompanions": [
+      "tomato",
+      "squash",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "thrips"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "stem canker"
+    ]
+  },
+  {
+    "species": "Cosmos bipinnatus",
+    "variety": "Sensation",
+    "commonName": "Sensation Cosmos",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "cosmos",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "low",
+    "soilPreference": "Average, well-drained, lean",
+    "matureHeightInches": 48,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 90,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Tall airy plants (3-5 ft) with large daisy-like blooms in white, pink, and crimson. Thrives in poor to average soil; over-fertilizing reduces flowering. Self-sows readily in mild climates."
+    },
+    "goodCompanions": [
+      "tomato",
+      "squash",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "thrips"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "stem canker"
+    ]
+  },
+  {
+    "species": "Cosmos bipinnatus",
+    "variety": "Chocolate",
+    "commonName": "Chocolate Cosmos",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "cosmos",
+    "family": "Asteraceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 7,
+    "daysToMaturity": 75,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "low",
+    "soilPreference": "Average, well-drained, lean",
+    "matureHeightInches": 48,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Deep maroon-brown single blooms with a true chocolate fragrance. Grows 2-3 ft tall. Not as vigorous as Sensation; benefits from consistent moisture. Excellent specialty cut flower."
+    },
+    "goodCompanions": [
+      "tomato",
+      "squash",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "thrips"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "stem canker"
+    ]
   },
   {
     "species": "Tropaeolum majus",
     "commonName": "Nasturtium",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "nasturtium",
+    "family": "Tropaeolaceae",
     "directSowWeeksAfterLastFrost": 0,
     "daysToGermination": 10,
     "daysToMaturity": 55,
@@ -153,15 +732,70 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 18,
     "growthRate": "fast",
-    "goodCompanions": ["tomato", "cucumber", "cabbage", "beans"],
-    "commonPests": ["aphids", "caterpillars"],
-    "commonDiseases": ["bacterial wilt"]
+    "goodCompanions": [
+      "tomato",
+      "cucumber",
+      "cabbage",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "caterpillars"
+    ],
+    "commonDiseases": [
+      "bacterial wilt"
+    ]
+  },
+  {
+    "species": "Tropaeolum majus",
+    "variety": "Jewel Mix",
+    "commonName": "Jewel Mix Nasturtium",
+    "plantType": "flower",
+    "isPerennial": false,
+    "cropGroup": "nasturtium",
+    "family": "Tropaeolaceae",
+    "directSowWeeksAfterLastFrost": 0,
+    "daysToGermination": 10,
+    "daysToMaturity": 55,
+    "spacingInches": 10,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Average to poor, well-drained",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 18,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 75,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Compact bushy habit (12-15 in.) with semi-double blooms in scarlet, gold, orange, and cherry. Edible flowers and leaves with a peppery flavor. Prefers poor soil; rich soil promotes foliage over blooms. Does not transplant well."
+    },
+    "goodCompanions": [
+      "tomato",
+      "cucumber",
+      "cabbage",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "caterpillars"
+    ],
+    "commonDiseases": [
+      "bacterial wilt"
+    ]
   },
   {
     "species": "Ipomoea purpurea",
     "commonName": "Morning Glory",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "morning-glory",
     "directSowWeeksAfterLastFrost": 1,
     "daysToGermination": 7,
     "daysToMaturity": 65,
@@ -172,15 +806,26 @@
     "matureHeightInches": 120,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["corn", "beans"],
-    "commonPests": ["aphids", "leaf miners", "spider mites"],
-    "commonDiseases": ["rust", "white blister"]
+    "goodCompanions": [
+      "corn",
+      "beans"
+    ],
+    "commonPests": [
+      "aphids",
+      "leaf miners",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "rust",
+      "white blister"
+    ]
   },
   {
     "species": "Lathyrus odoratus",
     "commonName": "Sweet Pea",
     "plantType": "flower",
     "isPerennial": false,
+    "cropGroup": "sweet-pea",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 10,
     "daysToMaturity": 65,
@@ -191,15 +836,25 @@
     "matureHeightInches": 72,
     "matureSpreadInches": 8,
     "growthRate": "fast",
-    "goodCompanions": ["beans", "peas"],
-    "commonPests": ["aphids", "slugs"],
-    "commonDiseases": ["powdery mildew", "root rot"]
+    "goodCompanions": [
+      "beans",
+      "peas"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "root rot"
+    ]
   },
   {
     "species": "Echinacea purpurea",
     "commonName": "Coneflower",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "coneflower",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 1,
     "directSowWeeksBeforeLastFrost": 2,
@@ -212,15 +867,27 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["black-eyed susan", "lavender", "sedum"],
-    "commonPests": ["aphids", "Japanese beetles", "eriophyid mites"],
-    "commonDiseases": ["powdery mildew", "aster yellows"]
+    "goodCompanions": [
+      "black-eyed susan",
+      "lavender",
+      "sedum"
+    ],
+    "commonPests": [
+      "aphids",
+      "Japanese beetles",
+      "eriophyid mites"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "aster yellows"
+    ]
   },
   {
     "species": "Rudbeckia hirta",
     "commonName": "Black-Eyed Susan",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "black-eyed-susan",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 1,
     "directSowWeeksBeforeLastFrost": 2,
@@ -233,15 +900,26 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["coneflower", "lavender", "ornamental grasses"],
-    "commonPests": ["aphids", "sawflies"],
-    "commonDiseases": ["powdery mildew", "septoria leaf spot"]
+    "goodCompanions": [
+      "coneflower",
+      "lavender",
+      "ornamental grasses"
+    ],
+    "commonPests": [
+      "aphids",
+      "sawflies"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "septoria leaf spot"
+    ]
   },
   {
     "species": "Hibiscus moscheutos",
     "commonName": "Hibiscus",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "hibiscus",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 14,
@@ -253,15 +931,28 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 48,
     "growthRate": "moderate",
-    "goodCompanions": ["rose", "lavender"],
-    "commonPests": ["aphids", "whiteflies", "spider mites", "Japanese beetles"],
-    "commonDiseases": ["leaf spot", "botrytis", "root rot"]
+    "goodCompanions": [
+      "rose",
+      "lavender"
+    ],
+    "commonPests": [
+      "aphids",
+      "whiteflies",
+      "spider mites",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "leaf spot",
+      "botrytis",
+      "root rot"
+    ]
   },
   {
     "species": "Hydrangea macrophylla",
     "commonName": "Hydrangea",
     "plantType": "flower",
     "isPerennial": true,
+    "cropGroup": "hydrangea",
     "transplantWeeksAfterLastFrost": 0,
     "daysToMaturity": 730,
     "spacingInches": 60,
@@ -271,9 +962,23 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 72,
     "growthRate": "moderate",
-    "goodCompanions": ["azalea", "hosta", "fern"],
-    "badCompanions": ["walnut"],
-    "commonPests": ["aphids", "spider mites", "scale"],
-    "commonDiseases": ["powdery mildew", "leaf spot", "root rot"]
+    "goodCompanions": [
+      "azalea",
+      "hosta",
+      "fern"
+    ],
+    "badCompanions": [
+      "walnut"
+    ],
+    "commonPests": [
+      "aphids",
+      "spider mites",
+      "scale"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "leaf spot",
+      "root rot"
+    ]
   }
 ]

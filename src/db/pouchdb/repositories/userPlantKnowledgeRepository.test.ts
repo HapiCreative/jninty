@@ -23,6 +23,7 @@ const baseEntry = {
   commonName: "Tomato",
   plantType: "vegetable" as const,
   isPerennial: false,
+  cropGroup: "tomato",
   sunNeeds: "full_sun" as const,
   waterNeeds: "moderate" as const,
 };

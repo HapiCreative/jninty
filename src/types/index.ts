@@ -57,7 +57,4 @@ export type {
   ScheduleTask,
   ScheduleTaskType,
 } from "../validation/scheduleTask.schema.ts";
-export type {
-  CustomCrop,
-  CustomVariety,
-} from "../validation/customCrop.schema.ts";
+export type { Scheduling } from "../validation/plantKnowledge.schema.ts";

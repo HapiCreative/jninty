@@ -81,10 +81,9 @@ export type {
   ScheduleTaskType,
 } from "./scheduleTask.schema.ts";
 export {
-  customCropSchema,
-  customVarietySchema,
-} from "./customCrop.schema.ts";
-export type { CustomCrop, CustomVariety } from "./customCrop.schema.ts";
+  schedulingSchema,
+} from "./plantKnowledge.schema.ts";
+export type { Scheduling } from "./plantKnowledge.schema.ts";
 export { validateEntity } from "./helpers.ts";
 export type {
   ValidationResult,

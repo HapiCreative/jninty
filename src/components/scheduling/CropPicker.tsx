@@ -1,9 +1,13 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import CropPickerSearch from "./CropPickerSearch.tsx";
 import VarietySelector from "./VarietySelector.tsx";
-import { useCropDB } from "../../hooks/useCropDB.ts";
-import type { CropSearchResult } from "../../services/cropDBSearch.ts";
-import type { CropVariety } from "../../data/cropdb/cropdb.types.ts";
+import {
+  getSchedulable,
+  searchSchedulable,
+  builtInEntryId,
+} from "../../services/knowledgeBase.ts";
+import type { SchedulableSearchResult } from "../../services/knowledgeBase.ts";
+import type { PlantKnowledge } from "../../validation/plantKnowledge.schema.ts";
 import type { CropSource } from "../../validation/plantingSchedule.schema.ts";
 
 export interface CropSelection {
@@ -21,8 +25,18 @@ interface CropPickerProps {
 
 type PickerStep = "search" | "varieties";
 
+/** Display-friendly category labels for plantType values. */
+const CATEGORY_LABELS: Record<string, string> = {
+  vegetable: "Vegetable",
+  herb: "Herb",
+  flower: "Flower",
+  berry: "Berry",
+  fruit_tree: "Fruit Tree",
+  ornamental: "Ornamental",
+  other: "Other",
+};
+
 export default function CropPicker({ onSelect, onClose }: CropPickerProps) {
-  const { categories, getCropsForCategory, search } = useCropDB();
   const [step, setStep] = useState<PickerStep>("search");
   const [selectedCrop, setSelectedCrop] = useState<{
     cropId: string;
@@ -30,16 +44,47 @@ export default function CropPicker({ onSelect, onClose }: CropPickerProps) {
     cropSource: CropSource;
   } | null>(null);
 
-  const handleSearchSelect = useCallback((result: CropSearchResult) => {
-    // If they picked a specific variety from search, select it directly
-    onSelect({
-      cropId: result.cropId,
-      varietyId: result.id,
-      cropName: result.cropName,
-      varietyName: result.varietyName,
-      cropSource: result.source,
-    });
-  }, [onSelect]);
+  // Group schedulable entries by category → cropGroup
+  const categoryGroups = useMemo(() => {
+    const entries = getSchedulable();
+    const categories = new Map<
+      string,
+      Map<string, { name: string; count: number }>
+    >();
+
+    for (const entry of entries) {
+      const cat = entry.plantType;
+      if (!categories.has(cat)) {
+        categories.set(cat, new Map());
+      }
+      const groups = categories.get(cat)!;
+      const existing = groups.get(entry.cropGroup);
+      if (existing) {
+        existing.count++;
+      } else {
+        // Use the base commonName (without variety) as the crop display name
+        const displayName = entry.variety
+          ? entry.commonName.replace(new RegExp(`^${entry.variety}\\s+`), "")
+          : entry.commonName;
+        groups.set(entry.cropGroup, { name: displayName, count: 1 });
+      }
+    }
+
+    return categories;
+  }, []);
+
+  const handleSearchSelect = useCallback(
+    (result: SchedulableSearchResult) => {
+      onSelect({
+        cropId: result.cropGroup,
+        varietyId: result.id,
+        cropName: result.commonName,
+        varietyName: result.variety || result.commonName,
+        cropSource: "builtin",
+      });
+    },
+    [onSelect],
+  );
 
   const handleCropClick = useCallback(
     (cropId: string, cropName: string, source: CropSource) => {
@@ -50,13 +95,13 @@ export default function CropPicker({ onSelect, onClose }: CropPickerProps) {
   );
 
   const handleVarietySelect = useCallback(
-    (variety: CropVariety) => {
+    (entry: PlantKnowledge) => {
       if (!selectedCrop) return;
       onSelect({
         cropId: selectedCrop.cropId,
-        varietyId: variety.id,
+        varietyId: builtInEntryId(entry.species, entry.variety),
         cropName: selectedCrop.cropName,
-        varietyName: variety.name,
+        varietyName: entry.variety ?? entry.commonName,
         cropSource: selectedCrop.cropSource,
       });
     },
@@ -101,7 +146,7 @@ export default function CropPicker({ onSelect, onClose }: CropPickerProps) {
         {step === "search" && (
           <>
             <CropPickerSearch
-              onSearch={search}
+              onSearch={searchSchedulable}
               onSelect={handleSearchSelect}
             />
 
@@ -111,43 +156,38 @@ export default function CropPicker({ onSelect, onClose }: CropPickerProps) {
                 Browse by Category
               </h3>
               <div className="mt-2 space-y-1">
-                {categories.map((category) => {
-                  const crops = getCropsForCategory(category);
-                  return (
-                    <details key={category} className="group">
-                      <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-text-heading transition-colors hover:bg-surface-muted">
-                        <span>{category}</span>
-                        <span className="text-xs text-text-muted">
-                          {crops.length}
-                        </span>
-                      </summary>
-                      <ul className="mt-1 space-y-0.5 pl-3">
-                        {crops.map((crop) => (
-                          <li key={crop.id}>
+                {[...categoryGroups.entries()].map(([category, groups]) => (
+                  <details key={category} className="group">
+                    <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-text-heading transition-colors hover:bg-surface-muted">
+                      <span>{CATEGORY_LABELS[category] ?? category}</span>
+                      <span className="text-xs text-text-muted">
+                        {groups.size}
+                      </span>
+                    </summary>
+                    <ul className="mt-1 space-y-0.5 pl-3">
+                      {[...groups.entries()]
+                        .sort(([, a], [, b]) => a.name.localeCompare(b.name))
+                        .map(([groupId, { name, count }]) => (
+                          <li key={groupId}>
                             <button
                               type="button"
                               onClick={() =>
-                                handleCropClick(
-                                  crop.id,
-                                  crop.commonName,
-                                  "builtin",
-                                )
+                                handleCropClick(groupId, name, "builtin")
                               }
                               className="flex w-full items-baseline justify-between rounded-lg px-3 py-1.5 text-left text-sm transition-colors hover:bg-surface-muted"
                             >
                               <span className="text-text-heading">
-                                {crop.commonName}
+                                {name}
                               </span>
                               <span className="text-xs text-text-muted">
-                                {crop.varieties.length} var.
+                                {count} var.
                               </span>
                             </button>
                           </li>
                         ))}
-                      </ul>
-                    </details>
-                  );
-                })}
+                    </ul>
+                  </details>
+                ))}
               </div>
             </div>
           </>

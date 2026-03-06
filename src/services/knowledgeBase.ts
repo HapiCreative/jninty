@@ -1,7 +1,8 @@
+import MiniSearch from "minisearch";
 import { plantKnowledgeSchema } from "../validation/plantKnowledge.schema.ts";
 import type { PlantKnowledge } from "../validation/plantKnowledge.schema.ts";
 import type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";
-import type { KnowledgeBaseItem } from "./knowledgeBaseTypes.ts";
+import type { KnowledgeBaseItem, SchedulablePlant } from "./knowledgeBaseTypes.ts";
 import { z } from "zod";
 
 import vegetablesData from "../../data/plants/vegetables.json";
@@ -159,4 +160,190 @@ export function findKnowledgeItemById(
   const userEntry = userEntries.find((e) => e.id === id);
   if (!userEntry) return undefined;
   return userEntryToItem(userEntry);
+}
+
+// ─── Crop Group API ───
+
+/**
+ * Group all entries by cropGroup.
+ */
+export function getCropGroups(): Map<string, PlantKnowledge[]> {
+  const plants = loadKnowledgeBase();
+  const groups = new Map<string, PlantKnowledge[]>();
+  for (const p of plants) {
+    const existing = groups.get(p.cropGroup);
+    if (existing) {
+      existing.push(p);
+    } else {
+      groups.set(p.cropGroup, [p]);
+    }
+  }
+  return groups;
+}
+
+/**
+ * Get all entries in a specific crop group.
+ */
+export function getCropGroup(groupId: string): PlantKnowledge[] {
+  const plants = loadKnowledgeBase();
+  return plants.filter((p) => p.cropGroup === groupId);
+}
+
+/**
+ * Get entries that have a scheduling block.
+ */
+export function getSchedulable(): SchedulablePlant[] {
+  const plants = loadKnowledgeBase();
+  return plants.filter(
+    (p): p is SchedulablePlant => p.scheduling != null,
+  );
+}
+
+/**
+ * Get unique plantType values (categories) from the knowledge base.
+ */
+export function getCategories(): string[] {
+  const plants = loadKnowledgeBase();
+  const types = new Set<string>();
+  for (const p of plants) {
+    types.add(p.plantType);
+  }
+  return [...types].sort();
+}
+
+/**
+ * Get entries by plantType category, grouped by cropGroup.
+ */
+export function getCropGroupsByCategory(
+  category: string,
+): Map<string, PlantKnowledge[]> {
+  const plants = loadKnowledgeBase();
+  const groups = new Map<string, PlantKnowledge[]>();
+  for (const p of plants) {
+    if (p.plantType !== category) continue;
+    const existing = groups.get(p.cropGroup);
+    if (existing) {
+      existing.push(p);
+    } else {
+      groups.set(p.cropGroup, [p]);
+    }
+  }
+  return groups;
+}
+
+/**
+ * Find a plant entry by species and optional variety.
+ */
+export function getBySpeciesAndVariety(
+  species: string,
+  variety?: string,
+): PlantKnowledge | undefined {
+  const plants = loadKnowledgeBase();
+  const s = species.toLowerCase();
+  if (variety) {
+    const v = variety.toLowerCase();
+    return plants.find(
+      (p) =>
+        p.species.toLowerCase() === s &&
+        p.variety?.toLowerCase() === v,
+    );
+  }
+  return plants.find(
+    (p) => p.species.toLowerCase() === s && !p.variety,
+  );
+}
+
+// ─── Schedulable Plant Search ───
+
+interface SchedulableSearchDoc {
+  id: string;
+  commonName: string;
+  variety: string;
+  cropGroup: string;
+  family: string;
+}
+
+let schedulableIndex: MiniSearch<SchedulableSearchDoc> | null = null;
+let schedulableMap: Map<string, SchedulablePlant> | null = null;
+
+/**
+ * Build MiniSearch index over all schedulable plants.
+ * Called on first search or explicitly.
+ */
+export function buildSchedulableSearchIndex(): void {
+  const entries = getSchedulable();
+
+  const index = new MiniSearch<SchedulableSearchDoc>({
+    fields: ["commonName", "variety", "cropGroup", "family"],
+    storeFields: ["commonName", "variety", "cropGroup", "family"],
+    searchOptions: {
+      boost: { commonName: 2, variety: 1.5 },
+      fuzzy: 0.2,
+      prefix: true,
+    },
+  });
+
+  const docs: SchedulableSearchDoc[] = [];
+  const map = new Map<string, SchedulablePlant>();
+
+  for (const entry of entries) {
+    const id = builtInEntryId(entry.species, entry.variety);
+    docs.push({
+      id,
+      commonName: entry.commonName,
+      variety: entry.variety ?? "",
+      cropGroup: entry.cropGroup,
+      family: entry.family ?? "",
+    });
+    map.set(id, entry);
+  }
+
+  index.addAll(docs);
+  schedulableIndex = index;
+  schedulableMap = map;
+}
+
+export interface SchedulableSearchResult {
+  id: string;
+  commonName: string;
+  variety: string;
+  cropGroup: string;
+  family: string;
+  entry: SchedulablePlant;
+}
+
+/**
+ * Search schedulable plants by name, variety, cropGroup, or family.
+ */
+export function searchSchedulable(query: string): SchedulableSearchResult[] {
+  if (!query.trim()) return [];
+
+  if (!schedulableIndex) {
+    buildSchedulableSearchIndex();
+  }
+
+  const results = schedulableIndex!.search(query);
+
+  return results
+    .map((r) => {
+      const entry = schedulableMap!.get(r.id);
+      if (!entry) return null;
+      return {
+        id: r.id,
+        commonName: entry.commonName,
+        variety: entry.variety ?? "",
+        cropGroup: entry.cropGroup,
+        family: entry.family ?? "",
+        entry,
+      };
+    })
+    .filter((r): r is SchedulableSearchResult => r != null);
+}
+
+/**
+ * Clear the schedulable search index (for testing or reinit).
+ */
+export function clearSchedulableSearchIndex(): void {
+  schedulableIndex = null;
+  schedulableMap = null;
 }

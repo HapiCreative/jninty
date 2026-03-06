@@ -5,6 +5,8 @@
     "commonName": "Cherry Tomato",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 7,
@@ -16,10 +18,42 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
-    "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
-    "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Indeterminate. Extremely productive; harvest regularly to encourage continued fruiting. Stake or cage for support."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
   },
   {
     "species": "Solanum lycopersicum",
@@ -27,6 +61,8 @@
     "commonName": "Beefsteak Tomato",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 7,
@@ -38,10 +74,42 @@
     "matureHeightInches": 72,
     "matureSpreadInches": 30,
     "growthRate": "fast",
-    "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
-    "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
-    "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
+    "scheduling": {
+      "daysToTransplant": 49,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 45,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Indeterminate. Large fruits up to 2 lbs. Requires strong staking or caging. Prune suckers for larger fruit."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
   },
   {
     "species": "Solanum lycopersicum",
@@ -49,6 +117,8 @@
     "commonName": "Roma Tomato",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 7,
@@ -60,10 +130,42 @@
     "matureHeightInches": 48,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["basil", "carrot", "parsley", "marigold"],
-    "badCompanions": ["fennel", "brassicas", "dill", "potato"],
-    "commonPests": ["tomato hornworm", "aphids", "whiteflies", "flea beetles"],
-    "commonDiseases": ["early blight", "late blight", "blossom end rot", "fusarium wilt"]
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 30,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Determinate paste tomato. Heavy producer ideal for sauces and canning. Sets fruit in concentrated window."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
   },
   {
     "species": "Capsicum annuum",
@@ -71,6 +173,8 @@
     "commonName": "Bell Pepper",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "pepper",
+    "family": "Solanaceae",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 10,
@@ -82,16 +186,47 @@
     "matureHeightInches": 30,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["basil", "tomato", "carrot", "onion"],
-    "badCompanions": ["fennel", "kohlrabi"],
-    "commonPests": ["aphids", "pepper weevil", "flea beetles", "hornworms"],
-    "commonDiseases": ["bacterial leaf spot", "phytophthora blight", "blossom end rot"]
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 40,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Harvest green or wait for full color (red, yellow, orange) for sweeter flavor. Needs warm soil above 65F."
+    },
+    "goodCompanions": [
+      "basil",
+      "tomato",
+      "carrot",
+      "onion"
+    ],
+    "badCompanions": [
+      "fennel",
+      "kohlrabi"
+    ],
+    "commonPests": [
+      "aphids",
+      "pepper weevil",
+      "flea beetles",
+      "hornworms"
+    ],
+    "commonDiseases": [
+      "bacterial leaf spot",
+      "phytophthora blight",
+      "blossom end rot"
+    ]
   },
   {
     "species": "Cucumis sativus",
     "commonName": "Cucumber",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "cucumber",
+    "family": "Cucurbitaceae",
     "indoorStartWeeksBeforeLastFrost": 3,
     "transplantWeeksAfterLastFrost": 2,
     "directSowWeeksAfterLastFrost": 2,
@@ -104,16 +239,209 @@
     "matureHeightInches": 72,
     "matureSpreadInches": 36,
     "growthRate": "fast",
-    "goodCompanions": ["beans", "corn", "peas", "radish", "sunflower"],
-    "badCompanions": ["potato", "aromatic herbs", "melon"],
-    "commonPests": ["cucumber beetle", "aphids", "spider mites", "squash vine borer"],
-    "commonDiseases": ["powdery mildew", "downy mildew", "bacterial wilt", "mosaic virus"]
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "peas",
+      "radish",
+      "sunflower"
+    ],
+    "badCompanions": [
+      "potato",
+      "aromatic herbs",
+      "melon"
+    ],
+    "commonPests": [
+      "cucumber beetle",
+      "aphids",
+      "spider mites",
+      "squash vine borer"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Cucumis sativus",
+    "variety": "Slicing",
+    "commonName": "Slicing Cucumber",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "cucumber",
+    "family": "Cucurbitaceae",
+    "indoorStartWeeksBeforeLastFrost": 3,
+    "transplantWeeksAfterLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 60,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 72,
+    "matureSpreadInches": 36,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 30,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Harvest at 6-8 inches for best flavor. Provide trellis to save space and reduce disease. Needs consistent water."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "peas",
+      "radish",
+      "sunflower"
+    ],
+    "badCompanions": [
+      "potato",
+      "aromatic herbs",
+      "melon"
+    ],
+    "commonPests": [
+      "cucumber beetle",
+      "aphids",
+      "spider mites",
+      "squash vine borer"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Cucumis sativus",
+    "variety": "Pickling",
+    "commonName": "Pickling Cucumber",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "cucumber",
+    "family": "Cucurbitaceae",
+    "indoorStartWeeksBeforeLastFrost": 3,
+    "transplantWeeksAfterLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 55,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 72,
+    "matureSpreadInches": 36,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 25,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Harvest small (2-4 inches) for best pickles. Very prolific; pick frequently to encourage production."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "peas",
+      "radish",
+      "sunflower"
+    ],
+    "badCompanions": [
+      "potato",
+      "aromatic herbs",
+      "melon"
+    ],
+    "commonPests": [
+      "cucumber beetle",
+      "aphids",
+      "spider mites",
+      "squash vine borer"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Cucumis sativus",
+    "variety": "English",
+    "commonName": "English Cucumber",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "cucumber",
+    "family": "Cucurbitaceae",
+    "indoorStartWeeksBeforeLastFrost": 3,
+    "transplantWeeksAfterLastFrost": 2,
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 72,
+    "matureSpreadInches": 36,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 30,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Long, thin-skinned, seedless type. Best grown on trellis. Harvest at 12-14 inches. Prefers warm protected conditions."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "peas",
+      "radish",
+      "sunflower"
+    ],
+    "badCompanions": [
+      "potato",
+      "aromatic herbs",
+      "melon"
+    ],
+    "commonPests": [
+      "cucumber beetle",
+      "aphids",
+      "spider mites",
+      "squash vine borer"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "mosaic virus"
+    ]
   },
   {
     "species": "Lactuca sativa",
     "commonName": "Lettuce",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "lettuce",
+    "family": "Asteraceae",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 7,
     "daysToMaturity": 45,
@@ -124,16 +452,248 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["carrot", "radish", "strawberry", "chives"],
-    "badCompanions": ["celery", "parsley"],
-    "commonPests": ["aphids", "slugs", "cutworms", "leaf miners"],
-    "commonDiseases": ["downy mildew", "lettuce drop", "tip burn", "mosaic virus"]
+    "goodCompanions": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "badCompanions": [
+      "celery",
+      "parsley"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "cutworms",
+      "leaf miners"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "lettuce drop",
+      "tip burn",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Lactuca sativa",
+    "variety": "Butterhead",
+    "commonName": "Butterhead Lettuce",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "lettuce",
+    "family": "Asteraceae",
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 55,
+    "spacingInches": 10,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with consistent moisture (pH 6.0-7.0)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Soft, tender leaves with mild flavor. Bolts in heat; grow in spring and fall. Harvest outer leaves or whole head."
+    },
+    "goodCompanions": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "badCompanions": [
+      "celery",
+      "parsley"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "cutworms",
+      "leaf miners"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "lettuce drop",
+      "tip burn",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Lactuca sativa",
+    "variety": "Romaine",
+    "commonName": "Romaine Lettuce",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "lettuce",
+    "family": "Asteraceae",
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 10,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with consistent moisture (pH 6.0-7.0)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Upright heads with crisp ribs. More heat-tolerant than butterhead. Cut-and-come-again or harvest full heads."
+    },
+    "goodCompanions": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "badCompanions": [
+      "celery",
+      "parsley"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "cutworms",
+      "leaf miners"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "lettuce drop",
+      "tip burn",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Lactuca sativa",
+    "variety": "Iceberg",
+    "commonName": "Iceberg Lettuce",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "lettuce",
+    "family": "Asteraceae",
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 75,
+    "spacingInches": 12,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with consistent moisture (pH 6.0-7.0)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 10,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Crisp, tight heads. Needs cool weather; very bolt-prone in heat. Harvest when heads feel firm."
+    },
+    "goodCompanions": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "badCompanions": [
+      "celery",
+      "parsley"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "cutworms",
+      "leaf miners"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "lettuce drop",
+      "tip burn",
+      "mosaic virus"
+    ]
+  },
+  {
+    "species": "Lactuca sativa",
+    "variety": "Red Leaf",
+    "commonName": "Red Leaf Lettuce",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "lettuce",
+    "family": "Asteraceae",
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 50,
+    "spacingInches": 10,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with consistent moisture (pH 6.0-7.0)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 0.125,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Loose-leaf type with red-tinged foliage. Fast-growing and bolt-resistant. Excellent for cut-and-come-again harvest."
+    },
+    "goodCompanions": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "badCompanions": [
+      "celery",
+      "parsley"
+    ],
+    "commonPests": [
+      "aphids",
+      "slugs",
+      "cutworms",
+      "leaf miners"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "lettuce drop",
+      "tip burn",
+      "mosaic virus"
+    ]
   },
   {
     "species": "Daucus carota",
     "commonName": "Carrot",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "carrot",
+    "family": "Apiaceae",
     "directSowWeeksBeforeLastFrost": 3,
     "daysToGermination": 17,
     "daysToMaturity": 75,
@@ -144,16 +704,195 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 3,
     "growthRate": "slow",
-    "goodCompanions": ["lettuce", "onion", "tomato", "rosemary", "sage"],
-    "badCompanions": ["dill", "parsnip"],
-    "commonPests": ["carrot rust fly", "aphids", "wireworms", "nematodes"],
-    "commonDiseases": ["alternaria leaf blight", "cavity spot", "aster yellows"]
+    "goodCompanions": [
+      "lettuce",
+      "onion",
+      "tomato",
+      "rosemary",
+      "sage"
+    ],
+    "badCompanions": [
+      "dill",
+      "parsnip"
+    ],
+    "commonPests": [
+      "carrot rust fly",
+      "aphids",
+      "wireworms",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "alternaria leaf blight",
+      "cavity spot",
+      "aster yellows"
+    ]
+  },
+  {
+    "species": "Daucus carota",
+    "variety": "Nantes",
+    "commonName": "Nantes Carrot",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "carrot",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 3,
+    "daysToGermination": 17,
+    "daysToMaturity": 65,
+    "spacingInches": 3,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Deep, loose, sandy loam free of rocks (pH 6.0-6.8)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 3,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Cylindrical, blunt-tipped roots with sweet flavor. Needs loose, stone-free soil. Keep soil moist until germination (10-14 days)."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "onion",
+      "tomato",
+      "rosemary",
+      "sage"
+    ],
+    "badCompanions": [
+      "dill",
+      "parsnip"
+    ],
+    "commonPests": [
+      "carrot rust fly",
+      "aphids",
+      "wireworms",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "alternaria leaf blight",
+      "cavity spot",
+      "aster yellows"
+    ]
+  },
+  {
+    "species": "Daucus carota",
+    "variety": "Danvers",
+    "commonName": "Danvers Carrot",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "carrot",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 3,
+    "daysToGermination": 17,
+    "daysToMaturity": 75,
+    "spacingInches": 3,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Deep, loose, sandy loam free of rocks (pH 6.0-6.8)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 3,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Tapered, sturdy roots that tolerate heavier soils. Good storage variety. 6-8 inch roots at maturity."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "onion",
+      "tomato",
+      "rosemary",
+      "sage"
+    ],
+    "badCompanions": [
+      "dill",
+      "parsnip"
+    ],
+    "commonPests": [
+      "carrot rust fly",
+      "aphids",
+      "wireworms",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "alternaria leaf blight",
+      "cavity spot",
+      "aster yellows"
+    ]
+  },
+  {
+    "species": "Daucus carota",
+    "variety": "Chantenay",
+    "commonName": "Chantenay Carrot",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "carrot",
+    "family": "Apiaceae",
+    "directSowWeeksBeforeLastFrost": 3,
+    "daysToGermination": 17,
+    "daysToMaturity": 70,
+    "spacingInches": 3,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Deep, loose, sandy loam free of rocks (pH 6.0-6.8)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 3,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Short, broad roots (5-6 inches). Excellent for heavy or shallow soils. Sweet flavor; good for cooking and storage."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "onion",
+      "tomato",
+      "rosemary",
+      "sage"
+    ],
+    "badCompanions": [
+      "dill",
+      "parsnip"
+    ],
+    "commonPests": [
+      "carrot rust fly",
+      "aphids",
+      "wireworms",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "alternaria leaf blight",
+      "cavity spot",
+      "aster yellows"
+    ]
   },
   {
     "species": "Allium cepa",
     "commonName": "Onion",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "onion",
+    "family": "Amaryllidaceae",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": -4,
     "daysToGermination": 10,
@@ -165,16 +904,202 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 6,
     "growthRate": "slow",
-    "goodCompanions": ["carrot", "lettuce", "tomato", "beet", "chamomile"],
-    "badCompanions": ["beans", "peas", "sage"],
-    "commonPests": ["onion thrips", "onion maggot", "nematodes"],
-    "commonDiseases": ["downy mildew", "botrytis neck rot", "pink root", "fusarium basal rot"]
+    "goodCompanions": [
+      "carrot",
+      "lettuce",
+      "tomato",
+      "beet",
+      "chamomile"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "onion maggot",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "botrytis neck rot",
+      "pink root",
+      "fusarium basal rot"
+    ]
+  },
+  {
+    "species": "Allium cepa",
+    "variety": "Yellow",
+    "commonName": "Yellow Onion",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "onion",
+    "family": "Amaryllidaceae",
+    "indoorStartWeeksBeforeLastFrost": 10,
+    "transplantWeeksAfterLastFrost": -4,
+    "daysToGermination": 10,
+    "daysToMaturity": 100,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 6,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "All-purpose storage onion. Choose long-day or short-day varieties for your latitude. Cure 2-3 weeks after harvest."
+    },
+    "goodCompanions": [
+      "carrot",
+      "lettuce",
+      "tomato",
+      "beet",
+      "chamomile"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "onion maggot",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "botrytis neck rot",
+      "pink root",
+      "fusarium basal rot"
+    ]
+  },
+  {
+    "species": "Allium cepa",
+    "variety": "Red",
+    "commonName": "Red Onion",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "onion",
+    "family": "Amaryllidaceae",
+    "indoorStartWeeksBeforeLastFrost": 10,
+    "transplantWeeksAfterLastFrost": -4,
+    "daysToGermination": 10,
+    "daysToMaturity": 110,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 6,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Mild, sweet flavor; excellent raw in salads. Shorter storage life than yellow. Harvest when tops fall over naturally."
+    },
+    "goodCompanions": [
+      "carrot",
+      "lettuce",
+      "tomato",
+      "beet",
+      "chamomile"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "onion maggot",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "botrytis neck rot",
+      "pink root",
+      "fusarium basal rot"
+    ]
+  },
+  {
+    "species": "Allium cepa",
+    "variety": "White",
+    "commonName": "White Onion",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "onion",
+    "family": "Amaryllidaceae",
+    "indoorStartWeeksBeforeLastFrost": 10,
+    "transplantWeeksAfterLastFrost": -4,
+    "daysToGermination": 10,
+    "daysToMaturity": 100,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 18,
+    "matureSpreadInches": 6,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Sharp, clean flavor. Papery white skin. Shorter storage than yellow varieties. Commonly used in Mexican and white sauces."
+    },
+    "goodCompanions": [
+      "carrot",
+      "lettuce",
+      "tomato",
+      "beet",
+      "chamomile"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "onion maggot",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "botrytis neck rot",
+      "pink root",
+      "fusarium basal rot"
+    ]
   },
   {
     "species": "Allium sativum",
     "commonName": "Garlic",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "garlic",
+    "family": "Amaryllidaceae",
     "directSowWeeksBeforeLastFrost": 6,
     "daysToGermination": 14,
     "daysToMaturity": 240,
@@ -185,10 +1110,137 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 6,
     "growthRate": "slow",
-    "goodCompanions": ["tomato", "pepper", "beet", "carrot", "lettuce"],
-    "badCompanions": ["beans", "peas", "sage"],
-    "commonPests": ["onion thrips", "bulb mites", "nematodes"],
-    "commonDiseases": ["white rot", "downy mildew", "rust", "fusarium basal rot"]
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beet",
+      "carrot",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "bulb mites",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "white rot",
+      "downy mildew",
+      "rust",
+      "fusarium basal rot"
+    ]
+  },
+  {
+    "species": "Allium sativum",
+    "variety": "Softneck",
+    "commonName": "Softneck Garlic",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "garlic",
+    "family": "Amaryllidaceae",
+    "directSowWeeksBeforeLastFrost": 6,
+    "daysToGermination": 14,
+    "daysToMaturity": 240,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with good organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 6,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Plant individual cloves in fall. Best for mild climates and long storage. Braidable stems. Harvest when lower leaves brown."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beet",
+      "carrot",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "bulb mites",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "white rot",
+      "downy mildew",
+      "rust",
+      "fusarium basal rot"
+    ]
+  },
+  {
+    "species": "Allium sativum",
+    "variety": "Hardneck",
+    "commonName": "Hardneck Garlic",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "garlic",
+    "family": "Amaryllidaceae",
+    "directSowWeeksBeforeLastFrost": 6,
+    "daysToGermination": 14,
+    "daysToMaturity": 240,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam with good organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 6,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Plant cloves in fall; needs cold period. Produces edible scapes in spring. Larger cloves but shorter storage than softneck."
+    },
+    "goodCompanions": [
+      "tomato",
+      "pepper",
+      "beet",
+      "carrot",
+      "lettuce"
+    ],
+    "badCompanions": [
+      "beans",
+      "peas",
+      "sage"
+    ],
+    "commonPests": [
+      "onion thrips",
+      "bulb mites",
+      "nematodes"
+    ],
+    "commonDiseases": [
+      "white rot",
+      "downy mildew",
+      "rust",
+      "fusarium basal rot"
+    ]
   },
   {
     "species": "Phaseolus vulgaris",
@@ -196,6 +1248,8 @@
     "commonName": "Bush Green Beans",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "bean",
+    "family": "Fabaceae",
     "directSowWeeksAfterLastFrost": 1,
     "daysToGermination": 8,
     "daysToMaturity": 55,
@@ -206,10 +1260,42 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 12,
     "growthRate": "fast",
-    "goodCompanions": ["corn", "cucumber", "potato", "carrot", "celery"],
-    "badCompanions": ["onion", "garlic", "fennel"],
-    "commonPests": ["Mexican bean beetle", "aphids", "bean leaf beetle", "spider mites"],
-    "commonDiseases": ["bean rust", "bacterial blight", "white mold", "anthracnose"]
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Compact bush habit; no support needed. Pick frequently when pencil-thin for tender beans. Do not sow in cold wet soil."
+    },
+    "goodCompanions": [
+      "corn",
+      "cucumber",
+      "potato",
+      "carrot",
+      "celery"
+    ],
+    "badCompanions": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "commonPests": [
+      "Mexican bean beetle",
+      "aphids",
+      "bean leaf beetle",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "bean rust",
+      "bacterial blight",
+      "white mold",
+      "anthracnose"
+    ]
   },
   {
     "species": "Pisum sativum",
@@ -217,6 +1303,8 @@
     "commonName": "Sugar Snap Peas",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "pea",
+    "family": "Fabaceae",
     "directSowWeeksBeforeLastFrost": 6,
     "daysToGermination": 10,
     "daysToMaturity": 60,
@@ -227,10 +1315,40 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 6,
     "growthRate": "moderate",
-    "goodCompanions": ["carrot", "turnip", "radish", "cucumber", "corn"],
-    "badCompanions": ["onion", "garlic"],
-    "commonPests": ["pea aphid", "pea weevil", "thrips"],
-    "commonDiseases": ["powdery mildew", "fusarium wilt", "root rot", "pea enation mosaic"]
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Edible pods with sweet peas inside. Provide 4-6 ft trellis. Sow as early as soil can be worked. Harvest when pods are plump."
+    },
+    "goodCompanions": [
+      "carrot",
+      "turnip",
+      "radish",
+      "cucumber",
+      "corn"
+    ],
+    "badCompanions": [
+      "onion",
+      "garlic"
+    ],
+    "commonPests": [
+      "pea aphid",
+      "pea weevil",
+      "thrips"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "fusarium wilt",
+      "root rot",
+      "pea enation mosaic"
+    ]
   },
   {
     "species": "Cucurbita moschata",
@@ -238,6 +1356,7 @@
     "commonName": "Butternut Squash",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "butternut-squash",
     "indoorStartWeeksBeforeLastFrost": 3,
     "transplantWeeksAfterLastFrost": 2,
     "directSowWeeksAfterLastFrost": 2,
@@ -250,16 +1369,36 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 96,
     "growthRate": "moderate",
-    "goodCompanions": ["corn", "beans", "radish", "marigold", "nasturtium"],
-    "badCompanions": ["potato"],
-    "commonPests": ["squash vine borer", "squash bug", "cucumber beetle", "aphids"],
-    "commonDiseases": ["powdery mildew", "downy mildew", "bacterial wilt", "blossom end rot"]
+    "goodCompanions": [
+      "corn",
+      "beans",
+      "radish",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "potato"
+    ],
+    "commonPests": [
+      "squash vine borer",
+      "squash bug",
+      "cucumber beetle",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "blossom end rot"
+    ]
   },
   {
     "species": "Cucurbita pepo",
     "commonName": "Zucchini",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "zucchini",
+    "family": "Cucurbitaceae",
     "indoorStartWeeksBeforeLastFrost": 3,
     "transplantWeeksAfterLastFrost": 1,
     "directSowWeeksAfterLastFrost": 1,
@@ -272,16 +1411,146 @@
     "matureHeightInches": 30,
     "matureSpreadInches": 48,
     "growthRate": "fast",
-    "goodCompanions": ["corn", "beans", "radish", "marigold", "nasturtium"],
-    "badCompanions": ["potato"],
-    "commonPests": ["squash vine borer", "squash bug", "cucumber beetle", "aphids"],
-    "commonDiseases": ["powdery mildew", "blossom end rot", "bacterial wilt", "downy mildew"]
+    "goodCompanions": [
+      "corn",
+      "beans",
+      "radish",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "potato"
+    ],
+    "commonPests": [
+      "squash vine borer",
+      "squash bug",
+      "cucumber beetle",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "blossom end rot",
+      "bacterial wilt",
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Cucurbita pepo",
+    "variety": "Black Beauty",
+    "commonName": "Black Beauty Zucchini",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "zucchini",
+    "family": "Cucurbitaceae",
+    "indoorStartWeeksBeforeLastFrost": 3,
+    "transplantWeeksAfterLastFrost": 1,
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 7,
+    "daysToMaturity": 50,
+    "spacingInches": 36,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in compost (pH 6.0-7.5)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 48,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 45,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 28,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Classic dark green zucchini. Harvest at 6-8 inches; check daily as fruit grows fast. Bush habit saves space."
+    },
+    "goodCompanions": [
+      "corn",
+      "beans",
+      "radish",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "potato"
+    ],
+    "commonPests": [
+      "squash vine borer",
+      "squash bug",
+      "cucumber beetle",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "blossom end rot",
+      "bacterial wilt",
+      "downy mildew"
+    ]
+  },
+  {
+    "species": "Cucurbita pepo",
+    "variety": "Golden",
+    "commonName": "Golden Zucchini",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "zucchini",
+    "family": "Cucurbitaceae",
+    "indoorStartWeeksBeforeLastFrost": 3,
+    "transplantWeeksAfterLastFrost": 1,
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 7,
+    "daysToMaturity": 50,
+    "spacingInches": 36,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in compost (pH 6.0-7.5)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 48,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 21,
+      "seedingDepthInches": 1,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 45,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 28,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Bright yellow skin. Similar culture to green zucchini. Slightly sweeter flavor. Easy to spot when ready to pick."
+    },
+    "goodCompanions": [
+      "corn",
+      "beans",
+      "radish",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "potato"
+    ],
+    "commonPests": [
+      "squash vine borer",
+      "squash bug",
+      "cucumber beetle",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "blossom end rot",
+      "bacterial wilt",
+      "downy mildew"
+    ]
   },
   {
     "species": "Brassica oleracea var. italica",
     "commonName": "Broccoli",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "broccoli",
+    "family": "Brassicaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 7,
@@ -293,16 +1562,149 @@
     "matureHeightInches": 30,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["onion", "garlic", "celery", "dill", "rosemary"],
-    "badCompanions": ["tomato", "pepper", "strawberry"],
-    "commonPests": ["cabbage worm", "cabbage looper", "aphids", "flea beetles"],
-    "commonDiseases": ["clubroot", "downy mildew", "black rot", "blackleg"]
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "blackleg"
+    ]
+  },
+  {
+    "species": "Brassica oleracea var. italica",
+    "variety": "Calabrese",
+    "commonName": "Calabrese Broccoli",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "broccoli",
+    "family": "Brassicaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToGermination": 7,
+    "daysToMaturity": 65,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 35,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Classic broccoli with large central head. Cut head before yellow flowers open. Side shoots continue producing for weeks."
+    },
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "blackleg"
+    ]
+  },
+  {
+    "species": "Brassica oleracea var. italica",
+    "variety": "De Cicco",
+    "commonName": "De Cicco Broccoli",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "broccoli",
+    "family": "Brassicaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToGermination": 7,
+    "daysToMaturity": 50,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in organic matter (pH 6.0-7.0)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 35,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 28,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 21,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Italian heirloom producing small central head then many side shoots. Cut-and-come-again habit extends harvest significantly."
+    },
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "blackleg"
+    ]
   },
   {
     "species": "Brassica oleracea var. botrytis",
     "commonName": "Cauliflower",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "cauliflower",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 7,
@@ -314,16 +1716,37 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 24,
     "growthRate": "moderate",
-    "goodCompanions": ["onion", "garlic", "celery", "dill", "rosemary"],
-    "badCompanions": ["tomato", "pepper", "strawberry"],
-    "commonPests": ["cabbage worm", "cabbage looper", "aphids", "flea beetles"],
-    "commonDiseases": ["clubroot", "downy mildew", "black rot", "blackleg"]
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "blackleg"
+    ]
   },
   {
     "species": "Brassica oleracea var. capitata",
     "commonName": "Cabbage",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "cabbage",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 7,
@@ -335,16 +1758,38 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 24,
     "growthRate": "moderate",
-    "goodCompanions": ["onion", "garlic", "celery", "dill", "rosemary"],
-    "badCompanions": ["tomato", "pepper", "strawberry"],
-    "commonPests": ["cabbage worm", "cabbage looper", "aphids", "flea beetles"],
-    "commonDiseases": ["clubroot", "black rot", "fusarium yellows", "downy mildew"]
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "black rot",
+      "fusarium yellows",
+      "downy mildew"
+    ]
   },
   {
     "species": "Brassica oleracea var. sabellica",
     "commonName": "Kale",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "kale",
+    "family": "Brassicaceae",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": -2,
     "directSowWeeksBeforeLastFrost": 4,
@@ -357,16 +1802,152 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["onion", "garlic", "celery", "dill", "rosemary"],
-    "badCompanions": ["tomato", "pepper", "strawberry"],
-    "commonPests": ["cabbage worm", "aphids", "flea beetles", "cabbage looper"],
-    "commonDiseases": ["clubroot", "downy mildew", "black rot", "alternaria leaf spot"]
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "aphids",
+      "flea beetles",
+      "cabbage looper"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "alternaria leaf spot"
+    ]
+  },
+  {
+    "species": "Brassica oleracea var. sabellica",
+    "variety": "Curly",
+    "commonName": "Curly Kale",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "kale",
+    "family": "Brassicaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": -2,
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 55,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in nitrogen (pH 6.0-7.5)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 28,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Ruffled blue-green leaves. Flavor sweetens after frost. Harvest lower leaves first, leaving crown to grow. Very cold hardy."
+    },
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "aphids",
+      "flea beetles",
+      "cabbage looper"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "alternaria leaf spot"
+    ]
+  },
+  {
+    "species": "Brassica oleracea var. sabellica",
+    "variety": "Lacinato",
+    "commonName": "Lacinato Kale",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "kale",
+    "family": "Brassicaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": -2,
+    "directSowWeeksBeforeLastFrost": 4,
+    "daysToGermination": 7,
+    "daysToMaturity": 60,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in nitrogen (pH 6.0-7.5)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 28,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": true,
+      "frostHardy": true,
+      "notes": "Also called dinosaur or Tuscan kale. Dark pebbled leaves; tender texture. More heat-tolerant than curly types."
+    },
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "aphids",
+      "flea beetles",
+      "cabbage looper"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "alternaria leaf spot"
+    ]
   },
   {
     "species": "Spinacia oleracea",
     "commonName": "Spinach",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "spinach",
+    "family": "Amaranthaceae",
     "directSowWeeksBeforeLastFrost": 6,
     "daysToGermination": 7,
     "daysToMaturity": 40,
@@ -377,15 +1958,129 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 6,
     "growthRate": "fast",
-    "goodCompanions": ["strawberry", "peas", "beans", "radish"],
-    "commonPests": ["aphids", "leaf miners", "slugs", "flea beetles"],
-    "commonDiseases": ["downy mildew", "fusarium wilt", "white rust", "anthracnose"]
+    "goodCompanions": [
+      "strawberry",
+      "peas",
+      "beans",
+      "radish"
+    ],
+    "commonPests": [
+      "aphids",
+      "leaf miners",
+      "slugs",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "fusarium wilt",
+      "white rust",
+      "anthracnose"
+    ]
+  },
+  {
+    "species": "Spinacia oleracea",
+    "variety": "Bloomsdale",
+    "commonName": "Bloomsdale Spinach",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "spinach",
+    "family": "Amaranthaceae",
+    "directSowWeeksBeforeLastFrost": 6,
+    "daysToGermination": 7,
+    "daysToMaturity": 45,
+    "spacingInches": 6,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in nitrogen (pH 6.5-7.5)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 6,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Heirloom with crinkled (savoy) leaves. Bolt-resistant for a spinach. Sow early spring and fall. Harvest outer leaves first."
+    },
+    "goodCompanions": [
+      "strawberry",
+      "peas",
+      "beans",
+      "radish"
+    ],
+    "commonPests": [
+      "aphids",
+      "leaf miners",
+      "slugs",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "fusarium wilt",
+      "white rust",
+      "anthracnose"
+    ]
+  },
+  {
+    "species": "Spinacia oleracea",
+    "variety": "Space",
+    "commonName": "Space Spinach",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "spinach",
+    "family": "Amaranthaceae",
+    "directSowWeeksBeforeLastFrost": 6,
+    "daysToGermination": 7,
+    "daysToMaturity": 40,
+    "spacingInches": 6,
+    "sunNeeds": "partial_shade",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile loam, rich in nitrogen (pH 6.5-7.5)",
+    "matureHeightInches": 12,
+    "matureSpreadInches": 6,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0.5,
+      "rowSpacingInches": 12,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Smooth-leaf hybrid. Excellent bolt resistance and good for baby leaf harvest. Fast-growing; ideal for succession sowing."
+    },
+    "goodCompanions": [
+      "strawberry",
+      "peas",
+      "beans",
+      "radish"
+    ],
+    "commonPests": [
+      "aphids",
+      "leaf miners",
+      "slugs",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "downy mildew",
+      "fusarium wilt",
+      "white rust",
+      "anthracnose"
+    ]
   },
   {
     "species": "Raphanus sativus",
     "commonName": "Radish",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "radish",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 4,
     "daysToMaturity": 25,
@@ -396,16 +2091,33 @@
     "matureHeightInches": 8,
     "matureSpreadInches": 4,
     "growthRate": "fast",
-    "goodCompanions": ["lettuce", "peas", "cucumber", "carrot", "nasturtium"],
-    "badCompanions": ["hyssop"],
-    "commonPests": ["flea beetles", "cabbage root maggot", "aphids"],
-    "commonDiseases": ["clubroot", "downy mildew", "black root"]
+    "goodCompanions": [
+      "lettuce",
+      "peas",
+      "cucumber",
+      "carrot",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "hyssop"
+    ],
+    "commonPests": [
+      "flea beetles",
+      "cabbage root maggot",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black root"
+    ]
   },
   {
     "species": "Beta vulgaris",
     "commonName": "Beet",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "beet",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 7,
     "daysToMaturity": 60,
@@ -416,16 +2128,34 @@
     "matureHeightInches": 14,
     "matureSpreadInches": 6,
     "growthRate": "moderate",
-    "goodCompanions": ["onion", "lettuce", "cabbage", "garlic"],
-    "badCompanions": ["pole beans", "mustard"],
-    "commonPests": ["leaf miners", "aphids", "flea beetles"],
-    "commonDiseases": ["cercospora leaf spot", "downy mildew", "root rot"]
+    "goodCompanions": [
+      "onion",
+      "lettuce",
+      "cabbage",
+      "garlic"
+    ],
+    "badCompanions": [
+      "pole beans",
+      "mustard"
+    ],
+    "commonPests": [
+      "leaf miners",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "cercospora leaf spot",
+      "downy mildew",
+      "root rot"
+    ]
   },
   {
     "species": "Zea mays",
     "commonName": "Sweet Corn",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "corn",
+    "family": "Poaceae",
     "directSowWeeksAfterLastFrost": 2,
     "daysToGermination": 7,
     "daysToMaturity": 75,
@@ -436,16 +2166,49 @@
     "matureHeightInches": 84,
     "matureSpreadInches": 18,
     "growthRate": "fast",
-    "goodCompanions": ["beans", "squash", "cucumber", "peas", "melon"],
-    "badCompanions": ["tomato", "celery"],
-    "commonPests": ["corn earworm", "corn borer", "cutworms", "aphids"],
-    "commonDiseases": ["common rust", "northern corn leaf blight", "smut", "stewarts wilt"]
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 7,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Plant in blocks of at least 4 rows for wind pollination. Harvest when silks are brown and dry. Needs rich soil and full sun."
+    },
+    "goodCompanions": [
+      "beans",
+      "squash",
+      "cucumber",
+      "peas",
+      "melon"
+    ],
+    "badCompanions": [
+      "tomato",
+      "celery"
+    ],
+    "commonPests": [
+      "corn earworm",
+      "corn borer",
+      "cutworms",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "common rust",
+      "northern corn leaf blight",
+      "smut",
+      "stewarts wilt"
+    ]
   },
   {
     "species": "Solanum tuberosum",
     "commonName": "Potato",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "potato",
+    "family": "Solanaceae",
     "directSowWeeksBeforeLastFrost": 2,
     "daysToGermination": 14,
     "daysToMaturity": 90,
@@ -456,16 +2219,206 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 18,
     "growthRate": "moderate",
-    "goodCompanions": ["beans", "corn", "cabbage", "horseradish", "marigold"],
-    "badCompanions": ["tomato", "squash", "cucumber", "sunflower"],
-    "commonPests": ["Colorado potato beetle", "aphids", "wireworms", "flea beetles"],
-    "commonDiseases": ["late blight", "early blight", "scab", "blackleg"]
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "cabbage",
+      "horseradish",
+      "marigold"
+    ],
+    "badCompanions": [
+      "tomato",
+      "squash",
+      "cucumber",
+      "sunflower"
+    ],
+    "commonPests": [
+      "Colorado potato beetle",
+      "aphids",
+      "wireworms",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "late blight",
+      "early blight",
+      "scab",
+      "blackleg"
+    ]
+  },
+  {
+    "species": "Solanum tuberosum",
+    "variety": "Russet",
+    "commonName": "Russet Potato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "potato",
+    "family": "Solanaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "daysToGermination": 14,
+    "daysToMaturity": 100,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, loose, slightly acidic loam (pH 5.0-6.5)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 4,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Classic baking potato. Plant certified seed potatoes; hill soil as plants grow. Harvest after vines die back. Cure before storage."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "cabbage",
+      "horseradish",
+      "marigold"
+    ],
+    "badCompanions": [
+      "tomato",
+      "squash",
+      "cucumber",
+      "sunflower"
+    ],
+    "commonPests": [
+      "Colorado potato beetle",
+      "aphids",
+      "wireworms",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "late blight",
+      "early blight",
+      "scab",
+      "blackleg"
+    ]
+  },
+  {
+    "species": "Solanum tuberosum",
+    "variety": "Red",
+    "commonName": "Red Potato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "potato",
+    "family": "Solanaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "daysToGermination": 14,
+    "daysToMaturity": 80,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, loose, slightly acidic loam (pH 5.0-6.5)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 4,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Waxy texture; holds shape when cooked. Good for roasting and salads. Can harvest as new potatoes when plants flower."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "cabbage",
+      "horseradish",
+      "marigold"
+    ],
+    "badCompanions": [
+      "tomato",
+      "squash",
+      "cucumber",
+      "sunflower"
+    ],
+    "commonPests": [
+      "Colorado potato beetle",
+      "aphids",
+      "wireworms",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "late blight",
+      "early blight",
+      "scab",
+      "blackleg"
+    ]
+  },
+  {
+    "species": "Solanum tuberosum",
+    "variety": "Yukon Gold",
+    "commonName": "Yukon Gold Potato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "potato",
+    "family": "Solanaceae",
+    "directSowWeeksBeforeLastFrost": 2,
+    "daysToGermination": 14,
+    "daysToMaturity": 90,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, loose, slightly acidic loam (pH 5.0-6.5)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 4,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Yellow flesh with buttery flavor. All-purpose; good boiled, mashed, or roasted. Medium storage life. Early to mid-season harvest."
+    },
+    "goodCompanions": [
+      "beans",
+      "corn",
+      "cabbage",
+      "horseradish",
+      "marigold"
+    ],
+    "badCompanions": [
+      "tomato",
+      "squash",
+      "cucumber",
+      "sunflower"
+    ],
+    "commonPests": [
+      "Colorado potato beetle",
+      "aphids",
+      "wireworms",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "late blight",
+      "early blight",
+      "scab",
+      "blackleg"
+    ]
   },
   {
     "species": "Ipomoea batatas",
     "commonName": "Sweet Potato",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "sweet-potato",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 3,
     "daysToMaturity": 100,
@@ -476,16 +2429,34 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 48,
     "growthRate": "moderate",
-    "goodCompanions": ["beans", "thyme", "dill"],
-    "badCompanions": ["squash", "tomato"],
-    "commonPests": ["sweet potato weevil", "wireworms", "flea beetles", "whiteflies"],
-    "commonDiseases": ["fusarium wilt", "black rot", "scurf", "stem rot"]
+    "goodCompanions": [
+      "beans",
+      "thyme",
+      "dill"
+    ],
+    "badCompanions": [
+      "squash",
+      "tomato"
+    ],
+    "commonPests": [
+      "sweet potato weevil",
+      "wireworms",
+      "flea beetles",
+      "whiteflies"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "black rot",
+      "scurf",
+      "stem rot"
+    ]
   },
   {
     "species": "Solanum melongena",
     "commonName": "Eggplant",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "eggplant",
     "indoorStartWeeksBeforeLastFrost": 8,
     "transplantWeeksAfterLastFrost": 2,
     "daysToGermination": 10,
@@ -497,16 +2468,35 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 24,
     "growthRate": "moderate",
-    "goodCompanions": ["beans", "pepper", "spinach", "thyme", "marigold"],
-    "badCompanions": ["fennel"],
-    "commonPests": ["flea beetles", "aphids", "Colorado potato beetle", "spider mites"],
-    "commonDiseases": ["verticillium wilt", "phytophthora blight", "early blight", "anthracnose"]
+    "goodCompanions": [
+      "beans",
+      "pepper",
+      "spinach",
+      "thyme",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel"
+    ],
+    "commonPests": [
+      "flea beetles",
+      "aphids",
+      "Colorado potato beetle",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "verticillium wilt",
+      "phytophthora blight",
+      "early blight",
+      "anthracnose"
+    ]
   },
   {
     "species": "Apium graveolens",
     "commonName": "Celery",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "celery",
     "indoorStartWeeksBeforeLastFrost": 10,
     "transplantWeeksAfterLastFrost": 1,
     "daysToGermination": 14,
@@ -518,16 +2508,36 @@
     "matureHeightInches": 24,
     "matureSpreadInches": 12,
     "growthRate": "slow",
-    "goodCompanions": ["onion", "cabbage", "tomato", "beans"],
-    "badCompanions": ["carrot", "parsnip", "corn"],
-    "commonPests": ["celery leaf tier", "aphids", "carrot rust fly", "slugs"],
-    "commonDiseases": ["early blight", "late blight", "fusarium yellows", "pink rot"]
+    "goodCompanions": [
+      "onion",
+      "cabbage",
+      "tomato",
+      "beans"
+    ],
+    "badCompanions": [
+      "carrot",
+      "parsnip",
+      "corn"
+    ],
+    "commonPests": [
+      "celery leaf tier",
+      "aphids",
+      "carrot rust fly",
+      "slugs"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "fusarium yellows",
+      "pink rot"
+    ]
   },
   {
     "species": "Asparagus officinalis",
     "commonName": "Asparagus",
     "plantType": "vegetable",
     "isPerennial": true,
+    "cropGroup": "asparagus",
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 21,
     "daysToMaturity": 730,
@@ -538,16 +2548,35 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 18,
     "growthRate": "slow",
-    "goodCompanions": ["tomato", "parsley", "basil", "marigold"],
-    "badCompanions": ["garlic", "onion", "potato"],
-    "commonPests": ["asparagus beetle", "aphids", "cutworms"],
-    "commonDiseases": ["fusarium crown rot", "asparagus rust", "purple spot", "cercospora leaf spot"]
+    "goodCompanions": [
+      "tomato",
+      "parsley",
+      "basil",
+      "marigold"
+    ],
+    "badCompanions": [
+      "garlic",
+      "onion",
+      "potato"
+    ],
+    "commonPests": [
+      "asparagus beetle",
+      "aphids",
+      "cutworms"
+    ],
+    "commonDiseases": [
+      "fusarium crown rot",
+      "asparagus rust",
+      "purple spot",
+      "cercospora leaf spot"
+    ]
   },
   {
     "species": "Cucurbita maxima",
     "commonName": "Pumpkin",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "pumpkin",
     "indoorStartWeeksBeforeLastFrost": 3,
     "transplantWeeksAfterLastFrost": 1,
     "directSowWeeksAfterLastFrost": 1,
@@ -560,16 +2589,35 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 120,
     "growthRate": "moderate",
-    "goodCompanions": ["corn", "beans", "radish", "marigold", "nasturtium"],
-    "badCompanions": ["potato"],
-    "commonPests": ["squash vine borer", "squash bug", "cucumber beetle", "aphids"],
-    "commonDiseases": ["powdery mildew", "downy mildew", "bacterial wilt", "anthracnose"]
+    "goodCompanions": [
+      "corn",
+      "beans",
+      "radish",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "potato"
+    ],
+    "commonPests": [
+      "squash vine borer",
+      "squash bug",
+      "cucumber beetle",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "bacterial wilt",
+      "anthracnose"
+    ]
   },
   {
     "species": "Citrullus lanatus",
     "commonName": "Watermelon",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "watermelon",
     "indoorStartWeeksBeforeLastFrost": 4,
     "transplantWeeksAfterLastFrost": 2,
     "directSowWeeksAfterLastFrost": 2,
@@ -582,16 +2630,35 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 120,
     "growthRate": "fast",
-    "goodCompanions": ["corn", "radish", "nasturtium", "marigold"],
-    "badCompanions": ["potato", "cucumber"],
-    "commonPests": ["aphids", "cucumber beetle", "spider mites", "squash bug"],
-    "commonDiseases": ["fusarium wilt", "anthracnose", "gummy stem blight", "powdery mildew"]
+    "goodCompanions": [
+      "corn",
+      "radish",
+      "nasturtium",
+      "marigold"
+    ],
+    "badCompanions": [
+      "potato",
+      "cucumber"
+    ],
+    "commonPests": [
+      "aphids",
+      "cucumber beetle",
+      "spider mites",
+      "squash bug"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "anthracnose",
+      "gummy stem blight",
+      "powdery mildew"
+    ]
   },
   {
     "species": "Cucumis melo",
     "commonName": "Cantaloupe",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "cantaloupe",
     "indoorStartWeeksBeforeLastFrost": 4,
     "transplantWeeksAfterLastFrost": 2,
     "directSowWeeksAfterLastFrost": 2,
@@ -604,16 +2671,35 @@
     "matureHeightInches": 18,
     "matureSpreadInches": 72,
     "growthRate": "moderate",
-    "goodCompanions": ["corn", "radish", "nasturtium", "marigold"],
-    "badCompanions": ["potato", "cucumber"],
-    "commonPests": ["aphids", "cucumber beetle", "spider mites", "squash vine borer"],
-    "commonDiseases": ["powdery mildew", "fusarium wilt", "bacterial wilt", "downy mildew"]
+    "goodCompanions": [
+      "corn",
+      "radish",
+      "nasturtium",
+      "marigold"
+    ],
+    "badCompanions": [
+      "potato",
+      "cucumber"
+    ],
+    "commonPests": [
+      "aphids",
+      "cucumber beetle",
+      "spider mites",
+      "squash vine borer"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "fusarium wilt",
+      "bacterial wilt",
+      "downy mildew"
+    ]
   },
   {
     "species": "Abelmoschus esculentus",
     "commonName": "Okra",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "okra",
     "indoorStartWeeksBeforeLastFrost": 4,
     "transplantWeeksAfterLastFrost": 3,
     "directSowWeeksAfterLastFrost": 3,
@@ -626,15 +2712,31 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["pepper", "eggplant", "melon", "cucumber"],
-    "commonPests": ["aphids", "corn earworm", "stink bugs", "flea beetles"],
-    "commonDiseases": ["fusarium wilt", "verticillium wilt", "powdery mildew", "root-knot nematode"]
+    "goodCompanions": [
+      "pepper",
+      "eggplant",
+      "melon",
+      "cucumber"
+    ],
+    "commonPests": [
+      "aphids",
+      "corn earworm",
+      "stink bugs",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "fusarium wilt",
+      "verticillium wilt",
+      "powdery mildew",
+      "root-knot nematode"
+    ]
   },
   {
     "species": "Brassica oleracea var. gemmifera",
     "commonName": "Brussels Sprouts",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "brussels-sprouts",
     "indoorStartWeeksBeforeLastFrost": 6,
     "transplantWeeksAfterLastFrost": -2,
     "daysToGermination": 7,
@@ -646,16 +2748,37 @@
     "matureHeightInches": 36,
     "matureSpreadInches": 24,
     "growthRate": "slow",
-    "goodCompanions": ["onion", "garlic", "celery", "dill", "rosemary"],
-    "badCompanions": ["tomato", "pepper", "strawberry"],
-    "commonPests": ["cabbage worm", "cabbage looper", "aphids", "flea beetles"],
-    "commonDiseases": ["clubroot", "downy mildew", "black rot", "ring spot"]
+    "goodCompanions": [
+      "onion",
+      "garlic",
+      "celery",
+      "dill",
+      "rosemary"
+    ],
+    "badCompanions": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "commonPests": [
+      "cabbage worm",
+      "cabbage looper",
+      "aphids",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "black rot",
+      "ring spot"
+    ]
   },
   {
     "species": "Brassica rapa",
     "commonName": "Turnip",
     "plantType": "vegetable",
     "isPerennial": false,
+    "cropGroup": "turnip",
     "directSowWeeksBeforeLastFrost": 4,
     "daysToGermination": 5,
     "daysToMaturity": 55,
@@ -666,9 +2789,569 @@
     "matureHeightInches": 12,
     "matureSpreadInches": 6,
     "growthRate": "fast",
-    "goodCompanions": ["peas", "onion", "garlic"],
-    "badCompanions": ["potato", "mustard"],
-    "commonPests": ["flea beetles", "cabbage root maggot", "aphids"],
-    "commonDiseases": ["clubroot", "downy mildew", "white rust", "black rot"]
+    "goodCompanions": [
+      "peas",
+      "onion",
+      "garlic"
+    ],
+    "badCompanions": [
+      "potato",
+      "mustard"
+    ],
+    "commonPests": [
+      "flea beetles",
+      "cabbage root maggot",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "clubroot",
+      "downy mildew",
+      "white rust",
+      "black rot"
+    ]
+  },
+  {
+    "species": "Solanum lycopersicum",
+    "variety": "Brandywine",
+    "commonName": "Brandywine Tomato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 90,
+    "spacingInches": 30,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 49,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 48,
+      "harvestWindowDays": 40,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Indeterminate heirloom with exceptional flavor. Potato-leaf foliage. Prone to cracking; water evenly."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
+  },
+  {
+    "species": "Solanum lycopersicum",
+    "variety": "Sun Gold",
+    "commonName": "Sun Gold Tomato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 60,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 42,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Indeterminate orange cherry. Extremely sweet flavor. Vigorous grower; needs tall staking. Harvest when deep orange."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
+  },
+  {
+    "species": "Solanum lycopersicum",
+    "variety": "San Marzano",
+    "commonName": "San Marzano Tomato",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "tomato",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 6,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 80,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": 49,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 35,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Indeterminate Italian paste tomato. Meaty with few seeds; prized for sauce. Needs consistent moisture and staking."
+    },
+    "goodCompanions": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "badCompanions": [
+      "fennel",
+      "brassicas",
+      "dill",
+      "potato"
+    ],
+    "commonPests": [
+      "tomato hornworm",
+      "aphids",
+      "whiteflies",
+      "flea beetles"
+    ],
+    "commonDiseases": [
+      "early blight",
+      "late blight",
+      "blossom end rot",
+      "fusarium wilt"
+    ]
+  },
+  {
+    "species": "Capsicum annuum",
+    "variety": "Jalapeno",
+    "commonName": "Jalapeno Pepper",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "pepper",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 10,
+    "daysToMaturity": 70,
+    "spacingInches": 14,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 45,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Harvest green for mild heat or red for more heat. Prolific producer. Corking (white lines) indicates maturity."
+    },
+    "goodCompanions": [
+      "basil",
+      "tomato",
+      "carrot",
+      "onion"
+    ],
+    "badCompanions": [
+      "fennel",
+      "kohlrabi"
+    ],
+    "commonPests": [
+      "aphids",
+      "pepper weevil",
+      "flea beetles",
+      "hornworms"
+    ],
+    "commonDiseases": [
+      "bacterial leaf spot",
+      "phytophthora blight",
+      "blossom end rot"
+    ]
+  },
+  {
+    "species": "Capsicum annuum",
+    "variety": "Habanero",
+    "commonName": "Habanero Pepper",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "pepper",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 10,
+    "daysToMaturity": 95,
+    "spacingInches": 18,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 63,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 40,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Very hot. Requires long warm season; start seeds early. Harvest when orange for full heat and fruity flavor."
+    },
+    "goodCompanions": [
+      "basil",
+      "tomato",
+      "carrot",
+      "onion"
+    ],
+    "badCompanions": [
+      "fennel",
+      "kohlrabi"
+    ],
+    "commonPests": [
+      "aphids",
+      "pepper weevil",
+      "flea beetles",
+      "hornworms"
+    ],
+    "commonDiseases": [
+      "bacterial leaf spot",
+      "phytophthora blight",
+      "blossom end rot"
+    ]
+  },
+  {
+    "species": "Capsicum annuum",
+    "variety": "Banana",
+    "commonName": "Banana Pepper",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "pepper",
+    "family": "Solanaceae",
+    "indoorStartWeeksBeforeLastFrost": 8,
+    "transplantWeeksAfterLastFrost": 2,
+    "daysToGermination": 10,
+    "daysToMaturity": 70,
+    "spacingInches": 14,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, rich loam, slightly acidic (pH 6.0-6.8)",
+    "matureHeightInches": 30,
+    "matureSpreadInches": 18,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": 56,
+      "seedingDepthInches": 0.25,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 45,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": true,
+      "frostHardy": false,
+      "notes": "Mild sweet pepper. Harvest yellow-green or wait for red. Excellent for pickling and frying. Heavy yields."
+    },
+    "goodCompanions": [
+      "basil",
+      "tomato",
+      "carrot",
+      "onion"
+    ],
+    "badCompanions": [
+      "fennel",
+      "kohlrabi"
+    ],
+    "commonPests": [
+      "aphids",
+      "pepper weevil",
+      "flea beetles",
+      "hornworms"
+    ],
+    "commonDiseases": [
+      "bacterial leaf spot",
+      "phytophthora blight",
+      "blossom end rot"
+    ]
+  },
+  {
+    "species": "Phaseolus vulgaris",
+    "variety": "Pole",
+    "commonName": "Pole Bean",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "bean",
+    "family": "Fabaceae",
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 8,
+    "daysToMaturity": 65,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, moderately fertile loam (pH 6.0-7.0)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 30,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Climbing variety; needs 6-8 ft support. Longer harvest window than bush types. Pick regularly to extend production."
+    },
+    "goodCompanions": [
+      "corn",
+      "cucumber",
+      "potato",
+      "carrot",
+      "celery"
+    ],
+    "badCompanions": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "commonPests": [
+      "Mexican bean beetle",
+      "aphids",
+      "bean leaf beetle",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "bean rust",
+      "bacterial blight",
+      "white mold",
+      "anthracnose"
+    ]
+  },
+  {
+    "species": "Phaseolus vulgaris",
+    "variety": "Lima",
+    "commonName": "Lima Bean",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "bean",
+    "family": "Fabaceae",
+    "directSowWeeksAfterLastFrost": 1,
+    "daysToGermination": 8,
+    "daysToMaturity": 80,
+    "spacingInches": 6,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, moderately fertile loam (pH 6.0-7.0)",
+    "matureHeightInches": 24,
+    "matureSpreadInches": 12,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 24,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Needs warm soil (65F+) for germination. Harvest when pods are plump but still green. Both bush and pole types available."
+    },
+    "goodCompanions": [
+      "corn",
+      "cucumber",
+      "potato",
+      "carrot",
+      "celery"
+    ],
+    "badCompanions": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "commonPests": [
+      "Mexican bean beetle",
+      "aphids",
+      "bean leaf beetle",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "bean rust",
+      "bacterial blight",
+      "white mold",
+      "anthracnose"
+    ]
+  },
+  {
+    "species": "Pisum sativum",
+    "variety": "Snow",
+    "commonName": "Snow Pea",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "pea",
+    "family": "Fabaceae",
+    "directSowWeeksBeforeLastFrost": 6,
+    "daysToGermination": 10,
+    "daysToMaturity": 55,
+    "spacingInches": 3,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, moderately fertile loam (pH 6.0-7.5)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 6,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 18,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": 14,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Flat edible pods harvested before peas swell. Shorter vines (3-4 ft). Cool season crop; production drops in heat."
+    },
+    "goodCompanions": [
+      "carrot",
+      "turnip",
+      "radish",
+      "cucumber",
+      "corn"
+    ],
+    "badCompanions": [
+      "onion",
+      "garlic"
+    ],
+    "commonPests": [
+      "pea aphid",
+      "pea weevil",
+      "thrips"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "fusarium wilt",
+      "root rot",
+      "pea enation mosaic"
+    ]
+  },
+  {
+    "species": "Zea mays",
+    "variety": "Popcorn",
+    "commonName": "Popcorn Corn",
+    "plantType": "vegetable",
+    "isPerennial": false,
+    "cropGroup": "corn",
+    "family": "Poaceae",
+    "directSowWeeksAfterLastFrost": 2,
+    "daysToGermination": 7,
+    "daysToMaturity": 100,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "high",
+    "soilPreference": "Well-drained, fertile loam, rich in nitrogen (pH 5.8-7.0)",
+    "matureHeightInches": 84,
+    "matureSpreadInches": 18,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 1.5,
+      "rowSpacingInches": 30,
+      "harvestWindowDays": 14,
+      "bedPrepLeadDays": 7,
+      "successionIntervalDays": null,
+      "directSow": true,
+      "indoorStart": false,
+      "frostHardy": false,
+      "notes": "Let ears dry on stalk until husks are papery. Cure indoors for 4-6 weeks before shelling. Isolate from sweet corn varieties."
+    },
+    "goodCompanions": [
+      "beans",
+      "squash",
+      "cucumber",
+      "peas",
+      "melon"
+    ],
+    "badCompanions": [
+      "tomato",
+      "celery"
+    ],
+    "commonPests": [
+      "corn earworm",
+      "corn borer",
+      "cutworms",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "common rust",
+      "northern corn leaf blight",
+      "smut",
+      "stewarts wilt"
+    ]
   }
 ]

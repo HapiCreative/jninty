@@ -1,9 +1,11 @@
 [
   {
-    "species": "Fragaria \u00d7 ananassa",
+    "species": "Fragaria × ananassa",
     "commonName": "Strawberry",
     "plantType": "berry",
     "isPerennial": true,
+    "cropGroup": "strawberry",
+    "family": "Rosaceae",
     "transplantWeeksAfterLastFrost": -2,
     "daysToMaturity": 120,
     "spacingInches": 18,
@@ -13,16 +15,188 @@
     "matureHeightInches": 8,
     "matureSpreadInches": 12,
     "growthRate": "moderate",
-    "goodCompanions": ["lettuce", "spinach", "beans", "onion", "thyme"],
-    "badCompanions": ["brassicas", "fennel"],
-    "commonPests": ["slugs", "strawberry root weevils", "spider mites"],
-    "commonDiseases": ["gray mold", "powdery mildew", "verticillium wilt"]
+    "goodCompanions": [
+      "lettuce",
+      "spinach",
+      "beans",
+      "onion",
+      "thyme"
+    ],
+    "badCompanions": [
+      "brassicas",
+      "fennel"
+    ],
+    "commonPests": [
+      "slugs",
+      "strawberry root weevils",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "gray mold",
+      "powdery mildew",
+      "verticillium wilt"
+    ]
+  },
+  {
+    "species": "Fragaria × ananassa",
+    "variety": "Earliglow",
+    "commonName": "Earliglow Strawberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "strawberry",
+    "family": "Rosaceae",
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToMaturity": 365,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, sandy loam, slightly acidic (pH 5.5-6.8)",
+    "matureHeightInches": 8,
+    "matureSpreadInches": 12,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 21,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "June-bearing variety. Pinch blossoms the first year to encourage strong root development. Produces one large flush of berries in early summer the following year. Excellent disease resistance and flavor. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "spinach",
+      "beans",
+      "onion",
+      "thyme"
+    ],
+    "badCompanions": [
+      "brassicas",
+      "fennel"
+    ],
+    "commonPests": [
+      "slugs",
+      "strawberry root weevils",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "gray mold",
+      "powdery mildew",
+      "verticillium wilt"
+    ]
+  },
+  {
+    "species": "Fragaria × ananassa",
+    "variety": "Ozark Beauty",
+    "commonName": "Ozark Beauty Strawberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "strawberry",
+    "family": "Rosaceae",
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToMaturity": 90,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, sandy loam, slightly acidic (pH 5.5-6.8)",
+    "matureHeightInches": 8,
+    "matureSpreadInches": 12,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 120,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Everbearing variety producing two main flushes: late spring and early fall. Can fruit the first year if planted in early spring. Large, sweet berries. Vigorous runner production. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "spinach",
+      "beans",
+      "onion",
+      "thyme"
+    ],
+    "badCompanions": [
+      "brassicas",
+      "fennel"
+    ],
+    "commonPests": [
+      "slugs",
+      "strawberry root weevils",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "gray mold",
+      "powdery mildew",
+      "verticillium wilt"
+    ]
+  },
+  {
+    "species": "Fragaria × ananassa",
+    "variety": "Albion",
+    "commonName": "Albion Strawberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "strawberry",
+    "family": "Rosaceae",
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToMaturity": 90,
+    "spacingInches": 12,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, sandy loam, slightly acidic (pH 5.5-6.8)",
+    "matureHeightInches": 8,
+    "matureSpreadInches": 12,
+    "growthRate": "moderate",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 0,
+      "rowSpacingInches": 36,
+      "harvestWindowDays": 150,
+      "bedPrepLeadDays": 14,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Day-neutral variety that fruits continuously from late spring through fall regardless of day length. Firm, conical berries with excellent flavor. Produces fewer runners than June-bearing types. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "lettuce",
+      "spinach",
+      "beans",
+      "onion",
+      "thyme"
+    ],
+    "badCompanions": [
+      "brassicas",
+      "fennel"
+    ],
+    "commonPests": [
+      "slugs",
+      "strawberry root weevils",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "gray mold",
+      "powdery mildew",
+      "verticillium wilt"
+    ]
   },
   {
     "species": "Vaccinium corymbosum",
     "commonName": "Blueberry",
     "plantType": "berry",
     "isPerennial": true,
+    "cropGroup": "blueberry",
+    "family": "Ericaceae",
     "transplantWeeksAfterLastFrost": 0,
     "daysToMaturity": 730,
     "spacingInches": 60,
@@ -32,16 +206,134 @@
     "matureHeightInches": 72,
     "matureSpreadInches": 60,
     "growthRate": "slow",
-    "goodCompanions": ["strawberry", "rhododendron", "azalea"],
-    "badCompanions": ["walnut", "tomato", "pepper"],
-    "commonPests": ["birds", "blueberry maggots", "Japanese beetles"],
-    "commonDiseases": ["mummy berry", "phomopsis", "botrytis"]
+    "goodCompanions": [
+      "strawberry",
+      "rhododendron",
+      "azalea"
+    ],
+    "badCompanions": [
+      "walnut",
+      "tomato",
+      "pepper"
+    ],
+    "commonPests": [
+      "birds",
+      "blueberry maggots",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "mummy berry",
+      "phomopsis",
+      "botrytis"
+    ]
+  },
+  {
+    "species": "Vaccinium corymbosum",
+    "variety": "Bluecrop",
+    "commonName": "Bluecrop Blueberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "blueberry",
+    "family": "Ericaceae",
+    "transplantWeeksAfterLastFrost": 0,
+    "daysToMaturity": 730,
+    "spacingInches": 72,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Acidic (pH 4.5-5.5), well-drained, organic-rich",
+    "matureHeightInches": 72,
+    "matureSpreadInches": 60,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 96,
+      "harvestWindowDays": 35,
+      "bedPrepLeadDays": 30,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Northern highbush midseason variety and the most widely planted blueberry worldwide. Reliable heavy crops of medium-large berries. Requires acidic soil (pH 4.5-5.5). Plant at least two varieties for cross-pollination. Remove blossoms for the first two years to establish strong roots. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "strawberry",
+      "rhododendron",
+      "azalea"
+    ],
+    "badCompanions": [
+      "walnut",
+      "tomato",
+      "pepper"
+    ],
+    "commonPests": [
+      "birds",
+      "blueberry maggots",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "mummy berry",
+      "phomopsis",
+      "botrytis"
+    ]
+  },
+  {
+    "species": "Vaccinium corymbosum",
+    "variety": "Duke",
+    "commonName": "Duke Blueberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "blueberry",
+    "family": "Ericaceae",
+    "transplantWeeksAfterLastFrost": 0,
+    "daysToMaturity": 730,
+    "spacingInches": 72,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Acidic (pH 4.5-5.5), well-drained, organic-rich",
+    "matureHeightInches": 72,
+    "matureSpreadInches": 60,
+    "growthRate": "slow",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 96,
+      "harvestWindowDays": 28,
+      "bedPrepLeadDays": 30,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Northern highbush early-season variety. Blooms late but ripens early, reducing frost damage risk to flowers. Consistent yields of mild, sweet berries. Requires acidic soil (pH 4.5-5.5) and cross-pollination with another variety. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "strawberry",
+      "rhododendron",
+      "azalea"
+    ],
+    "badCompanions": [
+      "walnut",
+      "tomato",
+      "pepper"
+    ],
+    "commonPests": [
+      "birds",
+      "blueberry maggots",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "mummy berry",
+      "phomopsis",
+      "botrytis"
+    ]
   },
   {
     "species": "Rubus idaeus",
     "commonName": "Raspberry",
     "plantType": "berry",
     "isPerennial": true,
+    "cropGroup": "raspberry",
+    "family": "Rosaceae",
     "transplantWeeksAfterLastFrost": -2,
     "daysToMaturity": 365,
     "spacingInches": 36,
@@ -51,16 +343,133 @@
     "matureHeightInches": 60,
     "matureSpreadInches": 24,
     "growthRate": "fast",
-    "goodCompanions": ["garlic", "marigold", "tansy"],
-    "badCompanions": ["blackberry", "potato", "tomato"],
-    "commonPests": ["Japanese beetles", "raspberry cane borers", "spider mites"],
-    "commonDiseases": ["anthracnose", "gray mold", "root rot"]
+    "goodCompanions": [
+      "garlic",
+      "marigold",
+      "tansy"
+    ],
+    "badCompanions": [
+      "blackberry",
+      "potato",
+      "tomato"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "raspberry cane borers",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "anthracnose",
+      "gray mold",
+      "root rot"
+    ]
+  },
+  {
+    "species": "Rubus idaeus",
+    "variety": "Heritage",
+    "commonName": "Heritage Raspberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "raspberry",
+    "family": "Rosaceae",
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToMaturity": 365,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, slightly acidic (pH 5.5-6.5)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 72,
+      "harvestWindowDays": 60,
+      "bedPrepLeadDays": 21,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Everbearing (primocane-fruiting) red raspberry. Produces a fall crop on first-year canes and an optional early summer crop on overwintered canes. Can be mowed to the ground in late winter for simplified management with a single fall harvest. Medium-sized, firm berries with excellent flavor. Hardy to USDA zone 4."
+    },
+    "goodCompanions": [
+      "garlic",
+      "marigold",
+      "tansy"
+    ],
+    "badCompanions": [
+      "blackberry",
+      "potato",
+      "tomato"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "raspberry cane borers",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "anthracnose",
+      "gray mold",
+      "root rot"
+    ]
+  },
+  {
+    "species": "Rubus idaeus",
+    "variety": "Latham",
+    "commonName": "Latham Raspberry",
+    "plantType": "berry",
+    "isPerennial": true,
+    "cropGroup": "raspberry",
+    "family": "Rosaceae",
+    "transplantWeeksAfterLastFrost": -2,
+    "daysToMaturity": 540,
+    "spacingInches": 24,
+    "sunNeeds": "full_sun",
+    "waterNeeds": "moderate",
+    "soilPreference": "Well-drained, fertile, slightly acidic (pH 5.5-6.5)",
+    "matureHeightInches": 60,
+    "matureSpreadInches": 24,
+    "growthRate": "fast",
+    "scheduling": {
+      "daysToTransplant": null,
+      "seedingDepthInches": 2,
+      "rowSpacingInches": 72,
+      "harvestWindowDays": 28,
+      "bedPrepLeadDays": 21,
+      "successionIntervalDays": null,
+      "directSow": false,
+      "indoorStart": false,
+      "frostHardy": true,
+      "notes": "Summer-bearing (floricane-fruiting) red raspberry. Fruits on second-year canes in midsummer. One of the hardiest raspberry varieties available. Round, dark red berries. Prune out spent canes after harvest. Very cold tolerant, hardy to USDA zone 3."
+    },
+    "goodCompanions": [
+      "garlic",
+      "marigold",
+      "tansy"
+    ],
+    "badCompanions": [
+      "blackberry",
+      "potato",
+      "tomato"
+    ],
+    "commonPests": [
+      "Japanese beetles",
+      "raspberry cane borers",
+      "spider mites"
+    ],
+    "commonDiseases": [
+      "anthracnose",
+      "gray mold",
+      "root rot"
+    ]
   },
   {
     "species": "Rubus fruticosus",
     "commonName": "Blackberry",
     "plantType": "berry",
     "isPerennial": true,
+    "cropGroup": "blackberry",
     "transplantWeeksAfterLastFrost": -2,
     "daysToMaturity": 365,
     "spacingInches": 48,
@@ -70,16 +479,33 @@
     "matureHeightInches": 72,
     "matureSpreadInches": 36,
     "growthRate": "fast",
-    "goodCompanions": ["tansy", "garlic", "marigold"],
-    "badCompanions": ["raspberry", "tomato", "pepper"],
-    "commonPests": ["spotted wing drosophila", "spider mites", "Japanese beetles"],
-    "commonDiseases": ["anthracnose", "orange rust", "double blossom"]
+    "goodCompanions": [
+      "tansy",
+      "garlic",
+      "marigold"
+    ],
+    "badCompanions": [
+      "raspberry",
+      "tomato",
+      "pepper"
+    ],
+    "commonPests": [
+      "spotted wing drosophila",
+      "spider mites",
+      "Japanese beetles"
+    ],
+    "commonDiseases": [
+      "anthracnose",
+      "orange rust",
+      "double blossom"
+    ]
   },
   {
     "species": "Malus domestica",
     "commonName": "Apple Tree",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "apple-tree",
     "transplantWeeksAfterLastFrost": -4,
     "daysToMaturity": 1095,
     "spacingInches": 180,
@@ -89,16 +515,34 @@
     "matureHeightInches": 180,
     "matureSpreadInches": 180,
     "growthRate": "moderate",
-    "goodCompanions": ["chives", "garlic", "marigold", "nasturtium", "comfrey"],
-    "badCompanions": ["walnut", "grass"],
-    "commonPests": ["codling moth", "apple maggot", "aphids"],
-    "commonDiseases": ["apple scab", "fire blight", "cedar apple rust"]
+    "goodCompanions": [
+      "chives",
+      "garlic",
+      "marigold",
+      "nasturtium",
+      "comfrey"
+    ],
+    "badCompanions": [
+      "walnut",
+      "grass"
+    ],
+    "commonPests": [
+      "codling moth",
+      "apple maggot",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "apple scab",
+      "fire blight",
+      "cedar apple rust"
+    ]
   },
   {
     "species": "Prunus persica",
     "commonName": "Peach Tree",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "peach-tree",
     "transplantWeeksAfterLastFrost": -4,
     "daysToMaturity": 1095,
     "spacingInches": 180,
@@ -108,16 +552,33 @@
     "matureHeightInches": 180,
     "matureSpreadInches": 180,
     "growthRate": "moderate",
-    "goodCompanions": ["garlic", "tansy", "marigold", "basil"],
-    "badCompanions": ["tomato", "walnut"],
-    "commonPests": ["peach tree borers", "oriental fruit moth", "plum curculio"],
-    "commonDiseases": ["peach leaf curl", "brown rot", "bacterial spot"]
+    "goodCompanions": [
+      "garlic",
+      "tansy",
+      "marigold",
+      "basil"
+    ],
+    "badCompanions": [
+      "tomato",
+      "walnut"
+    ],
+    "commonPests": [
+      "peach tree borers",
+      "oriental fruit moth",
+      "plum curculio"
+    ],
+    "commonDiseases": [
+      "peach leaf curl",
+      "brown rot",
+      "bacterial spot"
+    ]
   },
   {
     "species": "Prunus avium",
     "commonName": "Cherry Tree",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "cherry-tree",
     "transplantWeeksAfterLastFrost": -4,
     "daysToMaturity": 1460,
     "spacingInches": 240,
@@ -127,16 +588,33 @@
     "matureHeightInches": 240,
     "matureSpreadInches": 240,
     "growthRate": "moderate",
-    "goodCompanions": ["garlic", "chives", "marigold", "nasturtium"],
-    "badCompanions": ["walnut", "grass"],
-    "commonPests": ["cherry fruit fly", "birds", "aphids"],
-    "commonDiseases": ["brown rot", "bacterial canker", "cherry leaf spot"]
+    "goodCompanions": [
+      "garlic",
+      "chives",
+      "marigold",
+      "nasturtium"
+    ],
+    "badCompanions": [
+      "walnut",
+      "grass"
+    ],
+    "commonPests": [
+      "cherry fruit fly",
+      "birds",
+      "aphids"
+    ],
+    "commonDiseases": [
+      "brown rot",
+      "bacterial canker",
+      "cherry leaf spot"
+    ]
   },
   {
     "species": "Ficus carica",
     "commonName": "Fig Tree",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "fig-tree",
     "transplantWeeksAfterLastFrost": 2,
     "daysToMaturity": 730,
     "spacingInches": 180,
@@ -146,16 +624,32 @@
     "matureHeightInches": 180,
     "matureSpreadInches": 180,
     "growthRate": "moderate",
-    "goodCompanions": ["rue", "marigold", "strawberry", "comfrey"],
-    "badCompanions": ["walnut"],
-    "commonPests": ["fig beetles", "nematodes", "birds"],
-    "commonDiseases": ["fig rust", "leaf blight", "root knot nematode"]
+    "goodCompanions": [
+      "rue",
+      "marigold",
+      "strawberry",
+      "comfrey"
+    ],
+    "badCompanions": [
+      "walnut"
+    ],
+    "commonPests": [
+      "fig beetles",
+      "nematodes",
+      "birds"
+    ],
+    "commonDiseases": [
+      "fig rust",
+      "leaf blight",
+      "root knot nematode"
+    ]
   },
   {
     "species": "Vitis vinifera",
     "commonName": "Grape Vine",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "grape-vine",
     "transplantWeeksAfterLastFrost": -2,
     "daysToMaturity": 1095,
     "spacingInches": 96,
@@ -165,16 +659,33 @@
     "matureHeightInches": 96,
     "matureSpreadInches": 72,
     "growthRate": "moderate",
-    "goodCompanions": ["chives", "garlic", "rose", "hyssop"],
-    "badCompanions": ["cabbage", "radish"],
-    "commonPests": ["grape berry moth", "Japanese beetles", "phylloxera"],
-    "commonDiseases": ["powdery mildew", "downy mildew", "black rot"]
+    "goodCompanions": [
+      "chives",
+      "garlic",
+      "rose",
+      "hyssop"
+    ],
+    "badCompanions": [
+      "cabbage",
+      "radish"
+    ],
+    "commonPests": [
+      "grape berry moth",
+      "Japanese beetles",
+      "phylloxera"
+    ],
+    "commonDiseases": [
+      "powdery mildew",
+      "downy mildew",
+      "black rot"
+    ]
   },
   {
     "species": "Citrus limon",
     "commonName": "Lemon Tree",
     "plantType": "fruit_tree",
     "isPerennial": true,
+    "cropGroup": "lemon-tree",
     "transplantWeeksAfterLastFrost": 4,
     "daysToMaturity": 1095,
     "spacingInches": 180,
@@ -184,9 +695,24 @@
     "matureHeightInches": 180,
     "matureSpreadInches": 120,
     "growthRate": "moderate",
-    "goodCompanions": ["basil", "marigold", "lavender", "lemongrass"],
-    "badCompanions": ["walnut"],
-    "commonPests": ["citrus leafminer", "aphids", "scale insects"],
-    "commonDiseases": ["citrus canker", "citrus greening", "root rot"]
+    "goodCompanions": [
+      "basil",
+      "marigold",
+      "lavender",
+      "lemongrass"
+    ],
+    "badCompanions": [
+      "walnut"
+    ],
+    "commonPests": [
+      "citrus leafminer",
+      "aphids",
+      "scale insects"
+    ],
+    "commonDiseases": [
+      "citrus canker",
+      "citrus greening",
+      "root rot"
+    ]
   }
 ]
