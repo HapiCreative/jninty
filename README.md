@@ -33,6 +33,32 @@
 - **PWA** — Install on any device, full offline support
 - **No Account Required** — Everything stays on your device
 
+## Screenshots
+
+<p align="center">
+  <img src="public/screenshots/home.png" alt="Dashboard — weather, spending summary, suggested tasks, and recent journal entries" width="720" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/plants.png" alt="Plant Inventory — grid view with photos, species, and status badges" width="720" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/calendar.png" alt="Planting Calendar — timeline view with color-coded crop stages" width="720" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/tasks.png" alt="Tasks — list, daily, and weekly views with smart suggestions and filters" width="720" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/Expenses.png" alt="Expenses — spending breakdown by category with horizontal bar chart" width="720" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/mobile.png" alt="Mobile — fully responsive PWA with bottom navigation" width="300" />
+</p>
+
 ## Quick Start
 
 ```bash
