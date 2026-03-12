@@ -26,3 +26,10 @@ dist-ssr
 # Sync server
 sync/.env
 .certs/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

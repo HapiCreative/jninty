@@ -6,6 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 import pkg from "./package.json" with { type: "json" };
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const httpsConfig = fs.existsSync(path.resolve(__dirname, ".certs/cert.pem"))
   ? {
       key: fs.readFileSync(path.resolve(__dirname, ".certs/key.pem")),
@@ -30,48 +32,44 @@ export default defineConfig({
       "events",
     ],
   },
-  plugins: [
-    react(),
-    tailwindcss(),
-    VitePWA({
-      registerType: "autoUpdate",
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
-        navigateFallback: "/index.html",
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-css",
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
+  plugins: [react(), tailwindcss(), VitePWA({
+    registerType: "autoUpdate",
+    workbox: {
+      globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
+      navigateFallback: "/index.html",
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "google-fonts-css",
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
             },
           },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "google-fonts-files",
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "google-fonts-files",
+            expiration: {
+              maxEntries: 20,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
             },
           },
-        ],
-      },
-      manifest: false, // We provide our own manifest.json in public/
-    }),
-  ],
+        },
+      ],
+    },
+    manifest: false, // We provide our own manifest.json in public/
+  }), cloudflare()],
   server: {
     https: httpsConfig,
     host: true,
