@@ -1,6 +1,4 @@
 import { useState, useRef, type FormEvent } from "react";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
 import { register } from "../../lib/apiClient";
 import {
   stripeMonthlyPriceId,
@@ -17,30 +15,12 @@ interface SignUpModalProps {
   onSwitchToLogin: () => void;
 }
 
-function getPasswordStrength(pw: string): {
-  label: string;
-  color: string;
-  width: string;
-} {
-  if (pw.length < 8) return { label: "Too short", color: "bg-red-500", width: "w-1/4" };
-  let score = 0;
-  if (/[a-z]/.test(pw)) score++;
-  if (/[A-Z]/.test(pw)) score++;
-  if (/\d/.test(pw)) score++;
-  if (/[^a-zA-Z0-9]/.test(pw)) score++;
-  if (pw.length >= 12) score++;
-
-  if (score <= 2) return { label: "Weak", color: "bg-amber-500", width: "w-1/3" };
-  if (score <= 3) return { label: "Good", color: "bg-blue-500", width: "w-2/3" };
-  return { label: "Strong", color: "bg-green-600", width: "w-full" };
-}
-
 export default function SignUpModal({
   isOpen,
   onClose,
   onSwitchToLogin,
 }: SignUpModalProps) {
-  const [plan, setPlan] = useState<"annual" | "monthly">("annual");
+  const [plan, setPlan] = useState<"annual" | "monthly">("monthly");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -54,19 +34,17 @@ export default function SignUpModal({
 
   if (!isOpen) return null;
 
-  const strength = getPasswordStrength(password);
-
   function validate(): boolean {
     const errors: Record<string, string> = {};
 
-    if (!email.includes("@") || !email.includes(".")) {
-      errors["email"] = "Please enter a valid email address";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors["email"] = "Please enter a valid email address.";
     }
     if (password.length < 8) {
-      errors["password"] = "Password must be at least 8 characters";
+      errors["password"] = "Password must be at least 8 characters.";
     }
     if (password !== confirmPassword) {
-      errors["confirmPassword"] = "Passwords do not match";
+      errors["confirmPassword"] = "Passwords do not match.";
     }
 
     setFieldErrors(errors);
@@ -112,71 +90,71 @@ export default function SignUpModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="signup-modal-title"
-        className="w-full max-w-sm rounded-xl border border-border-default bg-surface-elevated p-6 shadow-lg"
+        className="w-full max-w-md rounded-2xl border border-cream-200 bg-white p-8 shadow-lg"
       >
-        <div className="flex items-center justify-between">
-          <h2
-            id="signup-modal-title"
-            className="font-display text-lg font-semibold text-text-heading"
-          >
-            Start Jninty Cloud
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md p-1 text-text-muted transition-colors hover:bg-surface-muted hover:text-text-primary"
-            aria-label="Close"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-            </svg>
-          </button>
+        {/* Logo */}
+        <div className="flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-900 font-display text-sm font-extrabold text-cream-50">
+            J
+          </div>
+          <span className="ml-2 font-display text-xl font-bold text-green-800">
+            Jninty
+          </span>
         </div>
 
+        <h2
+          id="signup-modal-title"
+          className="mt-6 mb-1 text-center font-display text-2xl font-bold text-green-800"
+        >
+          Start Jninty Cloud
+        </h2>
+        <p className="mb-6 text-center font-sans text-sm text-soil-400">
+          Sync your garden across every device.
+        </p>
+
         {/* Plan toggle */}
-        <div className="mt-4">
-          <div className="inline-flex w-full overflow-hidden rounded-lg border border-border-strong">
+        <div className="mb-6 flex justify-center">
+          <div className="inline-flex rounded-lg border border-brown-300 bg-cream-200 p-1">
             <button
               type="button"
               onClick={() => setPlan("monthly")}
-              className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-1.5 font-sans text-sm font-semibold transition-all ${
                 plan === "monthly"
-                  ? "bg-primary text-text-on-primary"
-                  : "bg-surface-elevated text-text-secondary hover:bg-surface-muted"
+                  ? "bg-white text-soil-900 shadow-sm"
+                  : "text-soil-600 hover:text-soil-900"
               }`}
             >
-              Monthly — {monthlyPrice}
+              Monthly
             </button>
             <button
               type="button"
               onClick={() => setPlan("annual")}
-              className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
+              className={`rounded-md px-4 py-1.5 font-sans text-sm transition-colors ${
                 plan === "annual"
-                  ? "bg-primary text-text-on-primary"
-                  : "bg-surface-elevated text-text-secondary hover:bg-surface-muted"
+                  ? "bg-white font-semibold text-soil-900 shadow-sm"
+                  : "font-medium text-soil-600 hover:text-soil-900"
               }`}
             >
-              Annual — {annualPrice} (save 17%)
+              Annual
+              <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
+                Save 17%
+              </span>
             </button>
           </div>
         </div>
 
-        <form
-          onSubmit={(e) => void handleSubmit(e)}
-          className="mt-4 space-y-4"
-          noValidate
-        >
-          <div>
+        <form onSubmit={(e) => void handleSubmit(e)} noValidate>
+          <div className="mb-4">
             <label
               htmlFor="signup-email"
-              className="block text-sm font-medium text-text-primary"
+              className="mb-1 block text-left font-sans text-sm font-medium text-soil-700"
             >
               Email
             </label>
-            <Input
+            <input
               id="signup-email"
               type="email"
-              required
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -186,26 +164,25 @@ export default function SignUpModal({
                   return next;
                 });
               }}
-              className="mt-1"
               autoComplete="email"
+              className="w-full rounded-lg border border-brown-300 bg-white px-3 py-2 font-sans text-sm text-soil-900 placeholder:text-soil-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
             />
             {fieldErrors["email"] && (
-              <p className="mt-1 text-xs text-red-600">{fieldErrors["email"]}</p>
+              <p className="mt-1 text-xs text-terracotta-600">{fieldErrors["email"]}</p>
             )}
           </div>
 
-          <div>
+          <div className="mb-4">
             <label
               htmlFor="signup-password"
-              className="block text-sm font-medium text-text-primary"
+              className="mb-1 block text-left font-sans text-sm font-medium text-soil-700"
             >
               Password
             </label>
-            <Input
+            <input
               id="signup-password"
               type="password"
-              required
-              minLength={8}
+              placeholder="At least 8 characters"
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -215,39 +192,25 @@ export default function SignUpModal({
                   return next;
                 });
               }}
-              className="mt-1"
               autoComplete="new-password"
+              className="w-full rounded-lg border border-brown-300 bg-white px-3 py-2 font-sans text-sm text-soil-900 placeholder:text-soil-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
             />
-            {password.length > 0 && (
-              <div className="mt-1.5">
-                <div className="h-1 overflow-hidden rounded-full bg-surface-muted">
-                  <div
-                    className={`h-full rounded-full transition-all ${strength.color} ${strength.width}`}
-                  />
-                </div>
-                <p className="mt-0.5 text-xs text-text-muted">
-                  {strength.label}
-                </p>
-              </div>
-            )}
             {fieldErrors["password"] && (
-              <p className="mt-1 text-xs text-red-600">
-                {fieldErrors["password"]}
-              </p>
+              <p className="mt-1 text-xs text-terracotta-600">{fieldErrors["password"]}</p>
             )}
           </div>
 
-          <div>
+          <div className="mb-4">
             <label
               htmlFor="signup-confirm-password"
-              className="block text-sm font-medium text-text-primary"
+              className="mb-1 block text-left font-sans text-sm font-medium text-soil-700"
             >
               Confirm Password
             </label>
-            <Input
+            <input
               id="signup-confirm-password"
               type="password"
-              required
+              placeholder="Repeat your password"
               value={confirmPassword}
               onChange={(e) => {
                 setConfirmPassword(e.target.value);
@@ -257,47 +220,42 @@ export default function SignUpModal({
                   return next;
                 });
               }}
-              className="mt-1"
               autoComplete="new-password"
+              className="w-full rounded-lg border border-brown-300 bg-white px-3 py-2 font-sans text-sm text-soil-900 placeholder:text-soil-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
             />
             {fieldErrors["confirmPassword"] && (
-              <p className="mt-1 text-xs text-red-600">
-                {fieldErrors["confirmPassword"]}
-              </p>
+              <p className="mt-1 text-xs text-terracotta-600">{fieldErrors["confirmPassword"]}</p>
             )}
           </div>
 
           {error && (
-            <p className="text-sm text-red-600" role="alert">
+            <div className="mt-4 rounded-lg bg-terracotta-400/10 p-3 text-sm text-terracotta-600" role="alert">
               {error}
-            </p>
+            </div>
           )}
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Redirecting...
-              </span>
-            ) : (
-              "Continue to Payment"
-            )}
-          </Button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-6 w-full rounded-lg bg-terracotta-500 px-6 py-3 text-center font-sans text-base font-semibold text-white shadow-lg transition-all hover:bg-terracotta-600 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+          >
+            {loading ? "Creating account..." : "Continue to Payment \u2192"}
+          </button>
         </form>
 
-        <div className="mt-4 space-y-2 text-center text-sm">
+        <p className="mt-4 text-center text-xs text-soil-400">
+          &#128274; You&apos;ll be redirected to Stripe for secure payment.
+        </p>
+        <p className="mt-4 block text-center text-sm text-soil-600">
+          Already have an account?{" "}
           <button
             type="button"
             onClick={onSwitchToLogin}
-            className="text-primary hover:underline"
+            className="font-medium text-green-700 hover:underline"
           >
-            Already have an account? Sign in
+            Sign in
           </button>
-          <p className="text-xs text-text-muted">
-            You&apos;ll be redirected to Stripe to complete payment. Cancel
-            anytime.
-          </p>
-        </div>
+        </p>
       </div>
     </div>
   );

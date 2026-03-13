@@ -1,6 +1,4 @@
 import { useState, useRef, type FormEvent } from "react";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
 import { useAuth } from "../../store/authStore";
 import { login } from "../../lib/apiClient";
 import { startCloudSync } from "../../lib/cloudSync";
@@ -23,7 +21,6 @@ export default function LoginModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showForgotText, setShowForgotText] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef);
@@ -34,6 +31,12 @@ export default function LoginModal({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -62,109 +65,96 @@ export default function LoginModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="login-modal-title"
-        className="w-full max-w-sm rounded-xl border border-border-default bg-surface-elevated p-6 shadow-lg"
+        className="w-full max-w-md rounded-2xl border border-cream-200 bg-white p-8 shadow-lg"
       >
-        <div className="flex items-center justify-between">
-          <h2
-            id="login-modal-title"
-            className="font-display text-lg font-semibold text-text-heading"
-          >
-            Sign in to Jninty Cloud
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md p-1 text-text-muted transition-colors hover:bg-surface-muted hover:text-text-primary"
-            aria-label="Close"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-            </svg>
-          </button>
+        {/* Logo */}
+        <div className="flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-900 font-display text-sm font-extrabold text-cream-50">
+            J
+          </div>
+          <span className="ml-2 font-display text-xl font-bold text-green-800">
+            Jninty
+          </span>
         </div>
 
-        <form onSubmit={(e) => void handleSubmit(e)} className="mt-4 space-y-4">
-          <div>
+        <h2
+          id="login-modal-title"
+          className="mt-6 mb-1 text-center font-display text-2xl font-bold text-green-800"
+        >
+          Sign in to Jninty Cloud
+        </h2>
+        <p className="mb-6 text-center font-sans text-sm text-soil-400">
+          Welcome back.
+        </p>
+
+        <form onSubmit={(e) => void handleSubmit(e)} noValidate>
+          <div className="mb-4">
             <label
               htmlFor="login-email"
-              className="block text-sm font-medium text-text-primary"
+              className="mb-1 block text-left font-sans text-sm font-medium text-soil-700"
             >
               Email
             </label>
-            <Input
+            <input
               id="login-email"
               type="email"
-              required
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1"
               autoComplete="email"
+              className="w-full rounded-lg border border-brown-300 bg-white px-3 py-2 font-sans text-sm text-soil-900 placeholder:text-soil-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
             />
           </div>
 
-          <div>
+          <div className="mb-4">
             <label
               htmlFor="login-password"
-              className="block text-sm font-medium text-text-primary"
+              className="mb-1 block text-left font-sans text-sm font-medium text-soil-700"
             >
               Password
             </label>
-            <Input
+            <input
               id="login-password"
               type="password"
-              required
+              placeholder="Your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1"
               autoComplete="current-password"
+              className="w-full rounded-lg border border-brown-300 bg-white px-3 py-2 font-sans text-sm text-soil-900 placeholder:text-soil-400 focus:border-green-600 focus:outline-none focus:ring-2 focus:ring-green-600/25"
             />
           </div>
 
           {error && (
-            <p className="text-sm text-red-600" role="alert">
+            <div className="mt-4 rounded-lg bg-terracotta-400/10 p-3 text-sm text-terracotta-600" role="alert">
               {error}
-            </p>
+            </div>
           )}
 
-          <Button
+          <button
             type="submit"
             disabled={loading}
-            className="w-full"
+            className="mt-6 w-full rounded-lg bg-terracotta-500 px-6 py-3 text-center font-sans text-base font-semibold text-white shadow-lg transition-all hover:bg-terracotta-600 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
           >
-            {loading ? (
-              <span className="flex items-center gap-2">
-                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Signing in...
-              </span>
-            ) : (
-              "Sign In"
-            )}
-          </Button>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
 
-        <div className="mt-4 space-y-2 text-center text-sm">
+        <p className="mt-4 block text-center text-sm text-soil-600">
+          Don&apos;t have an account?{" "}
           <button
             type="button"
             onClick={onSwitchToSignUp}
-            className="text-primary hover:underline"
+            className="font-medium text-green-700 hover:underline"
           >
-            Don&apos;t have an account? Create one
+            Get started
           </button>
-          <div>
-            <button
-              type="button"
-              onClick={() => setShowForgotText(true)}
-              className="text-text-muted hover:underline"
-            >
-              Forgot password?
-            </button>
-            {showForgotText && (
-              <p className="mt-1 text-xs text-text-muted">
-                Email hello@jninty.com for support
-              </p>
-            )}
-          </div>
-        </div>
+        </p>
+        <p className="mt-2 block text-center text-sm text-soil-400">
+          Need help? Email{" "}
+          <a href="mailto:hello@jninty.com" className="text-green-700 hover:underline">
+            hello@jninty.com
+          </a>
+        </p>
       </div>
     </div>
   );
