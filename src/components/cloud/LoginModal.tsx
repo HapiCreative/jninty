@@ -1,6 +1,6 @@
 import { useState, useRef, type FormEvent } from "react";
 import { useAuth } from "../../store/authStore";
-import { login } from "../../lib/apiClient";
+import { login, PaymentRequiredError } from "../../lib/apiClient";
 import { startCloudSync } from "../../lib/cloudSync";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { useModalA11y } from "../../hooks/useModalA11y";
@@ -45,6 +45,10 @@ export default function LoginModal({
       startCloudSync(result.user.id, result.token);
       onClose();
     } catch (err) {
+      if (err instanceof PaymentRequiredError) {
+        window.location.href = err.checkoutUrl;
+        return;
+      }
       setError(
         err instanceof Error ? err.message : "Login failed. Please try again.",
       );
