@@ -8,6 +8,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-offline--ready-5A0FC8?logo=pwa&logoColor=white)
+[![Jninty Cloud](https://img.shields.io/badge/Jninty_Cloud-Sync_Anywhere-2D6A4F?style=flat&logo=cloud&logoColor=white)](https://jninty.com)
 
 **A local-first, open-source garden journal and management PWA.** All data lives on your device in IndexedDB — no account required, works offline, with optional multi-device sync via CouchDB.
 
@@ -31,7 +32,15 @@
 - **Push Notifications** — Task reminders and frost alerts
 - **Multi-Device Sync** — Optional CouchDB replication (see below)
 - **PWA** — Install on any device, full offline support
-- **No Account Required** — Everything stays on your device
+- **No Account Required** — Everything stays on your device. Optionally sign up for [Jninty Cloud](https://jninty.com) for multi-device sync and cloud backups
+
+## Jninty Cloud
+
+Don't want to manage your own sync server? [**Jninty Cloud**](https://jninty.com) gives you automatic multi-device sync, encrypted cloud backups, and access from anywhere — no Docker, no VPS, no setup.
+
+**$4.99/month or $49.99/year** — [Get started at jninty.com](https://jninty.com)
+
+Jninty is and will always be fully open source and self-hostable. Cloud is an optional convenience for those who want it.
 
 ## Screenshots
 
@@ -161,7 +170,9 @@ For more details, see [sync/README.md](sync/README.md).
 
 ## Cloud Sync (Optional)
 
-For syncing across networks (not just LAN), you can host CouchDB on a remote server:
+The easiest way to sync across devices is [**Jninty Cloud**](https://jninty.com) — automatic sync, encrypted backups, no setup required.
+
+If you prefer to self-host, you can run CouchDB on a remote server:
 
 1. **Set up a VPS** with Docker and run the same `sync/docker-compose.yml`
 2. **Enable HTTPS** — CouchDB must be behind a reverse proxy (nginx, Caddy) with a valid TLS certificate, since browsers block mixed HTTP/HTTPS content
