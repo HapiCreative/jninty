@@ -41,7 +41,7 @@ export function setLogoutCallback(cb: () => void): void {
  * Used as a fallback during migration so existing sessions aren't invalidated.
  * TODO: Remove after migration period (~7 days post-deploy).
  */
-function getLegacyToken(): string | null {
+export function getLegacyToken(): string | null {
   try {
     return localStorage.getItem(LEGACY_TOKEN_KEY);
   } catch {
@@ -58,6 +58,22 @@ export function clearLegacyToken(): void {
   }
 }
 
+/** Check whether the non-HttpOnly companion cookie is set. */
+export function hasLoggedInCookie(): boolean {
+  return document.cookie.split(";").some((c) => c.trim().startsWith("jninty_logged_in="));
+}
+
+/**
+ * Clear the jninty_logged_in companion cookie client-side.
+ * This is a synchronous guarantee — even if logoutFromServer() fails (offline),
+ * the app won't enter a login-check loop on the next page load.
+ */
+export function clearLoggedInCookie(): void {
+  document.cookie = "jninty_logged_in=; Path=/; Max-Age=0";
+  // Production: also clear with domain scope
+  document.cookie = "jninty_logged_in=; Domain=.jninty.com; Path=/; Max-Age=0";
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -71,11 +87,13 @@ async function request<T>(
     ...(options.headers as Record<string, string> | undefined),
   };
 
-  // Migration fallback: if we still have a legacy token in localStorage,
-  // send it as a Bearer header so older API deployments still work.
-  const legacyToken = getLegacyToken();
-  if (legacyToken) {
-    headers["Authorization"] = `Bearer ${legacyToken}`;
+  // Migration fallback: only send Bearer header when the companion cookie
+  // is absent (i.e., user hasn't been migrated to cookie auth yet).
+  if (!hasLoggedInCookie()) {
+    const legacyToken = getLegacyToken();
+    if (legacyToken) {
+      headers["Authorization"] = `Bearer ${legacyToken}`;
+    }
   }
 
   const res = await fetch(`${apiUrl}${path}`, {

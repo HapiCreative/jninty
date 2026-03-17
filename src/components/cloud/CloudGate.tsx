@@ -80,10 +80,10 @@ function PaywallScreen() {
 }
 
 function ExpiredScreen() {
-  const { dispatch } = useAuth();
+  const { performLogout } = useAuth();
 
   function handleSignOut() {
-    dispatch({ type: "LOGOUT" });
+    performLogout();
   }
 
   return (

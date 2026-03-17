@@ -3,33 +3,21 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useCallback,
   useRef,
   type ReactNode,
   type Dispatch,
 } from "react";
 import { isCloudEnabled, apiUrl } from "../config/cloud";
 import type { AuthState, AuthAction } from "../types/auth";
-import { normalizeUser, logoutFromServer, clearLegacyToken } from "../lib/apiClient";
-
-/**
- * localStorage key — kept temporarily for migration fallback.
- * TODO: Remove after migration period (~7 days post-deploy).
- */
-const LEGACY_TOKEN_KEY = "jninty_auth_token";
-
-/** Check whether the non-HttpOnly companion cookie is set. */
-function hasLoggedInCookie(): boolean {
-  return document.cookie.split("; ").some((c) => c.startsWith("jninty_logged_in="));
-}
-
-/** Check whether a legacy localStorage token exists (migration fallback). */
-function getLegacyToken(): string | null {
-  try {
-    return localStorage.getItem(LEGACY_TOKEN_KEY);
-  } catch {
-    return null;
-  }
-}
+import {
+  normalizeUser,
+  logoutFromServer,
+  clearLegacyToken,
+  clearLoggedInCookie,
+  hasLoggedInCookie,
+  getLegacyToken,
+} from "../lib/apiClient";
 
 const initialState: AuthState = {
   isAuthenticated: false,
@@ -38,6 +26,7 @@ const initialState: AuthState = {
   isLoading: true,
 };
 
+/** Pure reducer — no side effects. */
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case "LOGIN":
@@ -48,9 +37,6 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         isLoading: false,
       };
     case "LOGOUT":
-      // Clear server cookies + legacy localStorage
-      void logoutFromServer();
-      clearLegacyToken();
       return {
         isAuthenticated: false,
         user: null,
@@ -68,6 +54,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 interface AuthContextValue {
   state: AuthState;
   dispatch: Dispatch<AuthAction>;
+  /** Perform a full logout: clear cookies, localStorage, call server, update state. */
+  performLogout: () => void;
 }
 
 const noopState: AuthState = {
@@ -80,10 +68,34 @@ const noopState: AuthState = {
 const AuthContext = createContext<AuthContextValue>({
   state: noopState,
   dispatch: () => undefined,
+  performLogout: () => undefined,
 });
 
 function AuthProviderInner({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
+
+  /**
+   * Full logout with side effects — used for explicit user sign-out.
+   * Clears companion cookie (synchronous), legacy localStorage, calls server,
+   * and dispatches LOGOUT to update state.
+   */
+  const performLogout = useCallback(() => {
+    clearLoggedInCookie();
+    clearLegacyToken();
+    void logoutFromServer();
+    dispatch({ type: "LOGOUT" });
+  }, []);
+
+  /**
+   * Silent logout — used when session validation fails (401 from /auth/me).
+   * Clears local state but does NOT call logoutFromServer() since the server
+   * already knows the session is invalid.
+   */
+  const silentLogout = useCallback(() => {
+    clearLoggedInCookie();
+    clearLegacyToken();
+    dispatch({ type: "LOGOUT" });
+  }, []);
 
   const fetchingRef = useRef(false);
   useEffect(() => {
@@ -123,16 +135,16 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
         if (legacyToken) {
           clearLegacyToken();
         }
+        fetchingRef.current = false;
       })
       .catch(() => {
-        clearLegacyToken();
-        dispatch({ type: "LOGOUT" });
+        silentLogout();
         fetchingRef.current = false;
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AuthContext.Provider value={{ state, dispatch }}>
+    <AuthContext.Provider value={{ state, dispatch, performLogout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -141,7 +153,9 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
 export function AuthProvider({ children }: { children: ReactNode }) {
   if (!isCloudEnabled) {
     return (
-      <AuthContext.Provider value={{ state: noopState, dispatch: () => undefined }}>
+      <AuthContext.Provider
+        value={{ state: noopState, dispatch: () => undefined, performLogout: () => undefined }}
+      >
         {children}
       </AuthContext.Provider>
     );
