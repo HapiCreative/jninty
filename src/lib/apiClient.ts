@@ -29,6 +29,16 @@ class ApiError extends Error {
   }
 }
 
+export class PaymentRequiredError extends Error {
+  checkoutUrl: string;
+
+  constructor(checkoutUrl: string) {
+    super("Payment required");
+    this.name = "PaymentRequiredError";
+    this.checkoutUrl = checkoutUrl;
+  }
+}
+
 // Store a reference to the auth dispatch so we can trigger logout on 401
 let logoutCallback: (() => void) | null = null;
 
@@ -114,6 +124,13 @@ async function request<T>(
     clearLegacyToken();
     logoutCallback?.();
     throw new ApiError(message, 401);
+  }
+
+  if (res.status === 402) {
+    const body = (await res.json()) as { checkoutUrl?: string };
+    if (body.checkoutUrl) {
+      throw new PaymentRequiredError(body.checkoutUrl);
+    }
   }
 
   if (!res.ok) {

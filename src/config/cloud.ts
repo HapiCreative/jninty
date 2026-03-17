@@ -1,7 +1,18 @@
 export const isCloudEnabled =
   import.meta.env.VITE_CLOUD_ENABLED === "true";
 
-export const apiUrl = import.meta.env.VITE_API_URL as string | undefined;
+function normalizeApiUrl(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  let url = raw.trim().replace(/\/+$/, "");
+  if (url && !/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+  return url || undefined;
+}
+
+export const apiUrl = normalizeApiUrl(
+  import.meta.env.VITE_API_URL as string | undefined,
+);
 
 export const stripePublishableKey = import.meta.env
   .VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
