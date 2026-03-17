@@ -8,6 +8,8 @@ import {
   builtInEntryId,
   loadAllKnowledgeItems,
   findKnowledgeItemById,
+  groupBySpecies,
+  speciesSlug,
 } from "./knowledgeBase.ts";
 import type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";
 
@@ -214,5 +216,52 @@ describe("findKnowledgeItemById", () => {
       [],
     );
     expect(item).toBeUndefined();
+  });
+});
+
+describe("speciesSlug", () => {
+  it("slugifies a species name", () => {
+    expect(speciesSlug("Solanum lycopersicum")).toBe("solanum-lycopersicum");
+  });
+
+  it("handles special characters", () => {
+    expect(speciesSlug("Fragaria × ananassa")).toBe("fragaria-ananassa");
+  });
+});
+
+describe("groupBySpecies", () => {
+  it("groups items by species", () => {
+    const items = loadAllKnowledgeItems([]);
+    const groups = groupBySpecies(items);
+    const tomatoes = groups.find(
+      (g) => g.species === "Solanum lycopersicum",
+    );
+    expect(tomatoes).toBeDefined();
+    expect(tomatoes!.entries.length).toBeGreaterThan(1);
+  });
+
+  it("sorts groups alphabetically by commonName", () => {
+    const items = loadAllKnowledgeItems([]);
+    const groups = groupBySpecies(items);
+    for (let i = 1; i < groups.length; i++) {
+      const prev = groups[i - 1]!;
+      const curr = groups[i]!;
+      expect(
+        prev.commonName.localeCompare(curr.commonName),
+      ).toBeLessThanOrEqual(0);
+    }
+  });
+
+  it("includes speciesSlug on each group", () => {
+    const items = loadAllKnowledgeItems([]);
+    const groups = groupBySpecies(items);
+    for (const g of groups) {
+      expect(g.speciesSlug).toBeTruthy();
+      expect(g.speciesSlug).not.toContain(" ");
+    }
+  });
+
+  it("works with an empty list", () => {
+    expect(groupBySpecies([])).toEqual([]);
   });
 });

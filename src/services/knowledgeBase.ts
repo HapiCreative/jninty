@@ -2,7 +2,7 @@ import MiniSearch from "minisearch";
 import { plantKnowledgeSchema } from "../validation/plantKnowledge.schema.ts";
 import type { PlantKnowledge } from "../validation/plantKnowledge.schema.ts";
 import type { UserPlantKnowledge } from "../validation/userPlantKnowledge.schema.ts";
-import type { KnowledgeBaseItem, SchedulablePlant } from "./knowledgeBaseTypes.ts";
+import type { KnowledgeBaseItem, SchedulablePlant, SpeciesGroup } from "./knowledgeBaseTypes.ts";
 import { z } from "zod";
 
 import vegetablesData from "../../data/plants/vegetables.json";
@@ -82,6 +82,55 @@ export function getCompanions(species: string): {
  */
 export function clearKnowledgeBaseCache(): void {
   cache = null;
+}
+
+// ─── Species Grouping ───
+
+/**
+ * Generate a URL-safe slug from a species name.
+ */
+export function speciesSlug(species: string): string {
+  return species
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/**
+ * Group KnowledgeBaseItems by species.
+ * Returns sorted by the commonName of the first entry in each group.
+ */
+export function groupBySpecies(items: KnowledgeBaseItem[]): SpeciesGroup[] {
+  const map = new Map<string, KnowledgeBaseItem[]>();
+  for (const item of items) {
+    const key = item.data.species;
+    const existing = map.get(key);
+    if (existing) {
+      existing.push(item);
+    } else {
+      map.set(key, [item]);
+    }
+  }
+
+  const groups: SpeciesGroup[] = [];
+  for (const [species, entries] of map) {
+    const first = entries[0]!;
+    // Prefer the base entry (no variety) for the display name; fall back to
+    // capitalising the cropGroup, which is always the clean species-level name.
+    const baseEntry = entries.find((e) => !e.data.variety);
+    const commonName = baseEntry
+      ? baseEntry.data.commonName
+      : first.data.cropGroup.charAt(0).toUpperCase() + first.data.cropGroup.slice(1);
+    groups.push({
+      species,
+      speciesSlug: speciesSlug(species),
+      commonName,
+      family: first.data.family,
+      entries,
+    });
+  }
+
+  return groups.sort((a, b) => a.commonName.localeCompare(b.commonName));
 }
 
 // ─── Unified Knowledge Base API ───
