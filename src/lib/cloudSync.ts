@@ -15,7 +15,7 @@ function setStatus(status: CloudSyncStatus) {
   }
 }
 
-export function startCloudSync(userId: string, token: string): void {
+export function startCloudSync(userId: string): void {
   if (syncHandler) {
     syncHandler.cancel();
   }
@@ -27,9 +27,8 @@ export function startCloudSync(userId: string, token: string): void {
     skip_setup: true,
     fetch(url, opts) {
       const fetchOpts = opts ?? {};
-      const headers = new Headers(fetchOpts.headers);
-      headers.set("Authorization", `Bearer ${token}`);
-      return fetch(url, { ...fetchOpts, headers });
+      // Auth token is sent automatically via HttpOnly cookie
+      return fetch(url, { ...fetchOpts, credentials: "include" });
     },
   } as PouchDB.Configuration.RemoteDatabaseConfiguration);
 

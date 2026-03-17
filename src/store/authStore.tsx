@@ -3,15 +3,21 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useCallback,
   useRef,
   type ReactNode,
   type Dispatch,
 } from "react";
 import { isCloudEnabled, apiUrl } from "../config/cloud";
 import type { AuthState, AuthAction } from "../types/auth";
-import { normalizeUser } from "../lib/apiClient";
-
-const AUTH_TOKEN_KEY = "jninty_auth_token";
+import {
+  normalizeUser,
+  logoutFromServer,
+  clearLegacyToken,
+  clearLoggedInCookie,
+  hasLoggedInCookie,
+  getLegacyToken,
+} from "../lib/apiClient";
 
 const initialState: AuthState = {
   isAuthenticated: false,
@@ -20,18 +26,17 @@ const initialState: AuthState = {
   isLoading: true,
 };
 
+/** Pure reducer — no side effects. */
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
     case "LOGIN":
-      localStorage.setItem(AUTH_TOKEN_KEY, action.payload.token);
       return {
         isAuthenticated: true,
         user: action.payload.user,
-        token: action.payload.token,
+        token: action.payload.token ?? null,
         isLoading: false,
       };
     case "LOGOUT":
-      localStorage.removeItem(AUTH_TOKEN_KEY);
       return {
         isAuthenticated: false,
         user: null,
@@ -49,6 +54,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 interface AuthContextValue {
   state: AuthState;
   dispatch: Dispatch<AuthAction>;
+  /** Perform a full logout: clear cookies, localStorage, call server, update state. */
+  performLogout: () => void;
 }
 
 const noopState: AuthState = {
@@ -61,15 +68,43 @@ const noopState: AuthState = {
 const AuthContext = createContext<AuthContextValue>({
   state: noopState,
   dispatch: () => undefined,
+  performLogout: () => undefined,
 });
 
 function AuthProviderInner({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  /**
+   * Full logout with side effects — used for explicit user sign-out.
+   * Clears companion cookie (synchronous), legacy localStorage, calls server,
+   * and dispatches LOGOUT to update state.
+   */
+  const performLogout = useCallback(() => {
+    clearLoggedInCookie();
+    clearLegacyToken();
+    void logoutFromServer();
+    dispatch({ type: "LOGOUT" });
+  }, []);
+
+  /**
+   * Silent logout — used when session validation fails (401 from /auth/me).
+   * Clears local state but does NOT call logoutFromServer() since the server
+   * already knows the session is invalid.
+   */
+  const silentLogout = useCallback(() => {
+    clearLoggedInCookie();
+    clearLegacyToken();
+    dispatch({ type: "LOGOUT" });
+  }, []);
+
   const fetchingRef = useRef(false);
   useEffect(() => {
-    const token = localStorage.getItem(AUTH_TOKEN_KEY);
-    if (!token || !apiUrl) {
+    // Primary: check for the non-HttpOnly companion cookie
+    const hasCookie = hasLoggedInCookie();
+    // Migration fallback: check localStorage for a legacy token
+    const legacyToken = getLegacyToken();
+
+    if ((!hasCookie && !legacyToken) || !apiUrl) {
       dispatch({ type: "SET_LOADING", payload: false });
       return;
     }
@@ -77,8 +112,15 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
     if (fetchingRef.current) return;
     fetchingRef.current = true;
 
+    const headers: Record<string, string> = {};
+    // Migration: if we have a legacy token but no cookie yet, send it as Bearer
+    if (!hasCookie && legacyToken) {
+      headers["Authorization"] = `Bearer ${legacyToken}`;
+    }
+
     fetch(`${apiUrl}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers,
+      credentials: "include", // send HttpOnly cookie
     })
       .then((res) => {
         if (!res.ok) throw new Error("unauthorized");
@@ -87,17 +129,22 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
       .then((raw: Record<string, unknown>) => {
         // /auth/me may return the user directly or wrapped in { user: ... }
         const userData = (raw["user"] ?? raw) as Record<string, unknown>;
-        dispatch({ type: "LOGIN", payload: { user: normalizeUser(userData), token } });
+        dispatch({ type: "LOGIN", payload: { user: normalizeUser(userData) } });
+        // If we validated a legacy token, the server should now have set
+        // the HttpOnly cookie. Clean up localStorage.
+        if (legacyToken) {
+          clearLegacyToken();
+        }
+        fetchingRef.current = false;
       })
       .catch(() => {
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        dispatch({ type: "LOGOUT" });
+        silentLogout();
         fetchingRef.current = false;
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AuthContext.Provider value={{ state, dispatch }}>
+    <AuthContext.Provider value={{ state, dispatch, performLogout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -106,7 +153,9 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
 export function AuthProvider({ children }: { children: ReactNode }) {
   if (!isCloudEnabled) {
     return (
-      <AuthContext.Provider value={{ state: noopState, dispatch: () => undefined }}>
+      <AuthContext.Provider
+        value={{ state: noopState, dispatch: () => undefined, performLogout: () => undefined }}
+      >
         {children}
       </AuthContext.Provider>
     );

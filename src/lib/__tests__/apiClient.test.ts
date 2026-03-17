@@ -12,10 +12,14 @@ vi.mock("../../config/cloud", () => ({
 describe("apiClient billing functions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    localStorage.setItem("jninty_auth_token", "test-token");
+    // Set the companion cookie so the migration fallback isn't triggered
+    Object.defineProperty(document, "cookie", {
+      writable: true,
+      value: "jninty_logged_in=true",
+    });
   });
 
-  it("cancelSubscription sends POST to /billing/cancel", async () => {
+  it("cancelSubscription sends POST to /billing/cancel with credentials", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -34,7 +38,10 @@ describe("apiClient billing functions", () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       "https://api.test.com/billing/cancel",
-      expect.objectContaining({ method: "POST" }),
+      expect.objectContaining({
+        method: "POST",
+        credentials: "include",
+      }),
     );
     expect(user.subscriptionStatus).toBe("cancelled");
   });
@@ -58,7 +65,10 @@ describe("apiClient billing functions", () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       "https://api.test.com/billing/reactivate",
-      expect.objectContaining({ method: "POST" }),
+      expect.objectContaining({
+        method: "POST",
+        credentials: "include",
+      }),
     );
     expect(user.subscriptionStatus).toBe("active");
   });
@@ -84,6 +94,7 @@ describe("apiClient billing functions", () => {
       "https://api.test.com/billing/change-plan",
       expect.objectContaining({
         method: "POST",
+        credentials: "include",
         body: JSON.stringify({ priceId: "price_annual_123" }),
       }),
     );

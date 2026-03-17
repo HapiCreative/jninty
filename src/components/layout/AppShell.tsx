@@ -377,7 +377,7 @@ export default function AppShell() {
   const isOnline = useOnlineStatus();
   const navigate = useNavigate();
   const { settings } = useSettings();
-  const { state: authState, dispatch: authDispatch } = useAuth();
+  const { state: authState, performLogout } = useAuth();
   const shortcutsHelp = useShortcutsHelpState();
   useKeyboardShortcuts(shortcutsHelp.show);
   const overdueTasks = usePouchQuery(() => taskRepository.getOverdue());
@@ -445,7 +445,7 @@ export default function AppShell() {
               aria-label="Sign Out"
               onClick={() => {
                 stopCloudSync();
-                authDispatch({ type: "LOGOUT" });
+                performLogout();
               }}
               className="ml-auto p-1 text-text-on-nav hover:text-text-on-primary transition-colors"
               title="Sign Out"
@@ -506,7 +506,7 @@ export default function AppShell() {
                 aria-label="Sign Out"
                 onClick={() => {
                   stopCloudSync();
-                  authDispatch({ type: "LOGOUT" });
+                  performLogout();
                 }}
                 className="p-1 text-text-secondary hover:text-text-heading"
               >

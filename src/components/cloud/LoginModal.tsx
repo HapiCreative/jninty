@@ -41,8 +41,8 @@ export default function LoginModal({
 
     try {
       const result = await login(email, password);
-      dispatch({ type: "LOGIN", payload: { user: result.user, token: result.token } });
-      startCloudSync(result.user.id, result.token);
+      dispatch({ type: "LOGIN", payload: { user: result.user } });
+      startCloudSync(result.user.id);
       onClose();
     } catch (err) {
       setError(

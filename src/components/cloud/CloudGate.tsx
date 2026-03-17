@@ -80,10 +80,10 @@ function PaywallScreen() {
 }
 
 function ExpiredScreen() {
-  const { dispatch } = useAuth();
+  const { performLogout } = useAuth();
 
   function handleSignOut() {
-    dispatch({ type: "LOGOUT" });
+    performLogout();
   }
 
   return (
@@ -123,7 +123,7 @@ export default function CloudGate({ children }: { children: ReactNode }) {
   // OSS mode — no gate
   if (!isCloudEnabled) return <>{children}</>;
 
-  // Validating stored token
+  // Validating auth session
   if (state.isLoading) return <LoadingScreen />;
 
   // Not logged in

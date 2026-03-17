@@ -95,16 +95,17 @@ export default function App() {
       activatingRef.current = true;
       fetch(`${apiUrl}/auth/activate?session_id=${sessionId}`, {
         method: "POST",
+        credentials: "include", // server sets auth cookie via Set-Cookie
       })
         .then((res) => res.json())
-        .then((data: { token?: string; user?: Record<string, unknown> }) => {
-          if (data.token && data.user) {
+        .then((data: { user?: Record<string, unknown> }) => {
+          if (data.user) {
             const user = normalizeUser(data.user);
             authDispatch({
               type: "LOGIN",
-              payload: { user, token: data.token },
+              payload: { user },
             });
-            startCloudSync(user.id, data.token);
+            startCloudSync(user.id);
             window.history.replaceState({}, "", window.location.pathname);
           }
         })
