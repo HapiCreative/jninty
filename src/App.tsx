@@ -116,6 +116,23 @@ export default function App() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Auto-start cloud sync when session is restored (e.g. page reload, new tab/device)
+  const syncStartedRef = useRef(false);
+  useEffect(() => {
+    if (
+      isCloudEnabled &&
+      authState.isAuthenticated &&
+      authState.user &&
+      !syncStartedRef.current
+    ) {
+      syncStartedRef.current = true;
+      startCloudSync(authState.user.id);
+    }
+    if (!authState.isAuthenticated) {
+      syncStartedRef.current = false;
+    }
+  }, [authState.isAuthenticated, authState.user]);
+
   return (
     <SettingsProvider>
       <ThemeApplicator />

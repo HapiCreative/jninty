@@ -6,6 +6,7 @@ import { MemoryRouter } from "react-router-dom";
 import { clearPouchDB } from "../db/pouchdb/testUtils.ts";
 import { journalRepository, plantRepository } from "../db/index.ts";
 import { SettingsProvider } from "../hooks/useSettings.tsx";
+import { ToastProvider } from "../components/ui/Toast.tsx";
 import { addToIndex, _resetIndex } from "../db/search.ts";
 import JournalPage from "./JournalPage.tsx";
 
@@ -67,9 +68,11 @@ beforeEach(async () => {
 function renderPage() {
   return render(
     <SettingsProvider>
-      <MemoryRouter initialEntries={["/journal"]}>
-        <JournalPage />
-      </MemoryRouter>
+      <ToastProvider>
+        <MemoryRouter initialEntries={["/journal"]}>
+          <JournalPage />
+        </MemoryRouter>
+      </ToastProvider>
     </SettingsProvider>,
   );
 }
