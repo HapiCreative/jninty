@@ -15,3 +15,11 @@ export interface KnowledgeBaseItem {
 
 /** A plant knowledge entry that has a scheduling block. */
 export type SchedulablePlant = PlantKnowledge & { scheduling: Scheduling };
+
+export interface SpeciesGroup {
+  species: string;
+  speciesSlug: string;
+  commonName: string;
+  family?: string | undefined;
+  entries: KnowledgeBaseItem[];
+}

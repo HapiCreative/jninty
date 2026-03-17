@@ -22,7 +22,7 @@ import CalendarPage from "./pages/CalendarPage";
 import SeasonComparisonPage from "./pages/SeasonComparisonPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import ExpenseFormPage from "./pages/ExpenseFormPage";
-import KnowledgeBrowserPage from "./pages/KnowledgeBrowserPage";
+import KnowledgeHubPage from "./pages/KnowledgeHubPage";
 import KnowledgeDetailPage from "./pages/KnowledgeDetailPage";
 import KnowledgeFormPage from "./pages/KnowledgeFormPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -43,6 +43,8 @@ import CloudGate from "./components/cloud/CloudGate";
 
 // Lazy-load the map page to code-split the Konva.js bundle
 const GardenMapPage = lazy(() => import("./pages/GardenMapPage"));
+const KnowledgeCategoryPage = lazy(() => import("./pages/KnowledgeCategoryPage"));
+const KnowledgeSpeciesPage = lazy(() => import("./pages/KnowledgeSpeciesPage"));
 
 function ThemeApplicator() {
   const { settings } = useSettings();
@@ -170,7 +172,17 @@ export default function App() {
                   </Suspense>
                 }
               />
-              <Route path="knowledge" element={<KnowledgeBrowserPage />} />
+              <Route path="knowledge" element={<KnowledgeHubPage />} />
+              <Route path="knowledge/plants/:category" element={
+                <Suspense fallback={<div className="flex h-64 items-center justify-center text-text-muted">Loading...</div>}>
+                  <KnowledgeCategoryPage />
+                </Suspense>
+              } />
+              <Route path="knowledge/species/:speciesSlug" element={
+                <Suspense fallback={<div className="flex h-64 items-center justify-center text-text-muted">Loading...</div>}>
+                  <KnowledgeSpeciesPage />
+                </Suspense>
+              } />
               <Route path="knowledge/new" element={<KnowledgeFormPage />} />
               <Route path="knowledge/:id" element={<KnowledgeDetailPage />} />
               <Route path="knowledge/:id/edit" element={<KnowledgeFormPage />} />

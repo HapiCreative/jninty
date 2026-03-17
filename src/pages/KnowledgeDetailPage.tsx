@@ -118,7 +118,7 @@ export default function KnowledgeDetailPage() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => navigate("/knowledge")}
+            onClick={() => navigate(-1)}
             className="rounded-lg p-1.5 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             aria-label="Back to knowledge base"
           >
