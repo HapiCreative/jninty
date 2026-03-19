@@ -512,6 +512,31 @@ export default function SettingsPage() {
     }
   };
 
+  // Edit season state
+  const [editSeasonId, setEditSeasonId] = useState<string | null>(null);
+  const [editSeason, setEditSeason] = useState({ name: "", year: 0, startDate: "", endDate: "" });
+
+  const startEditSeason = (season: { id: string; name: string; year: number; startDate: string; endDate: string }) => {
+    setEditSeasonId(season.id);
+    setEditSeason({ name: season.name, year: season.year, startDate: season.startDate, endDate: season.endDate });
+  };
+
+  const handleUpdateSeason = async () => {
+    if (!editSeasonId || !editSeason.name.trim() || !editSeason.startDate || !editSeason.endDate) return;
+    try {
+      await seasonRepository.update(editSeasonId, {
+        name: editSeason.name.trim(),
+        year: editSeason.year,
+        startDate: editSeason.startDate,
+        endDate: editSeason.endDate,
+      });
+      setEditSeasonId(null);
+      toast("Season updated", "success");
+    } catch {
+      toast("Failed to update season", "error");
+    }
+  };
+
   const [deleteSeasonId, setDeleteSeasonId] = useState<string | null>(null);
   const [deletingSeason, setDeletingSeason] = useState(false);
   const deleteSeasonName = seasons?.find((s) => s.id === deleteSeasonId)?.name;
@@ -1078,39 +1103,106 @@ export default function SettingsPage() {
             seasons.map((season) => (
               <div
                 key={season.id}
-                className={`flex items-center justify-between rounded-lg border p-3 ${
+                className={`rounded-lg border p-3 ${
                   season.isActive
                     ? "border-focus-ring bg-status-success-bg"
                     : "border-border-default bg-surface"
                 }`}
               >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-text-primary">{season.name}</span>
-                    <span className="text-sm text-text-secondary">{String(season.year)}</span>
-                    {season.isActive && <Badge variant="success">Active</Badge>}
+                {editSeasonId === season.id ? (
+                  <div className="space-y-3">
+                    <div>
+                      <label htmlFor={`edit-season-name-${season.id}`} className="mb-1 block text-sm font-medium text-text-secondary">
+                        Name
+                      </label>
+                      <Input
+                        id={`edit-season-name-${season.id}`}
+                        type="text"
+                        value={editSeason.name}
+                        onChange={(e) => setEditSeason((s) => ({ ...s, name: e.target.value }))}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`edit-season-year-${season.id}`} className="mb-1 block text-sm font-medium text-text-secondary">
+                        Year
+                      </label>
+                      <Input
+                        id={`edit-season-year-${season.id}`}
+                        type="number"
+                        value={String(editSeason.year)}
+                        onChange={(e) => setEditSeason((s) => ({ ...s, year: Number(e.target.value) }))}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label htmlFor={`edit-season-start-${season.id}`} className="mb-1 block text-sm font-medium text-text-secondary">
+                          Start Date
+                        </label>
+                        <Input
+                          id={`edit-season-start-${season.id}`}
+                          type="date"
+                          value={editSeason.startDate}
+                          onChange={(e) => setEditSeason((s) => ({ ...s, startDate: e.target.value }))}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor={`edit-season-end-${season.id}`} className="mb-1 block text-sm font-medium text-text-secondary">
+                          End Date
+                        </label>
+                        <Input
+                          id={`edit-season-end-${season.id}`}
+                          type="date"
+                          value={editSeason.endDate}
+                          onChange={(e) => setEditSeason((s) => ({ ...s, endDate: e.target.value }))}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button onClick={() => void handleUpdateSeason()}>
+                        Save
+                      </Button>
+                      <Button variant="ghost" onClick={() => setEditSeasonId(null)}>
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
-                  <p className="text-xs text-text-muted">
-                    {season.startDate} &ndash; {season.endDate}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {!season.isActive && (
-                    <Button
-                      variant="ghost"
-                      onClick={() => void handleSetActive(season.id)}
-                    >
-                      Set Active
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    className="text-terracotta-600 hover:bg-terracotta-400/10"
-                    onClick={() => setDeleteSeasonId(season.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-text-primary">{season.name}</span>
+                        <span className="text-sm text-text-secondary">{String(season.year)}</span>
+                        {season.isActive && <Badge variant="success">Active</Badge>}
+                      </div>
+                      <p className="text-xs text-text-muted">
+                        {season.startDate} &ndash; {season.endDate}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        onClick={() => startEditSeason(season)}
+                      >
+                        Edit
+                      </Button>
+                      {!season.isActive && (
+                        <Button
+                          variant="ghost"
+                          onClick={() => void handleSetActive(season.id)}
+                        >
+                          Set Active
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        className="text-terracotta-600 hover:bg-terracotta-400/10"
+                        onClick={() => setDeleteSeasonId(season.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             ))
           )}

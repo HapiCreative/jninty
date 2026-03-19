@@ -1,9 +1,9 @@
 import TaskFilterToolbar from "./TaskFilterToolbar.tsx";
 import type { TaskFilterState } from "../../hooks/useTaskFilter.ts";
 
-export type MonthRange = 1 | 3 | 6 | 12 | 24;
+export type MonthRange = "season" | 1 | 3 | 6 | 12 | 24;
 
-const RANGE_OPTIONS: MonthRange[] = [1, 3, 6, 12, 24];
+const RANGE_OPTIONS: MonthRange[] = ["season", 1, 3, 6, 12, 24];
 
 interface TimelineToolbarProps {
   monthRange: MonthRange;
@@ -32,7 +32,7 @@ export default function TimelineToolbar({
                   : "text-text-secondary hover:text-text-heading"
               }`}
             >
-              {range}m
+              {range === "season" ? "Season" : `${range}m`}
             </button>
           ))}
         </div>

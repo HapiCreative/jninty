@@ -56,12 +56,12 @@ export default function YearlyMiniMonth({
   }, [scheduleTasks]);
 
   return (
-    <div className="rounded-lg border border-border-default bg-surface-elevated p-2">
+    <div className="rounded-lg border border-border-default bg-surface-elevated p-2.5">
       {/* Month header — clickable to drill into monthly view */}
       <button
         type="button"
         onClick={() => onMonthClick(year, month)}
-        className="mb-1 w-full text-left text-xs font-semibold text-text-heading transition-colors hover:text-primary"
+        className="mb-1.5 w-full text-left text-sm font-semibold text-text-heading transition-colors hover:text-primary"
       >
         {format(monthDate, "MMMM")}
       </button>
@@ -71,7 +71,7 @@ export default function YearlyMiniMonth({
         {MINI_WEEK_DAYS.map((d, i) => (
           <div
             key={`${d}-${i}`}
-            className="text-center text-[9px] leading-tight text-text-muted"
+            className="text-center text-[10px] leading-tight text-text-muted"
           >
             {d}
           </div>
@@ -89,17 +89,17 @@ export default function YearlyMiniMonth({
 
           if (!inMonth) {
             return (
-              <div key={dateKey} className="h-5" />
+              <div key={dateKey} className="h-7" />
             );
           }
 
           return (
             <div
               key={dateKey}
-              className="flex h-5 flex-col items-center justify-start"
+              className="flex h-7 flex-col items-center justify-start gap-0.5"
             >
               <span
-                className={`text-[10px] leading-tight ${
+                className={`text-xs leading-tight ${
                   isToday
                     ? "font-bold text-primary"
                     : "text-text-secondary"
@@ -108,11 +108,11 @@ export default function YearlyMiniMonth({
                 {format(day, "d")}
               </span>
               {hasTasks && (
-                <div className="flex gap-px">
+                <div className="flex gap-0.5">
                   {[...taskTypes!].slice(0, 3).map((tt) => (
                     <span
                       key={tt}
-                      className="h-1 w-1 rounded-full"
+                      className="h-1.5 w-1.5 rounded-full"
                       style={{ backgroundColor: TASK_TYPE_COLORS[tt] }}
                     />
                   ))}

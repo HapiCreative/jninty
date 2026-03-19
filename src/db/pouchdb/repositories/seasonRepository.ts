@@ -52,6 +52,11 @@ export async function update(
     throw new Error(`Season not found: ${id}`);
   }
 
+  // If activating this season, deactivate all others first
+  if (changes.isActive === true && !entity.isActive) {
+    await deactivateAllExcept(id);
+  }
+
   const updated: Season = {
     ...entity,
     ...changes,
@@ -129,6 +134,31 @@ export async function getAll(): Promise<Season[]> {
     .sort((a, b) => b.year - a.year);
 }
 
+/** Deactivate all active seasons except the one with the given id. */
+async function deactivateAllExcept(exceptId: string): Promise<void> {
+  const timestamp = now();
+  await ensureAllIndexes();
+  const result = await localDB.find({
+    selector: { docType: DOC_TYPE },
+  });
+
+  for (const raw of result.docs) {
+    const doc = raw as PouchDoc<Season>;
+    const entity = stripPouchFields(doc);
+    if (entity.isActive && entity.id !== exceptId && entity.deletedAt == null) {
+      const deactivated = seasonSchema.parse({
+        ...entity,
+        isActive: false,
+        version: entity.version + 1,
+        updatedAt: timestamp,
+      });
+      const deactivatedDoc = toPouchDoc(deactivated, DOC_TYPE);
+      deactivatedDoc._rev = doc._rev;
+      await localDB.put(deactivatedDoc);
+    }
+  }
+}
+
 /**
  * Sets a season as active, deactivating all others.
  * PouchDB doesn't have transactions, so we update sequentially.
@@ -148,31 +178,10 @@ export async function setActive(id: string): Promise<Season> {
     throw new Error(`Season not found: ${id}`);
   }
 
-  const timestamp = now();
-
-  // Deactivate all other active seasons
-  await ensureAllIndexes();
-  const result = await localDB.find({
-    selector: { docType: DOC_TYPE },
-  });
-
-  for (const raw of result.docs) {
-    const doc = raw as PouchDoc<Season>;
-    const entity = stripPouchFields(doc);
-    if (entity.isActive && entity.id !== id && entity.deletedAt == null) {
-      const deactivated = seasonSchema.parse({
-        ...entity,
-        isActive: false,
-        version: entity.version + 1,
-        updatedAt: timestamp,
-      });
-      const deactivatedDoc = toPouchDoc(deactivated, DOC_TYPE);
-      deactivatedDoc._rev = doc._rev;
-      await localDB.put(deactivatedDoc);
-    }
-  }
+  await deactivateAllExcept(id);
 
   // Activate the target
+  const timestamp = now();
   const activated = seasonSchema.parse({
     ...target,
     isActive: true,

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { startOfMonth, differenceInCalendarDays, parseISO, format } from "date-fns";
+import { startOfMonth, differenceInCalendarMonths, differenceInCalendarDays, parseISO, format } from "date-fns";
 import {
   DndContext,
   DragOverlay,
@@ -28,6 +28,7 @@ import Skeleton from "../ui/Skeleton.tsx";
 import type { ScheduleDirection } from "../../validation/plantingSchedule.schema.ts";
 import StartingFlowWizard from "../startingFlow/StartingFlowWizard.tsx";
 import { useSettings } from "../../hooks/useSettings.tsx";
+import { useActiveSeason } from "../../hooks/useActiveSeason.ts";
 import { scheduleTaskRepository } from "../../db/index.ts";
 import type { ScheduleTask } from "../../validation/scheduleTask.schema.ts";
 import type { TimelineBar } from "../../hooks/useTimelineData.ts";
@@ -78,14 +79,33 @@ function CropPickerPanel({
 }
 
 export default function TimelineView() {
-  const [monthRange, setMonthRange] = useState<MonthRange>(3);
-  const [startDate] = useState(() => startOfMonth(new Date()));
+  const [monthRange, setMonthRange] = useState<MonthRange>("season");
   const filter = useTaskFilter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const { createSchedule } = useScheduling();
   const { rescheduleGroup, rescheduleSingleTask } = useRescheduling();
   const { toast } = useToast();
   const { settings } = useSettings();
+  const activeSeason = useActiveSeason();
+
+  // Compute effective start date and month count for season vs fixed range
+  const { startDate, monthCount } = useMemo(() => {
+    if (monthRange === "season" && activeSeason) {
+      const seasonStart = startOfMonth(parseISO(activeSeason.startDate));
+      const seasonEnd = parseISO(activeSeason.endDate);
+      const months = differenceInCalendarMonths(seasonEnd, seasonStart) + 1;
+      return { startDate: seasonStart, monthCount: Math.max(months, 1) };
+    }
+    if (monthRange === "season") {
+      // Fallback to frost dates if no active season
+      const lastFrost = parseISO(settings.lastFrostDate);
+      const firstFrost = parseISO(settings.firstFrostDate);
+      const seasonStart = startOfMonth(lastFrost);
+      const months = differenceInCalendarMonths(firstFrost, lastFrost) + 1;
+      return { startDate: seasonStart, monthCount: Math.max(months, 1) };
+    }
+    return { startDate: startOfMonth(new Date()), monthCount: monthRange };
+  }, [monthRange, activeSeason, settings.lastFrostDate, settings.firstFrostDate]);
 
   // Crop picker state
   const [showPicker, setShowPicker] = useState(false);
@@ -104,7 +124,7 @@ export default function TimelineView() {
   } | null>(null);
   const [harvestDrag, setHarvestDrag] = useState<HarvestDragState | null>(null);
 
-  const { monthRows, loading } = useTimelineData(startDate, monthRange);
+  const { monthRows, loading } = useTimelineData(startDate, monthCount);
 
   // Sensors: PointerSensor with 8px distance, TouchSensor with 250ms delay, KeyboardSensor for a11y
   const pointerSensor = useSensor(PointerSensor, {
